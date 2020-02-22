@@ -1,0 +1,41 @@
+<project name="z-blog-openresty" default="dist" basedir=".">
+    <description>
+        run lua-learn
+    </description>
+    <!-- set global properties for this build -->
+    <property name="openresty-home" location="D:\lua\openresty-1.15.8.2-win32"/>
+    <property name="conf" location="${basedir}/conf"/>
+    <property name="src" location="${basedir}/src"/>
+    <property name="target-conf" location="${openresty-home}/conf"/>
+    <property name="target-src" location="${openresty-home}/${ant.project.name}"/>
+
+    <echo>######开发版本的ant配置#####</echo>
+    <target name="clean" depends="">
+        <echo>清理openresty目录 ${dist}下的conf,logs,janus,januslib</echo>
+<!--        <delete file="${target-conf}/nginx.conf"/>-->
+<!--        <delete dir="${target-src}"/>-->
+        <delete>
+            <fileset dir="${target-conf}" includes="*.conf"/>
+        </delete>
+        <delete>
+            <fileset dir="${openresty-home}/logs" includes="*.log"/>
+        </delete>
+    </target>
+
+    <target name="init" depends="clean">
+        <echo>创建安装目录</echo>
+<!--        <mkdir dir="${target-conf}"/>-->
+<!--        <mkdir dir="${target-src}"/>-->
+    </target>
+
+    <target name="dist" depends="init" description="generate the distribution" >
+        <echo>复制安装文件</echo>
+        <copy todir="${target-conf}">
+            <fileset dir="${conf}"/>
+        </copy>
+<!--        <copy todir="${target-src}">-->
+<!--            <fileset dir="${src}"/>-->
+<!--        </copy>-->
+    </target>
+
+</project>
