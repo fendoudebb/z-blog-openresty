@@ -1,1 +1,1 @@
-template.render("topic.html", { message = "Hello, Topic!", topic= ngx.var.topic })
+template.render("topic.html", { message = "Hello, Topic!", topic= ngx.ctx.topic })

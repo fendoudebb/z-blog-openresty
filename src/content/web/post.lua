@@ -1,1 +1,1 @@
-template.render("post.html", { message = "Hello, Post!", postId= ngx.var.post_id })
+template.render("post.html", { message = "Hello, Post!", postId= ngx.ctx.post_id })
