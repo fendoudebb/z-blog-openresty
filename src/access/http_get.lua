@@ -1,3 +1,3 @@
 util.filter_non_get_method()
 
-ngx.ctx.post_id = ngx.var[1]
+ngx.ctx.ua = util.parse_ua()

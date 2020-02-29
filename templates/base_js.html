@@ -1,0 +1,48 @@
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<!--<![endif]-->
+<!--[if lt IE 9]>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 100)
+            $(".go-top").fadeIn(1000);
+        else
+            $(".go-top").fadeOut(1000);
+    });
+    $(".go-top").click(function (e) {
+        e.preventDefault();
+        $('body,html').animate({scrollTop: 0}, 1000);
+    });
+
+    $('.search-button').click(function () {
+        let keyword = $('.search-input').val().trim();
+        if (keyword.length > 0) {
+            window.location.href = "/search/"+keyword+".html"
+        }
+    });
+
+    $('.search-input').bind('keydown',function(event){
+        if(event.keyCode === 13) {
+            let keyword = $('.search-input').val().trim();
+            if (keyword.length > 0) {
+                window.location.href = "/search/"+keyword+".html"
+            }
+        }
+    });
+    $('#qrcode').qrcode({correctLevel:0,render: "canvas",text:window.location.href});
+</script>
+
+<script src="https://cdn.bootcss.com/highlight.js/9.15.6/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.6/languages/lua.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.6/languages/go.min.js"></script>
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-jsonview/1.2.3/jquery.jsonview.min.js"></script>
+<script src="https://cdn.bootcss.com/toastr.js/latest/toastr.min.js"></script>
+<!--
+{if condition="isMobile() neq 1"}
+<script src="https://s.zhangbj.com/lib/res/canvas.js"></script>
+{/if}-->

@@ -1,11 +1,608 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html, { title = ngx.ctx.post.title, keywords = ngx.ctx.post.keywords, description = ngx.ctx.post.description } )}
+    <style>
+
+        .table-area {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse; /*使用单一线条的边框*/
+            margin: 10px auto;
+            table-layout: fixed;
+            word-break: break-word;
+            empty-cells: show; /*单元格无内容依旧绘制边框*/
+            min-width: 100%;
+            border-color: grey;
+            text-align: center
+        }
+
+        table td, table th {
+            white-space: nowrap; /*表头内容强制在一行显示*/
+            border: 1px solid #e9eaec;
+            height: 30px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: #495060;
+            font-size: 12px;
+        }
+
+        table th {
+            background-color: #F8F8F9;
+        }
+
+        table tr:nth-child(odd) {
+            background: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background: #F8F8F9;
+        }
+
+        table tr:hover {
+            background: #efefef;
+        }
+
+        .content ul li{
+            list-style-type: disc;
+            margin: 0 16px 16px 20px;
+        }
+
+        .content ol li{
+            list-style-type: decimal;
+            margin: 0 16px 16px 20px;
+        }
+
+        .content li ol, .content li ul {
+            margin: 10px 0;
+        }
+
+        .content li li {
+            list-style-type: circle;
+        }
+
+        .content li li li {
+            list-style-type: square;
+        }
+
+        pre {
+            overflow-y: hidden;
+            overflow-x: auto;
+        }
+
+        code {
+            padding: 1px;
+            border-radius: 2px;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+            font-size: 14px;
+            background-color: #fff5f5;
+            color: #ff502c;
+        }
+
+        code::before, code::after {
+            letter-spacing: -.2em;
+            content: "\00a0";
+        }
+
+        pre code {
+            background: rgba(27,31,35,.05);
+            border-radius: 3px;
+            white-space: pre;
+            word-wrap: normal;
+            padding: 8px 12px !important;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        pre code::before, pre code::after {
+            letter-spacing: 0;
+            content: '';
+        }
+
+        /*code ol {
+            margin: 0;
+        }
+
+        code ol li {
+            padding-left: 8px;
+        }*/
+
+        pre {
+            position: relative
+        }
+
+        pre:hover .hljs-button {
+            display: block
+        }
+
+        .content p {
+            line-height: 26px;
+        }
+
+        /*blockquote {
+            margin: 14px 0;
+            padding: 10px 20px 10px 15px;
+            font-size: 14px;
+            border-left: 3px solid #dbdbdb;
+            background-color: rgba(112, 138, 153, 0.098);
+            color: rgb(136, 136, 136);
+        }*/
+
+        blockquote {
+            margin: 14px 0;
+            padding: 10px 20px 10px 15px;
+            font-size: 14px;
+            border-left: 3px solid #4CAF50;
+            background-color: #e7f6ed;
+            color: rgb(136, 136, 136);
+        }
+
+        blockquote p {
+            line-height: 1.6;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 20px;
+            padding-bottom: 8px;
+            margin-top: 35px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgb(221, 221, 221);
+            line-height: 1.225;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 35px;
+            margin-bottom: 10px;
+        }
+
+        .shadow {
+            margin-bottom: 8px;
+            padding: 16px 24px;
+            word-wrap: break-word;
+        }
+
+        .hljs-button {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            font-size: 12px;
+            color: white;
+            padding: 2px 8px;
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        .text-secondary {
+            font-size: .8rem!important;
+            color: #6c757d!important;
+        }
+
+        .badge-a {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #00965e;
+            padding: 0 .375rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            border-radius: .1875rem;
+            background-color: rgba(0,150,94,.1);
+            text-decoration: none;
+            margin: .25rem!important;
+        }
+
+        .badge-a:hover {
+            color: #004a2e;
+            background-color: rgba(0,150,94,.2);
+        }
+
+        .like-button {
+            cursor:pointer;
+            height:28px;
+            line-height: 14px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #4CAF50;
+            background-color: white;
+            border: 1px solid #4CAF50;
+            border-radius: 3px;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+        .liked-button {
+            cursor:not-allowed;
+            height:28px;
+            line-height: 14px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: white;
+            background-color: #4CAF50;
+            border: 1px solid #4CAF50;
+            border-radius: 3px;
+        }
+
+        .like-button:hover {
+            color: white;
+            background-color: #4CAF50;
+        }
+
+        #post-comment ul li{
+            list-style-type: none;
+            margin: 0 0 10px 0;
+            padding: 0;
+        }
+
+        .top-area {
+            padding: 16px 24px 4px 24px;
+        }
+
+        .content-pre {
+            padding: 8px 24px;
+        }
+
+        .foot-area {
+            padding: 8px 24px;
+        }
+
+        img {
+            display: block;
+            margin: 12px auto;
+            max-width: 100%;
+            cursor: zoom-in;
+            cursor: -moz-zoom-in;
+            cursor: -webkit-zoom-in;
+        }
+
+        .bg-img{
+            display: -webkit-box;
+            -webkit-box-align: center;
+            -webkit-box-pack: center;
+            -moz-box-align: center;
+            -moz-box-pack: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 99999999;
+            background: rgba(255, 255, 255,0.8);
+            overflow: auto;
+        }
+
+        .zoom-in{
+            cursor: -moz-zoom-in;
+            cursor: -webkit-zoom-in;
+            cursor: zoom-in;
+        }
+        .zoom-out{
+            max-width: none;
+            cursor: -moz-zoom-out;
+            cursor: -webkit-zoom-out;
+            cursor: zoom-out;
+        }
+
+        summary {
+            cursor: pointer;
+            outline: none;
+        }
+
+        .post-random-title {
+            font-size: 12px;
+            vertical-align:text-top;
+        }
+
+        .post-random-change {
+            font-size: 12px;
+            color: #8a8a8a;
+            float: right;
+            cursor: pointer;
+        }
+
+        .post-random-li {
+            list-style-type: decimal-leading-zero!important;
+            font-size: 12px;
+            color: #8a8a8a;
+            margin-right: 0!important;
+        }
+
+        .post-random-a {
+            font-size: 12px;
+            display: block;
+            text-decoration: none;
+            color: #8a8a8a;
+        }
+
+        .post-random-a div {
+            vertical-align:text-bottom;
+            display:inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .post-random-a:hover {
+            color: #4CAF50;
+        }
+    </style>
 </head>
 <body>
-{{message}}
-{{postId}}
+{(header.html)}
+<div class="main">
+    <div class="content">
+        <div class="shadow">
+            <h1>{{ngx.ctx.post.title}}</h1>
+            {% for _, t in ipairs(ngx.ctx.post.topics) do %}
+            <a href="/topic/{{t}}.html" class="badge-a" title="{{t}}">{{t}}</a>
+            {% end %}
+            {% if ngx.ctx.post.comment_count > 0 then %}
+            <a href="/p/{{ngx.ctx.post_id}}.html#post-comment" class="badge-a">评论 {{ngx.ctx.post.comment_count}}</a>
+            {% end %}
+            <span class="text-secondary" style="margin-left: .5rem!important;">大约 {{ngx.ctx.post.word_count}} 字</span>
+            <!--            <hr>-->
+            <div>{*ngx.ctx.post.content_html*}</div>
+
+            <div style="margin-top: 1.25rem">
+                <span class="text-secondary" >阅读 {{ngx.ctx.post.pv}} · 发布于 {{ngx.ctx.post.post_ts}}</span>
+            </div>
+
+            <div style="text-align: center;margin-top: 48px">
+                {% if ngx.ctx.post.is_liked then %}
+                <button class="liked-button">已赞 {{ngx.ctx.post.like_count}}</button>
+                {% else %}
+                <button class="like-button">赞 {{ngx.ctx.post.like_count}}</button>
+                {% end %}
+            </div>
+
+            <p style="text-align: center;color: #8a8a8a;margin: 50px 0">————&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEND&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp————</p>
+            <p style="text-align: center;margin-bottom: 30px;color: red;"><strong>扫描下方二维码关注公众号和小程序↓↓↓</strong></p>
+            <img src="{{ngx.var.scheme}}://{{ngx.var.host}}/qrcode.png" title="扫描二维码关注我">
+        </div>
+
+        <div id="post-comment">
+            {% if ngx.ctx.post.post_comment == nil then %}
+            <div class="shadow" style="padding: 16px 24px;">
+                <span style="font-size: 14px">暂无留言~</span>
+            </div>
+            {% else %}
+            <ul>
+                {% for _, comment in ipairs(ngx.ctx.post.post_comment) do %}
+                <li class="shadow">
+                    <div class="top-area">
+                        <span class="nickname-span">{{comment.nickname}}</span>
+                        <span class="floor-span">{{comment.floor}}楼</span>
+                    </div>
+                    {% if 'ONLINE' == comment.status then %}
+                    <pre class="content-pre">{{comment.content}}</pre>
+                    {% else %}
+                    <pre class="content-pre content-delete-pre">留言已删除</pre>
+                    {% end %}
+                    <div class="foot-area">
+                        <span class="browse-os-span">{{comment.browser}} | {{comment.os}}</span>
+                        <span class="time-span">{{ngx.http_time(comment.commentTime)}}</span>
+                    </div>
+
+                    {% if comment.replies ~= nil then %}
+                        {% for _, reply in ipairs(comment.replies) do %}
+                        <div class="reply-area">
+                            <div class="nickname-span" style="color: #4CAF50">作者回复</div>
+                            <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.replyContent}}</pre>
+                            <div style="margin-bottom: 8px">
+                                <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
+                                <span  class="time-span">{{ngx.http_time(reply.replyTime)}}</span>
+                            </div>
+                        </div>
+                        {% end %}
+                    {% end %}
+                </li>
+                {% end %}
+            </ul>
+            {% end %}
+
+            <div class="shadow" style="padding: 16px 24px;text-align: left">
+                <div style="margin-bottom: 20px">
+                    昵称：
+                    <label>
+                        <input id="nickname" type="text" name="nickname" placeholder="请输入昵称...">
+                    </label>
+                </div>
+                <div style="position: relative">
+                    <textarea id="message" title="评论区" placeholder="请输入评论..."></textarea>
+                    <button id="submitBtn" class="button" title="评论">评论</button>
+                </div>
+                <p id="error-hint" style="color: red;font-size: 14px" hidden></p>
+            </div>
+        </div>
+
+        <div>
+            <div class="shadow top-area" style="margin-bottom: 0">
+                <span class="post-random-title">随便看看</span>
+                <span class="post-random-change">换一批</span>
+            </div>
+            <div class="shadow">
+                <div id="post-random-hint" style="font-size: 12px;text-align: center;display: none">
+                    加载中...
+                </div>
+                <div id="post-random">
+                    <ul id="post-random-ul" style="font-size:0">
+                        {% if ngx.ctx.post.random_post ~= nil then %}
+                            {% for _, random_post in ipairs(ngx.ctx.post.random_post) do %}
+                            <li class='post-random-li'>
+                                <a class='post-random-a' href="/p/{{random_post.id}}.html" title="{{random_post.title}}">
+                                    <div style="width: 75%">{{random_post.title}}</div><div style='max-width:15%;float: right'>阅读 {{random_post.pv}}</div>
+                                </a>
+                            </li>
+                            {% end %}
+                        {% end %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {(sidebar.html)}
+</div>
+{(footer.html)}
+{(base_js.html)}
+<script>
+    $("table").wrap("<div class='table-area'></div>");
+
+    var postId = {{ngx.ctx.post_id}};
+
+    function strLen(str) {
+        var len = 0;
+        for (var i=0; i<str.length; i++) {
+            if (str.charCodeAt(i)>127 || str.charCodeAt(i)===94) {
+                len += 2;
+            } else {
+                len ++;
+            }
+        }
+        return len;
+    }
+
+    var $submitBtn = $('#submitBtn');
+
+    var clickFunc = function () {
+        var $errorHint = $('#error-hint');
+        var nickname = $('#nickname').val();
+        var content = $('#message').val();
+        var nicknameLen = strLen(nickname);
+        var contentLen = strLen(content);
+        if (nicknameLen <= 0 || contentLen <= 0) {
+            $errorHint.html("昵称或评论不能为空~");
+            $errorHint.show();
+            return
+        }
+        if (nicknameLen > 16) {
+            $errorHint.html("昵称长度不能超过16位~");
+            $errorHint.show();
+            return
+        }
+        if (contentLen > 1000) {
+            $errorHint.html("评论内容不能超过1000位~");
+            $errorHint.show();
+            return
+        }
+        $submitBtn.unbind();
+        var data = {'postId': postId, 'nickname': nickname, 'postComment': content};
+
+        $.post("/post/comment", data,function (data) {
+            if (data.code === 200) {
+                window.location.reload();
+                // window.location.href=window.location.href;
+            } else {
+                $submitBtn.bind('click', clickFunc);
+                $errorHint.html("评论失败~");
+                $errorHint.show();
+            }
+        });
+    };
+    $submitBtn.bind('click', clickFunc);
+
+    var data = {'postId': postId};
+    //@formatter:off
+    {% if ngx.ctx.post.is_liked then %}
+    $(".like-button").css("cursor", 'not-allowed');
+    {% else %}
+        var $likeBtn = $(".like-button");
+        $likeBtn.bind('click', function() {
+            $.post("/post/like", data,function (result) {
+                if (result.code === 200) {
+                    $likeBtn.unbind('click');
+                    $likeBtn.text("已赞 " + ({{ngx.ctx.post.like_count}} + 1));
+                    $likeBtn.css("cursor", 'not-allowed');
+                    $likeBtn.css("color", 'white');
+                    $likeBtn.css("background-color", '#4CAF50');
+                } else if (result.code === -1) {
+                    $likeBtn.unbind('click');
+                    $likeBtn.text("已赞 " + {{ngx.ctx.post.like_count}});
+                    $likeBtn.css("cursor", 'not-allowed');
+                }
+            });
+        });
+    {% end %}
+            //@formatter:on
+
+            hljs.initHighlightingOnLoad();
+
+            $("pre").not("#post-comment pre").each(function (index, element) {
+                var preTag = $(this);
+                preTag.append("<div class='hljs-button' title='Copy to Clipboard'>Copy</div>");
+                var id = "code" + index;
+                preTag.children("code").attr("id", id);
+                preTag.children(".hljs-button").attr("data-clipboard-target", "#" + id);
+            });
+            var clipboard = new ClipboardJS('.hljs-button');
+            clipboard.on('success', function (e) {
+                e.clearSelection();
+                var copyBtn = $(e.trigger);
+                copyBtn.html("Copy Success");
+                setTimeout(function () {
+                    copyBtn.html("Copy");
+                }, 1000);
+
+            });
+            clipboard.on('error', function (e) {
+                var copyBtn = $(e.trigger);
+                copyBtn.html("Copy Fail");
+                setTimeout(function () {
+                    copyBtn.html("Copy");
+                }, 1000);
+            });
+
+            $('img').addClass('zoom-in');
+            //点击图片放大
+            $('.zoom-in').bind('click', function () {
+                var img_content = $(this).attr("src");
+                $("body").append(
+                    "<div class='bg-img'>"
+                    + "<img src='" + img_content + "' class='zoom-out'>"
+                    + "</div>"
+                );
+                $("html").css('overflow-y', 'hidden');
+            });
+
+            //点击外层区域页面图片隐藏
+            $(document).on("click", ".bg-img", function () {
+                $(this).remove();
+                $("html").css('overflow-y', 'scroll');
+            });
+
+            var changeRandomPostBtn = $('.post-random-change');
+            var changeRandomPost = function(){
+                var $postRandomHint = $("#post-random-hint");
+                $postRandomHint.show();
+                $postRandomHint.html("加载中...");
+                var $postRandomUl = $("#post-random-ul");
+                $postRandomUl.hide();
+                $postRandomUl.html("");
+                $.post("/post/random", data, function (result) {
+                    if (result.code === 200) {
+                        $postRandomHint.hide();
+                        $postRandomUl.show();
+                        var randomPost = result.data.post;
+                        for (var i = 0; i < randomPost.length; i++) {
+                            var post = randomPost[i];
+                            $postRandomUl.append("<li class='post-random-li'><a class='post-random-a' href='/p/" + post.postId + ".html' title='"+post.title+"'><span>"+post.title+"</span><span style='float: right'>阅读数："+post.pv+"</span></a></li>");
+                        }
+                    } else {
+                        $postRandomHint.html("加载失败...");
+                        $postRandomUl.hide();
+                    }
+                });
+            };
+            // changeRandomPost();
+
+            changeRandomPostBtn.bind("click", changeRandomPost);
+</script>
 </body>
 </html>

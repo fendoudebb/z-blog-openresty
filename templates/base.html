@@ -1,0 +1,780 @@
+<meta charset="UTF-8">
+{% if '/' == ngx.var.uri then %}
+<title>程序员技术之旅</title>
+<meta name="keywords" content="Java，PHP，Android，Vue.js，MySQL，Redis，Linux，移动互联网，技术博客，程序员技术之旅"/>
+<meta name="description" content="程序员技术之旅：记录Java，PHP，Android，Vue.js，Linux，Nginx，MySQL，Redis，NoSQL，Git，JavaScript，HTML，CSS，Markdown，Python，Mac等各类互联网技术"/>
+{% else %}
+<title>{{title}} | 程序员技术之旅</title>
+<meta name="keywords" content="{{keywords}}"/>
+<meta name="description" content="{{description}}"/>
+{% end %}
+<link rel="shortcut icon" href="{{ngx.var.scheme}}://{{ngx.var.host}}/favicon.ico">
+<link rel="canonical" href="{{ngx.var.scheme}}://{{ngx.var.host}}{{ngx.var.request_uri}}">
+<link rel="bookmark" href="{{ngx.var.scheme}}://{{ngx.var.host}}/favicon.ico">
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+<meta name="referrer" content="always">
+<meta name="copyright" content="www.zhangbj.com"/>
+<!-- 定义网页作者 author -->
+<meta name="author" content="zhangbj,15317832520@163.com">
+<!--
+    定义网页搜索引擎索引方式，robotterms 是一组使用英文逗号「,」分割的值
+    通常有如下几种取值
+　　all：文件将被检索，且页面上的链接可以被查询；
+　　none：文件将不被检索，且页面上的链接不可以被查询；
+　　index：文件将被检索；
+　　follow：页面上的链接可以被查询；
+　　noindex：文件将不被检索；
+　　nofollow：页面上的链接不可以被查询。
+<meta name="robots" content="index,follow">
+　　-->
+<meta name="robots" content="all">
+<meta name="google-site-verification" content="Q6qlBBHYlFq8K0QMSvdg_cVVzoG5-Gco4TJduxP1psE"/>
+<meta name="baidu-site-verification" content="KrDGuKInJ7"/>
+<meta name="shenma-site-verification" content="f53e4e6cd9a517e05645dc69fddc2ddb_1552547177"/>
+<meta name="360-site-verification" content="0cde129f5662524ad3bc1ed9d76708ad"/>
+<meta name="sogou_site_verification" content="uJYpRkTzvU"/>
+<meta name="msvalidate.01" content="BEC970CC8D6ECFB653FCE663E3911D51"/>
+
+<!--Google Chrome-->
+<!-- 优先使用最新的chrome版本 -->
+<!-- 禁止自动翻译 -->
+<meta name="google" value="notranslate">
+
+<!--360浏览器-->
+<!--选择使用的浏览器解析内核 -->
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="force-rendering" content="webkit">
+
+<!--百度会自动对网页进行转码，这个标签是禁止百度的自动转码-->
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+<!--UC手机浏览器-->
+<!-- 将屏幕锁定在特定的方向 -->
+<meta name="screen-orientation" content="landscape/portrait">
+<!-- 全屏显示页面 -->
+<meta name="full-screen" content="yes">
+<!-- 强制图片显示，即使是"text mode" -->
+<meta name="imagemode" content="force">
+<!-- 应用模式，默认将全屏，禁止长按菜单，禁止手势，标准排版，强制图片显示。 -->
+<meta name="browsermode" content="application">
+<!-- 禁止夜间模式显示 -->
+<meta name="nightmode" content="disable">
+<!-- 使用适屏模式显示 -->
+<meta name="layoutmode" content="fitscreen">
+<!-- 当页面有太多文字时禁止缩放 -->
+<meta name="wap-font-scale" content="no">
+
+<!--QQ手机浏览器-->
+<!-- 锁定屏幕在特定方向 -->
+<meta name="x5-orientation" content="landscape/portrait">
+<!-- 全屏显示 -->
+<meta name="x5-fullscreen" content="true">
+<!-- 页面将以应用模式显示 -->
+<meta name="x5-page-mode" content="app">
+
+<!--Apple iOS-->
+<!-- Add to Home Screen添加到主屏 -->
+<!-- 是否启用 WebApp 全屏模式 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- 设置状态栏的背景颜色,只有在 “apple-mobile-web-app-capable” content=”yes” 时生效 -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<!-- 添加到主屏后的标题 -->
+<meta name="apple-mobile-web-app-title" content="程序员技术之旅">
+
+<!--Google Android-->
+<meta name="theme-color" content="#E64545">
+<!-- 添加到主屏 -->
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-dark.min.css" media="none"
+      onload="if(media!='all')media='all'">
+<noscript>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-dark.min.css">
+</noscript>
+<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-jsonview/1.2.3/jquery.jsonview.min.css" media="none"
+      onload="if(media!='all')media='all'">
+<noscript>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-jsonview/1.2.3/jquery.jsonview.min.css">
+</noscript>
+<link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" media="none"
+      onload="if(media!='all')media='all'">
+<noscript>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+</noscript>
+<style>
+
+    * {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        height: 100vh;
+    }
+
+    ::-webkit-scrollbar {
+        width: .5rem;
+        height: .5rem;
+        background: hsla(0, 0%, 100%, 0.6);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(95, 95, 95, .4);
+        transition: all .2s;
+        border-radius: .5rem;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(95, 95, 95, .7);
+    }
+
+    html {
+        height: 100%;
+        overflow-y: scroll;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    :root body {
+        position: absolute;
+    }
+
+    body {
+        width: 100vw;
+        /*overflow: hidden;*/
+        background-color: #F6F8F9;
+    }
+
+    hr {
+        height: 1px;
+        border: none;
+        border-top: 1px solid #F0F0F0;
+        margin: 0 0 20px 0;
+    }
+
+    ul, ol, li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    button {
+        outline: none;
+    }
+
+    /*取消a标签在移动端点击时的蓝色*/
+    a {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        /*-moz-user-focus: none;*/
+        -moz-user-select: none;
+    }
+
+    /*去除ios input框点击时的灰色背景*/
+    input {
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+
+    .main {
+        text-align: center;
+    }
+
+    .content {
+        display: inline-block;
+        text-align: left;
+        width: 65%;
+        max-width: 65%;
+    }
+
+    @media (max-width: 1920px) {
+        .content {
+            width: 35%;
+            max-width: 35%;
+        }
+    }
+
+    @media (max-width: 1440px) {
+        .content {
+            width: 45%;
+            max-width: 45%;
+        }
+    }
+
+    @media (max-width: 1366px) {
+        .content {
+            width: 40%;
+            max-width: 40%;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .content {
+            width: 50%;
+            max-width: 50%;
+        }
+    }
+
+    @media (max-width: 750px) {
+        .content {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    .header {
+        height: auto;
+        background-color: white;
+        min-height: 48px;
+        line-height: 48px;
+        text-align: center;
+    }
+
+    .header ul {
+        display: inline-block;
+    }
+
+    .header li {
+        display: inline-block;
+        transition: border-color .3s, background-color .3s, color .3s;
+    }
+
+    .header li:hover {
+        background-color: #4CAF50;
+    }
+
+    .header li:hover a {
+        color: white;
+    }
+
+    .header ul li a {
+        display: inline-block;
+        padding: 0 20px;
+        font-size: 14px;
+        text-decoration: none;
+        color: black;
+    }
+
+    .header-a-checked {
+        background-color: #4CAF50;
+    }
+
+    .header a:active {
+        color: #4CAF50;
+    }
+
+    .footer {
+        text-align: center;
+        height: 60px;
+        line-height: 30px;
+        padding: 20px;
+        color: #999;
+    }
+
+    .footer p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .footer a {
+        color: #999;
+        text-decoration: none;
+    }
+
+    .shadow {
+        /*border: 1px solid #ebeef5;*/
+        border-radius: 2px;
+        -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        -moz-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        background-color: white;
+    }
+
+    /*CSS实现内容超过长度后以省略号显示*/
+    .ellipsis, header > a, header > p, footer > a, footer > p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    .index-post-item {
+        transition: border-color .3s,background-color .3s,color .3s;
+        margin-bottom: 8px;
+        padding: 16px 24px;
+    }
+
+    .index-post-item:hover {
+        background-color: #EFEEEE;
+    }
+
+    .index-post-title-a {
+        display: block;
+        font-size: 16px;
+        word-wrap: break-word;
+        text-decoration: none;
+        font-weight: bold;
+        color: black;
+    }
+
+    .index-post-title-a:hover {
+        color: #4CAF50;
+    }
+
+    .index-post-title-a:active {
+        color: #999;
+    }
+
+    .index-post-desc {
+        margin: 0;
+        color: #8a8a8a;
+        word-wrap: break-word;
+    }
+
+    .anchor-link-a {
+        color: #8a8a8a;
+    }
+
+    .anchor-link-a:hover {
+        color: #4CAF50;
+    }
+
+    .post-tag {
+        font-size: 12px;
+        margin-right: 10px;
+        display: inline-block;
+        padding: 2px 5px;
+        border-radius: 2px;
+        color: white;
+        background-color: #4CAF50;
+        position: relative;
+        bottom: 2px;
+    }
+
+    .go-top {
+        fill: #ffffff;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none;
+        width: 40px;
+        height: 20px;
+        position: fixed;
+        right: 50px;
+        bottom: 50px;
+        /*background:url(../../images/favicon.ico) no-repeat -70px 0px;*/
+        background-color: #4CAF50;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+
+
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+    ul.pagination li a {
+        color: black;
+        float: left;
+        padding: 6px 12px;
+        margin: 2px;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+
+    ul.pagination li a.active {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 3px;
+    }
+
+    ul.pagination li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    .disabled {
+        cursor: not-allowed;
+    }
+
+    .sidebar {
+        display: inline-block;
+        text-align: left;
+        width: 30%;
+        max-width: 30%;
+        vertical-align: top;
+        margin-left: 8px;
+    }
+
+    .sidebar-widget {
+        margin-bottom: 8px;
+        padding: 16px 24px;
+    }
+
+    .sidebar-widget h3 {
+        font-size: 15px;
+        font-weight: bold;
+        margin: 0;
+        padding-bottom: 8px;
+    }
+
+    .sidebar-widget h3::before {
+        display: inline-block;
+        margin-right: 8px;
+        content: '';
+        width: 4px;
+        height: 22px;
+        vertical-align: -6px;
+        background-color: #4CAF50;
+    }
+
+    .sidebar-widget ul, .sidebar-widget li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar-widget li {
+        transition: border-color .3s, background-color .3s, color .3s;
+        padding: 8px 24px;
+        margin: 0 -24px;
+        outline: 0;
+    }
+
+    .sidebar-widget li:hover {
+        background-color: #EFEEEE;
+    }
+
+    .sidebar-widget li:not(:last-child) {
+        border-bottom: 1px dashed #8a8a8a;
+    }
+
+    .sidebar-widget li a {
+        display: block;
+        color: #8a8a8a;
+        text-decoration: none;
+        line-height: 22px;
+        max-height: 44px;
+        overflow: hidden;
+        word-wrap: break-word;
+    }
+
+    .sidebar-widget li span {
+        font-size: 12px;
+        color: #8a8a8a;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    .sidebar-widget a:active {
+        color: #999;
+    }
+
+    .sidebar-widget a:hover span {
+        color: #000000;
+    }
+
+    .sidebar-topic {
+        margin-top: 10px;
+    }
+
+    .sidebar-topic a{
+        color: #8a8a8a;
+        font-size: 12px;
+        display: inline-block;
+        text-decoration: none;
+        border-radius: 3px;
+        border: 1px solid #8a8a8a;
+        padding: 2px 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: #F5F5F5;
+        padding: 8px 12px;
+        margin: 5px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    @media (max-width: 1920px) {
+        .sidebar {
+            width: 15%;
+            max-width: 15%;
+        }
+    }
+
+    @media (max-width: 1366px) {
+        .sidebar {
+            width: 18%;
+            max-width: 18%;
+        }
+    }
+
+    @media (max-width: 1400px) {
+        .sidebar {
+            width: 20%;
+            max-width: 20%;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .sidebar {
+            width: 23%;
+            max-width: 23%;
+        }
+    }
+
+    @media (max-width: 750px) {
+        .sidebar {
+            display: none;
+        }
+    }
+
+    .top-area {
+        border-bottom: 1px solid #4CAF50;
+        padding: 10px 12px 4px 12px;
+    }
+
+    .nickname-span {
+        font-size: 12px;
+        vertical-align:text-top;
+    }
+
+    .floor-span {
+        font-size: 12px;
+        color: #8a8a8a;
+        float: right;
+    }
+
+    .reply-area {
+        border-top: 1px dashed #8a8a8a;
+        padding: 16px 24px 4px 24px;
+    }
+
+    .content-pre {
+        margin: 5px 0;
+        padding: 8px 12px;
+        min-height: 50px;
+        white-space:pre-wrap;
+        word-break:break-all;
+        word-wrap: break-word;
+    }
+
+    .content-delete-pre {
+        color: #8a8a8a;
+        text-decoration: line-through;
+        font-style: italic;
+    }
+
+    .foot-area {
+        height: 20px;
+        padding: 8px 12px 6px 12px;
+    }
+
+    .browse-os-span {
+        font-size: 12px;
+        color: #8a8a8a;
+        vertical-align:top;
+    }
+
+    .time-span {
+        font-size: 12px;
+        font-family: "Microsoft Yahei", cursive;
+        color: #8a8a8a;
+        float: right;
+    }
+
+    #nickname {
+        caret-color: #4CAF50;/*光标颜色*/
+        border: 1px solid #c8c8c8;
+        border-radius: 2px;
+        background-color: #ffffffff;
+        outline-color: #4CAF50;
+        resize: none; /*不能拖拽*/
+        height: 20px;
+        line-height: 10px;
+        padding: 1%;
+    }
+
+    #message {
+        caret-color: #4CAF50;/*光标颜色*/
+        border: 1px solid #c8c8c8;
+        border-radius: 2px;
+        background-color: #ffffffff;
+        width: 100%;
+        max-width: 100%;
+        height: 200px;
+        outline-color: #4CAF50;
+        /*outline: none; !*没有黄框*!*/
+        resize: none; /*不能拖拽*/
+        padding: 5px;
+        display: block;
+        font-family: "Microsoft Yahei",cursive;
+        overflow-x: auto;
+        overflow-y: auto;
+        white-space: nowrap;
+    }
+
+    #submitBtn {
+        position: absolute;
+        right: -11px;
+        bottom: 0;
+        margin: 0
+    }
+
+    .search-input {
+        caret-color: #4CAF50;/*光标颜色*/
+        box-sizing: border-box;/*解决超出父容器宽度问题*/
+        width: 75%;
+        max-width: 75%;
+        height: 34px;
+        line-height: 17px;
+        text-align: initial;
+        padding: 0 3% 0 3%;
+        background-color: #fff;
+        border: 1px solid #c8c8c8;
+        border-radius: 3px 0 0 3px;
+        /*color: #ccc;*/
+        font-weight: 400;
+        font-size: 14px;
+        outline-color: #4CAF50;
+    }
+
+    .search-button {
+        cursor:pointer;
+        float:right;
+        outline-color:#4CAF50;
+        text-align: center;
+        width: 25%;
+        height:34px;
+        line-height: 17px;
+        background: #4CAF50;
+        color: #fff;
+        border: 1px solid #4CAF50;
+        border-radius: 0 3px 3px 0;
+    }
+
+    input{
+        /*iOS input会有阴影*/
+        -webkit-appearance: none;
+    }
+
+    textarea {
+        /*iOS input会有阴影*/
+        -webkit-appearance: none;
+    }
+
+    input[type=search]::-webkit-search-cancel-button{
+        -webkit-appearance: none;
+    }
+
+    /*input[type=search]::-webkit-search-cancel-button{
+        -webkit-appearance: none;
+
+        position: relative;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+        background-color: #EBEBEB;
+    }
+
+    input[type=search]::-webkit-search-cancel-button:after{
+        position: absolute;
+        content: 'x';
+        left: 25%;
+        top: -12%;
+        font-size: 17px;
+        color: #fff;
+        z-index: 100000;
+    }*/
+
+
+    #qrcode canvas{
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+</style>
+
+<script>
+    console.log("程序员技术之旅\n\n开源地址：https://github.com/fendoudebb/z-blog\n\n")
+</script>
+
+{% if not config.is_debug() then%}
+<!--Google AdSense Start-->
+<!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-4671741323231057",
+        enable_page_level_ads: true
+    });
+</script>-->
+<!--Google AdSense End-->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117165778-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-117165778-2');
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?350b9cd599fb3ba34573919ce45ec3a9";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+{% end %}
