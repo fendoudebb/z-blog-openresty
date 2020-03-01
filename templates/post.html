@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {(base.html, { title = ngx.ctx.post.title, keywords = ngx.ctx.post.keywords, description = ngx.ctx.post.description } )}
+    {% local scheme = ngx.var.scheme %}
+    {% local host = ngx.var.host %}
+    {(base.html, { title = post.title, keywords = post.keywords, description = post.description, scheme = scheme, host = host } )}
     <style>
 
         .table-area {
@@ -340,42 +342,42 @@
 <div class="main">
     <div class="content">
         <div class="shadow">
-            <h1>{{ngx.ctx.post.title}}</h1>
-            {% for _, t in ipairs(ngx.ctx.post.topics) do %}
+            <h1>{{post.title}}</h1>
+            {% for _, t in ipairs(post.topics) do %}
             <a href="/topic/{{t}}.html" class="badge-a" title="{{t}}">{{t}}</a>
             {% end %}
-            {% if ngx.ctx.post.comment_count > 0 then %}
-            <a href="/p/{{ngx.ctx.post_id}}.html#post-comment" class="badge-a">评论 {{ngx.ctx.post.comment_count}}</a>
+            {% if post.comment_count > 0 then %}
+            <a href="/p/{{post_id}}.html#post-comment" class="badge-a">评论 {{post.comment_count}}</a>
             {% end %}
-            <span class="text-secondary" style="margin-left: .5rem!important;">大约 {{ngx.ctx.post.word_count}} 字</span>
+            <span class="text-secondary" style="margin-left: .5rem!important;">大约 {{post.word_count}} 字</span>
             <!--            <hr>-->
-            <div>{*ngx.ctx.post.content_html*}</div>
+            <div>{*post.content_html*}</div>
 
             <div style="margin-top: 1.25rem">
-                <span class="text-secondary" >阅读 {{ngx.ctx.post.pv}} · 发布于 {{ngx.ctx.post.post_ts}}</span>
+                <span class="text-secondary" >阅读 {{post.pv}} · 发布于 {{post.post_ts}}</span>
             </div>
 
             <div style="text-align: center;margin-top: 48px">
-                {% if ngx.ctx.post.is_liked then %}
-                <button class="liked-button">已赞 {{ngx.ctx.post.like_count}}</button>
+                {% if post.is_liked then %}
+                <button class="liked-button">已赞 {{post.like_count}}</button>
                 {% else %}
-                <button class="like-button">赞 {{ngx.ctx.post.like_count}}</button>
+                <button class="like-button">赞 {{post.like_count}}</button>
                 {% end %}
             </div>
 
             <p style="text-align: center;color: #8a8a8a;margin: 50px 0">————&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEND&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp————</p>
             <p style="text-align: center;margin-bottom: 30px;color: red;"><strong>扫描下方二维码关注公众号和小程序↓↓↓</strong></p>
-            <img src="{{ngx.var.scheme}}://{{ngx.var.host}}/qrcode.png" title="扫描二维码关注我">
+            <img src="{{scheme}}://{{host}}/qrcode.png" title="扫描二维码关注我">
         </div>
 
         <div id="post-comment">
-            {% if ngx.ctx.post.post_comment == nil then %}
+            {% if post.post_comment == nil then %}
             <div class="shadow" style="padding: 16px 24px;">
                 <span style="font-size: 14px">暂无留言~</span>
             </div>
             {% else %}
             <ul>
-                {% for _, comment in ipairs(ngx.ctx.post.post_comment) do %}
+                {% for _, comment in ipairs(post.post_comment) do %}
                 <li class="shadow">
                     <div class="top-area">
                         <span class="nickname-span">{{comment.nickname}}</span>
@@ -388,7 +390,7 @@
                     {% end %}
                     <div class="foot-area">
                         <span class="browse-os-span">{{comment.browser}} | {{comment.os}}</span>
-                        <span class="time-span">{{ngx.http_time(comment.commentTime)}}</span>
+                        <span class="time-span">{{comment.commentTimeStr}}</span>
                     </div>
 
                     {% if comment.replies ~= nil then %}
@@ -398,7 +400,7 @@
                             <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.replyContent}}</pre>
                             <div style="margin-bottom: 8px">
                                 <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                                <span  class="time-span">{{ngx.http_time(reply.replyTime)}}</span>
+                                <span class="time-span">{{reply.replyTimeStr}}</span>
                             </div>
                         </div>
                         {% end %}
@@ -434,8 +436,8 @@
                 </div>
                 <div id="post-random">
                     <ul id="post-random-ul" style="font-size:0">
-                        {% if ngx.ctx.post.random_post ~= nil then %}
-                            {% for _, random_post in ipairs(ngx.ctx.post.random_post) do %}
+                        {% if post.random_post ~= nil then %}
+                            {% for _, random_post in ipairs(post.random_post) do %}
                             <li class='post-random-li'>
                                 <a class='post-random-a' href="/p/{{random_post.id}}.html" title="{{random_post.title}}">
                                     <div style="width: 75%">{{random_post.title}}</div><div style='max-width:15%;float: right'>阅读 {{random_post.pv}}</div>
@@ -455,7 +457,7 @@
 <script>
     $("table").wrap("<div class='table-area'></div>");
 
-    var postId = {{ngx.ctx.post_id}};
+    var postId = {{post.id}};
 
     function strLen(str) {
         var len = 0;
@@ -510,7 +512,7 @@
 
     var data = {'postId': postId};
     //@formatter:off
-    {% if ngx.ctx.post.is_liked then %}
+    {% if post.is_liked then %}
     $(".like-button").css("cursor", 'not-allowed');
     {% else %}
         var $likeBtn = $(".like-button");
@@ -518,13 +520,13 @@
             $.post("/post/like", data,function (result) {
                 if (result.code === 200) {
                     $likeBtn.unbind('click');
-                    $likeBtn.text("已赞 " + ({{ngx.ctx.post.like_count}} + 1));
+                    $likeBtn.text("已赞 " + ({{post.like_count}} + 1));
                     $likeBtn.css("cursor", 'not-allowed');
                     $likeBtn.css("color", 'white');
                     $likeBtn.css("background-color", '#4CAF50');
                 } else if (result.code === -1) {
                     $likeBtn.unbind('click');
-                    $likeBtn.text("已赞 " + {{ngx.ctx.post.like_count}});
+                    $likeBtn.text("已赞 " + {{post.like_count}});
                     $likeBtn.css("cursor", 'not-allowed');
                 }
             });

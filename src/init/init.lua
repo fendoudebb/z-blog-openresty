@@ -4,5 +4,6 @@ pgmoon = require('pgmoon')
 template = require('resty.template')
 template.caching(false); -- 生产环境删除这条
 woothee = require('resty.woothee')
+http = require('resty.http')
 config = require('init/config')
 util = require('init/util')

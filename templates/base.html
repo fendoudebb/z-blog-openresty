@@ -1,5 +1,8 @@
+{% local scheme = scheme or ngx.var.scheme %}
+{% local host = host or ngx.var.host %}
+{% local request_uri = ngx.var.uri %}
 <meta charset="UTF-8">
-{% if '/' == ngx.var.uri then %}
+{% if '/' == request_uri then %}
 <title>程序员技术之旅</title>
 <meta name="keywords" content="Java，PHP，Android，Vue.js，MySQL，Redis，Linux，移动互联网，技术博客，程序员技术之旅"/>
 <meta name="description" content="程序员技术之旅：记录Java，PHP，Android，Vue.js，Linux，Nginx，MySQL，Redis，NoSQL，Git，JavaScript，HTML，CSS，Markdown，Python，Mac等各类互联网技术"/>
@@ -8,9 +11,9 @@
 <meta name="keywords" content="{{keywords}}"/>
 <meta name="description" content="{{description}}"/>
 {% end %}
-<link rel="shortcut icon" href="{{ngx.var.scheme}}://{{ngx.var.host}}/favicon.ico">
-<link rel="canonical" href="{{ngx.var.scheme}}://{{ngx.var.host}}{{ngx.var.request_uri}}">
-<link rel="bookmark" href="{{ngx.var.scheme}}://{{ngx.var.host}}/favicon.ico">
+<link rel="shortcut icon" href="{{scheme}}://{{host}}/favicon.ico">
+<link rel="canonical" href="{{scheme}}://{{host}}{{request_uri}}">
+<link rel="bookmark" href="{{scheme}}://{{host}}/favicon.ico">
 
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 <meta name="viewport"
