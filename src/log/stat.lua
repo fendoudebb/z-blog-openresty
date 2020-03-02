@@ -3,10 +3,8 @@ local function record_visit_data(premature, record)
     -- via ngx.socket.tcp or ngx.socket.udp
     -- (one may want to buffer the data in Lua a bit to
     -- save I/O operations)
+    ngx.log(ngx.ERR,util.query_ip("112.65.145.179"))
     ngx.log(ngx.ERR, json.encode(record))
-    util.query_db("select pg_sleep(5)")
-    ngx.log(ngx.ERR, json.encode(record))
-    --ngx.log(ngx.ERR, "url=", record.url, ', req_method=', record.req_method, ', req_param=', record.req_param, ", cost_time=", record.cost_time, ", status=", record.status)
 end
 
 local ua = ngx.ctx.ua;

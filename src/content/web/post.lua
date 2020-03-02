@@ -1,6 +1,6 @@
 -- to_char(post_ts, 'YYYY-MM-DD HH24:MI:SS') as post_ts
 -- select * , post_like @> '[{"ip":"117.187.27.178"}]'::jsonb from post; 判断json对象数组中是否包含
-local result = util.query_db([[
+local result = db.query([[
 select id, title, pv from post where post_status = 0 order by random() limit 10;
 select
 id, title, keywords, description, topics, content_html, word_count, post_status,

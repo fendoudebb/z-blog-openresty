@@ -1,9 +1,8 @@
-local delay = 1000000  -- in seconds
+local delay = 50000  -- in seconds
 local task = function(premature)
     if not premature then
         local running_count = ngx.timer.running_count()
         local pending_count = ngx.timer.pending_count()
-        --util.query_ip('41.249.255.142')
 
         ngx.log(ngx.ERR, "test ngx.timer.every#running_count=", running_count, ", pending_count=", pending_count)
     end
