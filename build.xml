@@ -17,9 +17,9 @@
         <delete>
             <fileset dir="${target-conf}" includes="*.conf"/>
         </delete>
-        <delete>
-            <fileset dir="${openresty-home}/logs" includes="*.log"/>
-        </delete>
+<!--        <delete>-->
+<!--            <fileset dir="${openresty-home}/logs" includes="*.log"/>-->
+<!--        </delete>-->
     </target>
 
     <target name="init" depends="clean">

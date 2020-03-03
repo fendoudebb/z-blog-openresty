@@ -3,7 +3,10 @@ local function record_visit_data(premature, record)
     -- via ngx.socket.tcp or ngx.socket.udp
     -- (one may want to buffer the data in Lua a bit to
     -- save I/O operations)
-    ngx.log(ngx.ERR,util.query_ip("112.65.145.179"))
+
+    local address = util.query_ip(record.ip)
+    ngx.log(ngx.ERR, address)
+
     ngx.log(ngx.ERR, json.encode(record))
 end
 

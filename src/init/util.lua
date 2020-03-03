@@ -45,17 +45,17 @@ function _M.query_ip(ip)
         keepalive_timeout = 2000 -- 毫秒
     })
 
-    if not res then
-        ngx.log(ngx.ERR, "request ip taobao error#", err)
-        db.query("insert into ip_pool(ip) values(" .. db.val_escape(ip) .. "::inet)")
-        return ''
+    if not res or res.status then
+        if not res then
+            ngx.log(ngx.ERR, "request ip taobao error#", err)
+        else
+            ngx.log(ngx.ERR, "request ip taobao header status=502")
+        end
+        -- insert on conflict do update 需设置唯一约束（主键也是唯一约束）
+        db.query("insert into ip_unknown(ip) values(" .. db.val_escape(ip) .. ") on conflict(ip) do update set update_ts = current_timestamp")
+        return nil
     end
 
-    if res.status == 502 then
-        ngx.log(ngx.ERR, "request ip taobao header status=502")
-        db.query("insert into ip_pool(ip) values(" .. db.val_escape(ip) .. "::inet)")
-        return ''
-    end
     -- {"code":0,"data":{"ip":"41.249.255.142","country":"摩洛哥","area":"","region":"XX","city":"XX","county":"XX","isp":"XX","country_id":"MA","area_id":"","region_id":"xx","city_id":"xx","county_id":"xx","isp_id":"xx"}}
     ngx.log(ngx.ERR, 'request ip taobao success-body#', res.body)
 
@@ -64,21 +64,27 @@ function _M.query_ip(ip)
     if json_data.region == json_data.city then
         json_data.city = nil
     end
+
     if json_data.region == 'XX' then
         json_data.region = nil
     end
+
     if json_data.city == 'XX' then
         json_data.city = nil
     end
+
     if json_data.isp == 'XX' then
         json_data.isp = nil
     end
+
     if json_data.region_id == 'xx' then
         json_data.region_id = nil
     end
+
     if json_data.city_id == 'xx' then
         json_data.city_id = nil
     end
+
     if json_data.isp_id == 'xx' then
         json_data.isp_id = nil
     end
@@ -97,6 +103,8 @@ function _M.query_ip(ip)
 
     local sql = "insert into ip_pool(ip, country, region, city, isp, country_id, region_id, city_id, isp_id) values" .. values
     db.query(sql)
+
+    return json_data.country .. (json_data.region or "") .. (json_data.city or "") .. (json_data.isp or "")
 end
 
 --ngx.location.capture # API disabled in the context of ngx.timer
