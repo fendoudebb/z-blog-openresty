@@ -1,0 +1,95 @@
+{%
+local memory = ngx.shared.memory
+local web_stat = memory:get("web_stat")
+if web_stat ~= nil then
+    web_stat = json.decode(web_stat)
+end
+%}
+
+{% if web_stat ~= nil then %}
+<div class="sidebar">
+    <div class="shadow sidebar-widget">
+        <form action="#" onsubmit="return false">
+            <input class="search-input" placeholder="请输入关键字..." type="search" results="10">
+            <button type="button" class="search-button">搜索</button>
+        </form>
+    </div>
+    <div class="shadow sidebar-widget">
+        <h3>标签</h3>
+        <div class="sidebar-topic">
+            {% for _, topic in ipairs(web_stat[1]) do %}
+            <a href="/topic/{{topic.name}}.html" title="{{topic.name}}"><span>{{topic.name}}</span></a>
+            {% end %}
+        </div>
+    </div>
+    <div class="shadow sidebar-widget">
+        <h3>友链</h3>
+        <div class="sidebar-topic">
+            {% for _, link in ipairs(web_stat[2]) do %}
+            <a href="{{link.url}}" title="{{link.website}}" target="_blank"><span>{{link.website}}</span></a>
+            {% end %}
+        </div>
+    </div>
+    <div class="shadow sidebar-widget">
+        <h3>站长统计</h3>
+        <ul>
+            <li>
+                <span>文章数：{{web_stat[3][1].count}}</span>
+            </li>
+            <li>
+                <span>访客数：{{web_stat[4][1].count}}</span>
+            </li>
+            <li>
+                <span>浏览量：{{web_stat[5][1].count}}</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="shadow sidebar-widget">
+        <h3>阅读排行榜</h3>
+        <ul>
+            {% for _, pv_rank in ipairs(web_stat[6]) do %}
+            <li>
+                <a href="/p/{{pv_rank.id}}.html" title="{{pv_rank.title}}">
+                    <span>{{pv_rank.title}}</span>
+                    <span>阅读数：{{pv_rank.pv}}</span>
+                </a>
+            </li>
+            {% end %}
+        </ul>
+    </div>
+
+    <div class="shadow sidebar-widget">
+        <h3>点赞排行榜</h3>
+        <ul>
+            {% for _, like_rank in ipairs(web_stat[7]) do %}
+            <li>
+                <a href="/p/{{like_rank.id}}.html" title="{{like_rank.title}}">
+                    <span>{{like_rank.title}}</span>
+                    <span>点赞数：{{like_rank.like_count}}</span>
+                </a>
+            </li>
+            {% end %}
+        </ul>
+    </div>
+
+    <div class="shadow sidebar-widget">
+        <h3>评论排行榜</h3>
+        <ul>
+            {% for _, comment_rank in ipairs(web_stat[8]) do %}
+            <li>
+                <a href="/p/{{comment_rank.id}}.html" title="{{comment_rank.title}}">
+                    <span>{{comment_rank.title}}</span>
+                    <span>评论数：{{comment_rank.comment_count}}</span>
+                </a>
+            </li>
+            {% end %}
+        </ul>
+    </div>
+
+    <div class="shadow sidebar-widget">
+        <h3>分享至微信</h3>
+        <div id="qrcode" style="margin-top: 10px"></div>
+    </div>
+</div>
+{% end %}

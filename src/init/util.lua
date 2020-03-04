@@ -118,4 +118,32 @@ end
 --    ngx.log(ngx.ERR, json.encode(res.body))
 --end
 
+function _M.query_web_stat()
+    local start_query = ngx.now()
+    local result = db.query([[
+        select name from topic order by sort;
+        select website, url from link where status = 0 order by sort;
+        select count(*) from post where post_status = 0;
+        select count(*) from ip_pool;
+        select count(*) from record_page_view;
+        select id, title, pv from post where post_status = 0 order by pv desc, create_ts desc limit 5;
+        select id, title, like_count from post where post_status = 0 order by like_count desc, create_ts desc limit 5;
+        select id, title, comment_count from post where post_status = 0 order by comment_count desc, create_ts desc limit 5;
+    ]])
+
+    local memory = ngx.shared.memory
+    local success, err = memory:set("web_stat", json.encode(result))
+
+    if not success then
+        ngx.log(ngx.ERR, "set shm err#", err)
+    else
+        local capacity_bytes = memory:capacity()
+        local free_bytes = memory:free_space()
+        ngx.log(ngx.ERR, "shm capacity_bytes#" .. capacity_bytes / 1024 / 1024 .. "M; shm free_bytes#" .. free_bytes / 1024 / 1024 .. "M")
+    end
+    local cost_time = ngx.now() - start_query
+    ngx.log(ngx.ERR, "query web_stat cost#" .. cost_time)
+    return cost_time
+end
+
 return _M
