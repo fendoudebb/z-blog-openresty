@@ -1,37 +1,5 @@
 local _M = {}
 
-local function filter_method(method, req_method)
-    if method ~= req_method then
-        ngx.log(ngx.ERR, "request_method=", req_method, ", non match=" .. method)
-        ngx.exit(ngx.HTTP_NOT_ALLOWED)
-    end
-end
-
-function _M.filter_non_get_method(req_method)
-    filter_method('GET', req_method)
-end
-
-function _M.filter_non_post_method(req_method)
-    filter_method('POST', req_method)
-end
-
--- 返回woothee对象
--- {"name": "xxx", "category": "xxx", "os": "xxx", "version": "xxx", "vendor": "xxx"}
--- name => name of browser (or string like name of user-agent)
--- category => "pc", "smartphone", "mobilephone", "appliance", "crawler", "misc", "unknown"
--- os => os from user-agent, or carrier name of mobile phones
--- version => version of browser, or terminal type name of mobile phones
--- os_version => NT 10.0 .etc
--- 根据category是否为crawler来判断是否是爬虫
-function _M.parse_ua(ua)
-    return woothee.parse(ua)
-end
-
--- 判断是否是爬虫，其实也是根据category是否为crawler来判断
---function _M.is_crawler(ua)
---    return woothee.is_crawler(ua)
---end
-
 function _M.query_ip(ip)
     local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
     local prop = result[1];

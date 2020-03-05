@@ -457,7 +457,7 @@
 <script>
     $("table").wrap("<div class='table-area'></div>");
 
-    var postId = {{post.id}};
+    var post_id = {{post.id}};
 
     function strLen(str) {
         var len = 0;
@@ -495,7 +495,7 @@
             return
         }
         $submitBtn.unbind();
-        var data = {'postId': postId, 'nickname': nickname, 'postComment': content};
+        var data = {'post_id': post_id, 'nickname': nickname, 'post_comment': content};
 
         $.post("/post/comment", data,function (data) {
             if (data.code === 200) {
@@ -510,24 +510,30 @@
     };
     $submitBtn.bind('click', clickFunc);
 
-    var data = {'postId': postId};
+    var data = {'post_id': post_id};
     //@formatter:off
     {% if post.is_liked then %}
     $(".like-button").css("cursor", 'not-allowed');
     {% else %}
         var $likeBtn = $(".like-button");
         $likeBtn.bind('click', function() {
-            $.post("/post/like", data,function (result) {
-                if (result.code === 200) {
-                    $likeBtn.unbind('click');
-                    $likeBtn.text("已赞 " + ({{post.like_count}} + 1));
-                    $likeBtn.css("cursor", 'not-allowed');
-                    $likeBtn.css("color", 'white');
-                    $likeBtn.css("background-color", '#4CAF50');
-                } else if (result.code === -1) {
-                    $likeBtn.unbind('click');
-                    $likeBtn.text("已赞 " + {{post.like_count}});
-                    $likeBtn.css("cursor", 'not-allowed');
+            $.ajax({
+                method: "POST",
+                url: "/post/like",
+                contentType: 'application/json',
+                data:JSON.stringify(data),
+                success: function (result) {
+                    if (result.code === 200) {
+                        $likeBtn.unbind('click');
+                        $likeBtn.text("已赞 " + ({{post.like_count}} + 1));
+                        $likeBtn.css("cursor", 'not-allowed');
+                        $likeBtn.css("color", 'white');
+                        $likeBtn.css("background-color", '#4CAF50');
+                    } else if (result.code === -1) {
+                        $likeBtn.unbind('click');
+                        $likeBtn.text("已赞 " + {{post.like_count}});
+                        $likeBtn.css("cursor", 'not-allowed');
+                    }
                 }
             });
         });

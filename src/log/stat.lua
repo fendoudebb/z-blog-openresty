@@ -4,6 +4,7 @@ local function record_visit_data(premature, record)
     -- (one may want to buffer the data in Lua a bit to
     -- save I/O operations)
 
+    --TODO 判断是否是文章，pv+1
     local address = util.query_ip(record.ip)
     ngx.log(ngx.ERR, address)
 
