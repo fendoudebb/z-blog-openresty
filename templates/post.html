@@ -390,17 +390,17 @@
                     {% end %}
                     <div class="foot-area">
                         <span class="browse-os-span">{{comment.browser}} | {{comment.os}}</span>
-                        <span class="time-span">{{comment.commentTimeStr}}</span>
+                        <span class="time-span">{{comment.comment_time}}</span>
                     </div>
 
                     {% if comment.replies ~= nil then %}
                         {% for _, reply in ipairs(comment.replies) do %}
                         <div class="reply-area">
                             <div class="nickname-span" style="color: #4CAF50">作者回复</div>
-                            <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.replyContent}}</pre>
+                            <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
                             <div style="margin-bottom: 8px">
                                 <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                                <span class="time-span">{{reply.replyTimeStr}}</span>
+                                <span class="time-span">{{reply.reply_time}}</span>
                             </div>
                         </div>
                         {% end %}
