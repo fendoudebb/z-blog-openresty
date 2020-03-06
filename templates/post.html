@@ -498,7 +498,7 @@
         var data = {'post_id': post_id, 'nickname': nickname, 'post_comment': content};
 
         $.post("/post/comment", data,function (data) {
-            if (data.code === 200) {
+            if (data.code === 0) {
                 window.location.reload();
                 // window.location.href=window.location.href;
             } else {
@@ -523,13 +523,13 @@
                 contentType: 'application/json',
                 data:JSON.stringify(data),
                 success: function (result) {
-                    if (result.code === 200) {
+                    if (result.code === 0) {
                         $likeBtn.unbind('click');
                         $likeBtn.text("已赞 " + ({{post.like_count}} + 1));
                         $likeBtn.css("cursor", 'not-allowed');
                         $likeBtn.css("color", 'white');
                         $likeBtn.css("background-color", '#4CAF50');
-                    } else if (result.code === -1) {
+                    } else if (result.code === 1001) {
                         $likeBtn.unbind('click');
                         $likeBtn.text("已赞 " + {{post.like_count}});
                         $likeBtn.css("cursor", 'not-allowed');
@@ -594,7 +594,7 @@
                 $postRandomUl.hide();
                 $postRandomUl.html("");
                 $.post("/post/random", data, function (result) {
-                    if (result.code === 200) {
+                    if (result.code === 0) {
                         $postRandomHint.hide();
                         $postRandomUl.show();
                         var randomPost = result.data.post;
