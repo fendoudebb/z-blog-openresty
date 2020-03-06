@@ -6,19 +6,10 @@ if type(post_id) ~= "number" then
 end
 
 local referer = ngx.var.http_referer
-if not referer then
-    ngx.log(ngx.ERR, "[post like] referer is nil, post_id#", post_id)
-    return req.bad_request()
-end
 
 local valid_referer = "/p/" .. post_id .. ".html"
 
-local captures, err = ngx.re.match(referer, valid_referer)
-
-if not captures then
-    ngx.log(ngx.ERR, "[post like] referer#", referer, " is invalid#", err)
-    return req.bad_request()
-end
+req.valid_http_referer(referer, valid_referer)
 
 --select
 --id, title, keywords, description, topics, content_html, word_count, post_status,

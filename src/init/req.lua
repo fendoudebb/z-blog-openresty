@@ -58,4 +58,19 @@ function _M.method_not_allowed(method)
     return ngx.exit(ngx.HTTP_NOT_ALLOWED)
 end
 
+function _M.valid_http_referer(referer, valid_referer)
+
+    if not referer then
+        ngx.log(ngx.ERR, "[valid_http_referer] referer is nil#", ngx.var.request_uri)
+        return _M.bad_request()
+    end
+
+    local captures, err = ngx.re.match(referer, valid_referer)
+
+    if not captures then
+        ngx.log(ngx.ERR, "[valid_http_referer] referer#", referer, " valid_referer#", valid_referer, " is invalid#", err)
+        return _M.bad_request()
+    end
+end
+
 return _M
