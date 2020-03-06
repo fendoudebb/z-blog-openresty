@@ -593,18 +593,24 @@
                 var $postRandomUl = $("#post-random-ul");
                 $postRandomUl.hide();
                 $postRandomUl.html("");
-                $.post("/post/random", data, function (result) {
-                    if (result.code === 0) {
-                        $postRandomHint.hide();
-                        $postRandomUl.show();
-                        var randomPost = result.data.post;
-                        for (var i = 0; i < randomPost.length; i++) {
-                            var post = randomPost[i];
-                            $postRandomUl.append("<li class='post-random-li'><a class='post-random-a' href='/p/" + post.postId + ".html' title='"+post.title+"'><span>"+post.title+"</span><span style='float: right'>阅读数："+post.pv+"</span></a></li>");
+                $.ajax({
+                    method: "POST",
+                    url: "/post/random",
+                    contentType: 'application/json',
+                    data:JSON.stringify(data),
+                    success: function (result) {
+                        if (result.code === 0) {
+                            $postRandomHint.hide();
+                            $postRandomUl.show();
+                            var randomPost = result.data.post;
+                            for (var i = 0; i < randomPost.length; i++) {
+                                var post = randomPost[i];
+                                $postRandomUl.append("<li class='post-random-li'><a class='post-random-a' href='/p/" + post.postId + ".html' title='"+post.title+"'><span>"+post.title+"</span><span style='float: right'>阅读数："+post.pv+"</span></a></li>");
+                            }
+                        } else {
+                            $postRandomHint.html("加载失败...");
+                            $postRandomUl.hide();
                         }
-                    } else {
-                        $postRandomHint.html("加载失败...");
-                        $postRandomUl.hide();
                     }
                 });
             };
