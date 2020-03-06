@@ -1,7 +1,9 @@
 local _M = {}
 
 function _M.query_ip(ip)
-    local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
+    --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
+    -- select concat('ab', null, 'cd') => abcd
+    local result = db.query("select concat(country, region, city, isp) as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
     local prop = result[1];
     -- 第一次查询ip未成功，但已经入库，prop虽然不等于nil，但prop.address还是为nil
     if prop ~= nil then
