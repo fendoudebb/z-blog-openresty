@@ -9,9 +9,17 @@ local function config()
     }
 end
 
+-- 参照pgmoon:escape_literal
 function _M.val_escape(val)
-    if val ~= nil then
-        return "'" .. val .. "'"
+    local type = type(val)
+    if "string" == type then
+        -- ngx.quote_sql_str按MySQL规则
+        --return ngx.quote_sql_str(val)
+        return "'" .. tostring((val:gsub("'", "''"))) .. "'"
+    elseif "number" == type then
+        return tostring(val)
+    elseif "boolean" == val then
+        return val and "TRUE" or "FALSE"
     else
         return "null"
     end
