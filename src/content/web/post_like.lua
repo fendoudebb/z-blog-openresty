@@ -1,4 +1,6 @@
 local post_id = ngx.ctx.body_data.post_id
+local client_ip = ngx.ctx.client_ip
+local ua = ngx.ctx.ua;
 
 if type(post_id) ~= "number" then
     ngx.log(ngx.ERR, "[post like] post_id type ~= number#", type(post_id))
@@ -21,10 +23,10 @@ local select_sql = [[
 select
 id, title, keywords, description, topics, content_html, word_count, post_status,
 pv, like_count, comment_count, comment_status, to_char(create_ts, 'YYYY-MM-DD') as create_ts, post_comment,
-post_like @> '[{"ip":"%s"}]'::jsonb as is_liked
+post_like @> '[{"ip":"%s"}]' as is_liked
 from post where id = %d
 ]]
-local result = db.query(string.format(select_sql, ngx.ctx.client_ip, post_id))
+local result = db.query(string.format(select_sql, client_ip, post_id))
 
 local post = result[1]
 
@@ -36,21 +38,31 @@ if post.is_liked then
     return ngx.say(json.encode(const.post_like_already))
 end
 
-local data = json.encode({
-    ip = ngx.ctx.client_ip,
-    likeTime = ngx.time()
-})
+local sql_value = string.format(
+        [['id', nextval('post_like_id_seq')::regclass,
+    'ip', '%s',
+    'address', '%s',
+    'like_time', '%s',
+    'like_timestamp', %d,
+    'ua', '%s',
+    'browser', '%s',
+    'browser_platform', '%s',
+    'browser_version', '%s',
+    'browser_vendor', '%s',
+    'os', '%s',
+    'os_version', '%s']],
+        client_ip, util.query_ip(client_ip), ngx.today(), ngx.time(), ngx.var.http_user_agent, ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
 
 local update_sql = [[
 update post set post_like =
 (
-    case when post_like is not null then post_like || '%s'
-    else '[%s]'
+    case when post_like is not null then jsonb_build_object(%s) || post_like
+    else jsonb_build_array(jsonb_build_object(%s))
     end
 ), like_count = like_count + 1
-where id = %d and post_like @> '[{"ip":"%s"}]' is false;
+where id = %d and post_like @> '[{"ip":"%s"}]' is not true;
 ]]
 
-db.query(string.format(update_sql, data, data, post_id, ngx.ctx.client_ip))
+db.query(string.format(update_sql, sql_value, sql_value, post_id, client_ip))
 
 ngx.say(json.encode(const.ok))
