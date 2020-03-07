@@ -13,7 +13,8 @@ local task_query_unknown_ip = function(premature)
         if result ~= nil then
             local address = util.query_ip(result.ip)
             if address ~= nil then
-                db.query("delete from ip_unknown where ip = "..db.val_escape(result.ip))
+                local sql = "delete from ip_unknown where ip = '%s'"
+                db.query(string.format(sql, result.ip))
             end
         end
         --local running_count = ngx.timer.running_count()
@@ -21,7 +22,6 @@ local task_query_unknown_ip = function(premature)
         --ngx.log(ngx.ERR, "test ngx.timer.every#running_count=", running_count, ", pending_count=", pending_count)
     end
 end
-
 
 if 0 == ngx.worker.id() then
     -- 启动时初始化

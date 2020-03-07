@@ -3,7 +3,8 @@ local _M = {}
 function _M.query_ip(ip)
     --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
     -- select concat('ab', null, 'cd') => abcd
-    local result = db.query("select concat(country, region, city, isp) as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
+    local select_sql = "select concat(country, region, city, isp) as address from ip_pool where ip = '%s'::inet limit 1"
+    local result = db.query(string.format(select_sql, ip))
     local prop = result[1];
     -- 第一次查询ip未成功，但已经入库，prop虽然不等于nil，但prop.address还是为nil
     if prop ~= nil then
@@ -22,7 +23,8 @@ function _M.query_ip(ip)
             ngx.log(ngx.ERR, "request ip taobao header status=502")
         end
         -- insert on conflict do update 需设置唯一约束（主键也是唯一约束）
-        db.query("insert into ip_unknown(ip) values(" .. db.val_escape(ip) .. ") on conflict(ip) do update set update_ts = current_timestamp")
+        local insert_sql = "insert into ip_unknown(ip) values('%s') on conflict(ip) do update set update_ts = current_timestamp"
+        db.query(string.format(insert_sql, ip))
         return nil
     end
 

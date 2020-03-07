@@ -347,7 +347,7 @@
             <a href="/topic/{{t}}.html" class="badge-a" title="{{t}}">{{t}}</a>
             {% end %}
             {% if post.comment_count > 0 then %}
-            <a href="/p/{{post_id}}.html#post-comment" class="badge-a">评论 {{post.comment_count}}</a>
+            <a href="/p/{{post.id}}.html#post-comment" class="badge-a">评论 {{post.comment_count}}</a>
             {% end %}
             <span class="text-secondary" style="margin-left: .5rem!important;">大约 {{post.word_count}} 字</span>
             <!--            <hr>-->
@@ -371,6 +371,19 @@
         </div>
 
         <div id="post-comment">
+            <div class="shadow" style="padding: 16px 24px;text-align: left">
+                <div style="margin-bottom: 20px">
+                    昵称：
+                    <label>
+                        <input id="nickname" type="text" name="nickname" placeholder="请输入昵称...">
+                    </label>
+                </div>
+                <div style="position: relative">
+                    <textarea id="message" title="评论区" placeholder="请输入评论..."></textarea>
+                    <button id="submitBtn" class="button" title="评论">评论</button>
+                </div>
+                <p id="error-hint" style="color: red;font-size: 14px" hidden></p>
+            </div>
             {% if post.post_comment == nil then %}
             <div class="shadow" style="padding: 16px 24px;">
                 <span style="font-size: 14px">暂无留言~</span>
@@ -390,7 +403,7 @@
                     {% end %}
                     <div class="foot-area">
                         <span class="browse-os-span">{{comment.browser}} | {{comment.os}}</span>
-                        <span class="time-span">{{comment.comment_time}}</span>
+                        <span class="time-span">{{comment.comment_date}}</span>
                     </div>
 
                     {% if comment.replies ~= nil then %}
@@ -400,7 +413,7 @@
                             <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
                             <div style="margin-bottom: 8px">
                                 <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                                <span class="time-span">{{reply.reply_time}}</span>
+                                <span class="time-span">{{reply.reply_date}}</span>
                             </div>
                         </div>
                         {% end %}
@@ -409,20 +422,6 @@
                 {% end %}
             </ul>
             {% end %}
-
-            <div class="shadow" style="padding: 16px 24px;text-align: left">
-                <div style="margin-bottom: 20px">
-                    昵称：
-                    <label>
-                        <input id="nickname" type="text" name="nickname" placeholder="请输入昵称...">
-                    </label>
-                </div>
-                <div style="position: relative">
-                    <textarea id="message" title="评论区" placeholder="请输入评论..."></textarea>
-                    <button id="submitBtn" class="button" title="评论">评论</button>
-                </div>
-                <p id="error-hint" style="color: red;font-size: 14px" hidden></p>
-            </div>
         </div>
 
         <div>
@@ -495,16 +494,22 @@
             return
         }
         $submitBtn.unbind();
-        var data = {'post_id': post_id, 'nickname': nickname, 'post_comment': content};
+        var data = {'post_id': post_id, 'nickname': nickname, 'content': content};
 
-        $.post("/post/comment", data,function (data) {
-            if (data.code === 0) {
-                window.location.reload();
-                // window.location.href=window.location.href;
-            } else {
-                $submitBtn.bind('click', clickFunc);
-                $errorHint.html("评论失败~");
-                $errorHint.show();
+        $.ajax({
+            method: "POST",
+            url: "/post/comment",
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (data) {
+                if (data.code === 0) {
+                    window.location.reload();
+                    // window.location.href=window.location.href;
+                } else {
+                    $submitBtn.bind('click', clickFunc);
+                    $errorHint.html("评论失败~");
+                    $errorHint.show();
+                }
             }
         });
     };

@@ -38,22 +38,21 @@ if post.is_liked then
     return ngx.say(json.encode(const.post_like_already))
 end
 
-local sql_value = string.format(
-        [['id', nextval('post_like_id_seq')::regclass,
-    'ip', '%s',
-    'address', '%s',
-    'like_time', '%s',
-    'like_timestamp', %d,
-    'ua', '%s',
-    'browser', '%s',
-    'browser_platform', '%s',
-    'browser_version', '%s',
-    'browser_vendor', '%s',
-    'os', '%s',
-    'os_version', '%s']],
-        client_ip, util.query_ip(client_ip), ngx.today(), ngx.time(), ngx.var.http_user_agent, ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
+local sql_value = string.format([[
+'id', nextval('post_like_id_seq')::regclass,
+'ip', '%s',
+'address', '%s',
+'like_date', '%s',
+'like_timestamp', %d,
+'ua', '%s',
+'browser', '%s',
+'browser_platform', '%s',
+'browser_version', '%s',
+'browser_vendor', '%s',
+'os', '%s',
+'os_version', '%s']], client_ip, util.query_ip(client_ip), ngx.today(), ngx.time(), ngx.var.http_user_agent, ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
 
-local update_sql = [[
+local update_sql = string.format([[
 update post set post_like =
 (
     case when post_like is not null then jsonb_build_object(%s) || post_like
@@ -61,8 +60,8 @@ update post set post_like =
     end
 ), like_count = like_count + 1
 where id = %d and post_like @> '[{"ip":"%s"}]' is not true;
-]]
+]], sql_value, sql_value, post_id, client_ip)
 
-db.query(string.format(update_sql, sql_value, sql_value, post_id, client_ip))
+db.query(update_sql)
 
 ngx.say(json.encode(const.ok))
