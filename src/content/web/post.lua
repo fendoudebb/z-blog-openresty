@@ -14,6 +14,7 @@ from post where id = %d and post_status = 0
 local result = db.query(string.format(sql, ngx.ctx.client_ip, ngx.var[1]))
 
 if result[2][1] == nil then
+    -- TODO 还未统计record_invalid_request
     ngx.exit(ngx.HTTP_NOT_FOUND)
 end
 
@@ -23,5 +24,7 @@ post.random_post = result[1]
 
 --table转字符串
 --table.concat(post.topics, ',')
+
+ngx.ctx.post_id = post.id
 
 template.render("post.html", {post = post})

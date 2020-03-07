@@ -41,10 +41,10 @@ end
 local sql_value = string.format([[
 'id', nextval('post_comment_id_seq')::regclass,
 'ip', '%s',
-'address', '%s',
+'address', %s,
 'comment_date', '%s',
 'comment_timestamp', %d,
-'ua', '%s',
+'ua', %s,
 'browser', '%s',
 'browser_platform', '%s',
 'browser_version', '%s',
@@ -55,7 +55,7 @@ local sql_value = string.format([[
 'content', %s,
 'status', 'ONLINE',
 'floor', comment_count + 1
-]], client_ip, util.query_ip(client_ip), ngx.today(), ngx.time(), ngx.var.http_user_agent, ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(nickname), db.val_escape(content))
+]], client_ip, db.val_escape(util.query_ip(client_ip)), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(nickname), db.val_escape(content))
 
 
 local update_sql = string.format([[

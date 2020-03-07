@@ -11,18 +11,24 @@ end
 
 -- 参照pgmoon:escape_literal
 function _M.val_escape(val)
-    local type = type(val)
-    if "string" == type then
-        -- ngx.quote_sql_str按MySQL规则
-        --return ngx.quote_sql_str(val)
-        return "'" .. tostring((val:gsub("'", "''"))) .. "'"
-    elseif "number" == type then
-        return tostring(val)
-    elseif "boolean" == val then
-        return val and "TRUE" or "FALSE"
+    if val then
+        -- 防止SQL注入，OpenResty自带
+        return ndk.set_var.set_quote_pgsql_str(val)
     else
         return "null"
     end
+    --local type = type(val)
+    --if "string" == type then
+    --    -- ngx.quote_sql_str按MySQL规则
+    --    --return ngx.quote_sql_str(val)
+    --    return "'" .. tostring((val:gsub("'", "''"))) .. "'"
+    --elseif "number" == type then
+    --    return tostring(val)
+    --elseif "boolean" == val then
+    --    return val and "TRUE" or "FALSE"
+    --else
+    --    return "null"
+    --end
 end
 
 function _M.query(sql)
