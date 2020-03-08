@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html, { title = "404" } )}
 </head>
 <body>
-404
+{(header.html)}
+<div class="main">
+    <div class="content">
+        <div class="shadow" style="padding: 30px;text-align: center">
+            页面不存在~
+        </div>
+        <div style="margin-top: 20px;text-align: center">
+            <button class="shadow button" title="返回首页">
+                <a href="/" style="color: #F5F5F5; text-decoration: none;">返回首页</a>
+            </button>
+        </div>
+    </div>
+    {(sidebar.html)}
+</div>
+{(footer.html)}
+{(base_js.html)}
 </body>
 </html>
