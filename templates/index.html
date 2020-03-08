@@ -1,10 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html)}
+    <style>
+        .content p {
+            margin: 10px 0;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-{{message}}
+{(header.html)}
+<div class="main">
+    <div class="content">
+        <ul>
+            {% for _, post in ipairs(posts) do %}
+            <li class="shadow index-post-item">
+                <a href="/p/{{post.id}}.html" class="index-post-title-a ellipsis" title="{{post.title}}">{{post.title}}</a>
+                <p class="index-post-desc">{{post.description}}</p>
+                <p>
+                    <span style="color: #8a8a8a">{{post.create_ts}}，阅读：{{post.pv}}{% if not ngx.ctx.is_mobile then %}，评论：<a href="/p/{{post.id}}.html#post-comment" class="anchor-link-a">{{post.comment_count}}</a>，点赞：<a href="/p/{{post.id}}.html#post-like" class="anchor-link-a">{{post.like_count}}</a>{% end %}{% if post.topics then %}，标签：{% for _, topic in ipairs(post.topics) do %}<a href="/topic/{{topic}}.html" class="anchor-link-a" title="标签：{{topic}}">{{topic}}</a>&nbsp;{% end %}{% end %}</span>
+                </p>
+            </li>
+            {% end %}
+        </ul>
+        <div style="text-align: center;margin-top: 20px">
+            <ul class="pagination">
+                <li>
+                    {% if cur_page == 1 then %}
+                    <a class="disabled" href="javascript:void(0);">上一页</a>
+                    {% else %}
+                    <a href="/">首页</a>
+                    <a href="?page={{cur_page-1}}">上一页</a>
+                    {% end %}
+                </li>
+                {% for i = 1, sum_page do %}
+                <li>
+                    <!--{if condition="$i > $currentPage - 5 && $i < $currentPage + 5"}
+                    {else /}
+                    {/if}-->
+                    {% if i > cur_page -4 and i < cur_page + 4 then %}
+                        {% if i == cur_page then %}
+                            <a class="active disabled" href="javascript:void(0);">{{i}}</a>
+                        {% else %}
+                            <a href="?page={{i}}">{{i}}</a>
+                        {% end %}
+                    {% end %}
+                </li>
+                {% end %}
+                <li>
+                    {% if cur_page < sum_page then %}
+                    <a href="?page={{cur_page+1}}">下一页</a>
+                    <a href="?page={{sum_page}}">尾页</a>
+                    {% else %}
+                    <a class="disabled" href="javascript:void(0);">下一页</a>
+                    {% end %}
+                </li>
+            </ul>
+        </div>
+    </div>
+    {(sidebar.html)}
+</div>
+{(footer.html)}
+{(base_js.html)}
 </body>
 </html>

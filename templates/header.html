@@ -39,8 +39,8 @@
     <!--<a class="ellipsis"  title="网址导航">网址导航</a>-->
 </div>
 <hr>
-{% if 'smartphone' == ngx.ctx.ua.category or 'mobilephone' == ngx.ctx.ua.category then %}
-<form action="#" onsubmit="return false">
+{% if ngx.ctx.is_mobile then %}
+<form action="#" onsubmit="return false" style="padding: 0 10px">
     <input class="search-input" placeholder="请输入关键字..." type="search" results="10">
     <button type="button" class="search-button">搜索</button>
 </form>
