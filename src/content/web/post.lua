@@ -17,8 +17,8 @@ from post where id = %d and post_status = 0
 local result = db.query(string.format(sql, ngx.ctx.client_ip, ngx.var[1]))
 
 if result[2][1] == nil then
-    -- TODO 还未统计record_invalid_request
-    ngx.exit(ngx.HTTP_NOT_FOUND)
+    ngx.status = ngx.HTTP_NOT_FOUND
+    return template.render("404.html")
 end
 
 local post = result[2][1]
