@@ -1,9 +1,10 @@
+{% local request_url = ngx.var.uri %}
 <div class="header">
     <ul>
         <li>
             <a href="/" title="首页">首页</a>
         </li>
-        {% if 'message-board.html' == ngx.var.uri then %}
+        {% if 'message-board.html' == request_url then %}
         <li class="header-a-checked">
             <a href="/message-board.html" style="color: white" title="留言板">留言板</a>
         </li>
@@ -13,7 +14,7 @@
         </li>
         {% end %}
 
-        {% if 'tool/format/json.html' == ngx.var.uri then %}
+        {% if 'tool/format/json.html' == request_url then %}
         <li class="header-a-checked">
             <a href="/tool/format/json.html" style="color: white" title="小工具">小工具</a>
         </li>
@@ -23,7 +24,7 @@
         </li>
         {% end %}
 
-        {% if 'tool/format/json.html' == ngx.var.uri then %}
+        {% if 'tool/format/json.html' == request_url then %}
         <li class="header-a-checked">
             <a href="/english.html" style="color: white" title="英语角">英语角</a>
         </li>

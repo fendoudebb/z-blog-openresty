@@ -1,3 +1,6 @@
+local db = require "module.db"
+local util = require "module.util"
+
 local task_query_web_stat_delay = 1800  -- in seconds 30分钟
 local task_query_unknown_ip_delay = 50000  -- TODO 正式环境需修改
 
@@ -9,6 +12,7 @@ end
 
 local task_query_unknown_ip = function(premature)
     if not premature then
+
         local result = db.query("select ip from ip_unknown limit 1")[1]
         if result ~= nil then
             local address = util.query_ip(result.ip)

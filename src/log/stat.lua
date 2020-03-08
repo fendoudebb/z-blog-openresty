@@ -1,5 +1,10 @@
+local json = require "cjson.safe"
+local db = require "module.db"
+local util = require "module.util"
+
 local function record_visit_data(premature, record)
     if not premature then
+
         local address = util.query_ip(record.ip)
         local sql = [[
                 insert into %s(url, req_method, req_param, ip, ip_address, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time)

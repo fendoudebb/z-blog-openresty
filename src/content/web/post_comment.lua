@@ -1,3 +1,9 @@
+local json = require "cjson.safe"
+local const = require "module.const"
+local db = require "module.db"
+local req = require "module.req"
+local util = require "module.util"
+
 local post_id = ngx.ctx.body_data.post_id
 local nickname = ngx.ctx.body_data.nickname
 local content = ngx.ctx.body_data.content

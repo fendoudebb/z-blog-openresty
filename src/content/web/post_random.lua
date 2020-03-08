@@ -1,3 +1,8 @@
+local json = require "cjson.safe"
+local const = require "module.const"
+local db = require "module.db"
+local req = require "module.req"
+
 local post_id = ngx.ctx.body_data.post_id
 
 if type(post_id) ~= "number" then

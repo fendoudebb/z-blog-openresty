@@ -1,4 +1,7 @@
-local _M = {}
+local json = require "cjson.safe"
+local woothee = require "resty.woothee"
+
+local _M = { _VERSION = "0.01" }
 
 local function filter_method(method, req_method)
     if method ~= req_method then

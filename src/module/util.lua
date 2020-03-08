@@ -1,4 +1,8 @@
-local _M = {}
+local json = require "cjson.safe"
+local http = require "resty.http"
+local db = require "module.db"
+
+local _M = { _VERSION = "0.01"}
 
 function _M.query_ip(ip)
     --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")

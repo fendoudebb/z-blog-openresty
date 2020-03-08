@@ -1,4 +1,6 @@
-local _M = {}
+local pgmoon = require "pgmoon"
+
+local _M = { _VERSION = "0.01"}
 
 local function config()
     return {

@@ -1,4 +1,5 @@
 {%
+local json = require "cjson.safe"
 local memory = ngx.shared.memory
 local web_stat = memory:get("web_stat")
 if web_stat ~= nil then
