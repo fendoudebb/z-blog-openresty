@@ -41,7 +41,7 @@ local result = db.query(string.format(select_sql, post_id))
 local post = result[1]
 
 if post == nil then
-    return ngx.say(json.encode(const.post_not_exist))
+    return ngx.say(json.encode(const.post_not_exist()))
 end
 
 local sql_value = string.format([[
@@ -76,4 +76,4 @@ where id = %d
 
 db.query(update_sql)
 
-ngx.say(json.encode(const.ok))
+ngx.say(json.encode(const.ok()))

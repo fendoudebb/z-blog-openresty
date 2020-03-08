@@ -37,11 +37,11 @@ local result = db.query(string.format(select_sql, client_ip, post_id))
 local post = result[1]
 
 if post == nil then
-    return ngx.say(json.encode(const.post_not_exist))
+    return ngx.say(json.encode(const.post_not_exist()))
 end
 
 if post.is_liked then
-    return ngx.say(json.encode(const.post_like_already))
+    return ngx.say(json.encode(const.post_like_already()))
 end
 
 local sql_value = string.format([[
@@ -69,5 +69,4 @@ where id = %d and post_like @> '[{"ip":"%s"}]' is not true;
 ]], sql_value, sql_value, post_id, client_ip)
 
 db.query(update_sql)
-
-ngx.say(json.encode(const.ok))
+ngx.say(json.encode(const.ok()))

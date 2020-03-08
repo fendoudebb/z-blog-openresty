@@ -384,11 +384,7 @@
                 </div>
                 <p id="error-hint" style="color: red;font-size: 14px" hidden></p>
             </div>
-            {% if post.post_comment == nil then %}
-            <div class="shadow" style="padding: 16px 24px;">
-                <span style="font-size: 14px">暂无留言~</span>
-            </div>
-            {% else %}
+            {% if post.post_comment ~= nil then %}
             <ul>
                 {% for _, comment in ipairs(post.post_comment) do %}
                 <li class="shadow">
@@ -407,16 +403,16 @@
                     </div>
 
                     {% if comment.replies ~= nil then %}
-                        {% for _, reply in ipairs(comment.replies) do %}
-                        <div class="reply-area">
-                            <div class="nickname-span" style="color: #4CAF50">作者回复</div>
-                            <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
-                            <div style="margin-bottom: 8px">
-                                <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                                <span class="time-span">{{reply.reply_date}}</span>
-                            </div>
+                    {% for _, reply in ipairs(comment.replies) do %}
+                    <div class="reply-area">
+                        <div class="nickname-span" style="color: #4CAF50">作者回复</div>
+                        <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
+                        <div style="margin-bottom: 8px">
+                            <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
+                            <span class="time-span">{{reply.reply_date}}</span>
                         </div>
-                        {% end %}
+                    </div>
+                    {% end %}
                     {% end %}
                 </li>
                 {% end %}
@@ -610,7 +606,7 @@
                             var randomPost = result.data.post;
                             for (var i = 0; i < randomPost.length; i++) {
                                 var post = randomPost[i];
-                                $postRandomUl.append("<li class='post-random-li'><a class='post-random-a' href='/p/" + post.postId + ".html' title='"+post.title+"'><span>"+post.title+"</span><span style='float: right'>阅读数："+post.pv+"</span></a></li>");
+                                $postRandomUl.append("<li class='post-random-li'><a class='post-random-a' href='/p/" + post.id + ".html' title='"+post.title+"'><span>"+post.title+"</span><span style='float: right'>阅读数："+post.pv+"</span></a></li>");
                             }
                         } else {
                             $postRandomHint.html("加载失败...");

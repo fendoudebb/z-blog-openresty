@@ -17,12 +17,8 @@ local valid_referer = "/p/" .. post_id .. ".html"
 req.valid_http_referer(referer, valid_referer)
 
 local result = db.query([[
-select id as "postId", title, pv from post where post_status = 0 order by random() limit 10
+select id, title, pv from post where post_status = 0 order by random() limit 10
 ]])
 
-local res = const.ok
-
-res.data = {
-    post = result
-}
+local res = const.ok({ post = result })
 ngx.say(json.encode(res))
