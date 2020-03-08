@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    {(base.html, { title = title, keywords = keywords, description = description } )}
+    <style>
+        #json-textarea {
+            padding: 5px;
+            border: 1px solid #4CAF50;
+            border-radius: 2px;
+            background-color: #ffffffff;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+            outline: none; /*没有黄框*/
+            resize: none; /*不能拖拽*/
+            display: block;
+            font-family: "Courier New", cursive;
+        }
+
+        #json {
+            padding: 5px;
+            border: 1px solid #4CAF50;
+            border-radius: 2px;
+            background-color: #ffffffff;
+            overflow-y: auto;
+            overflow-x: hidden;
+            word-break: break-all;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+        }
+
+        #json * {
+            font-size: 16px;
+            font-family: "Courier New", cursive;
+        }
+
+        #format-json-result-btn-group {
+            margin-top: 20px;
+        }
+
+        #format-json-result:-moz-full-screen {
+            background: white;
+            min-height: 100vh;
+            max-height: 100vh;
+            min-width: 100%;
+            max-width: 100%
+        }
+
+        #format-json-result:-webkit-full-screen {
+            background: white;
+            min-height: 100vh;
+            max-height: 100vh;
+            min-width: 100%;
+            max-width: 100%
+        }
+
+        #format-json-result:fullscreen {
+            background: white;
+            min-height: 100vh;
+            max-height: 100vh;
+            min-width: 100%;
+            max-width: 100%
+        }
+
+        #format-json-result:-moz-full-screen > #json {
+            min-height: 80vh;
+            max-height: 80vh;
+        }
+
+        #format-json-result:-webkit-full-screen > #json {
+            min-height: 80vh;
+            max-height: 80vh;
+        }
+
+        #format-json-result:fullscreen > #json {
+            min-height: 80vh;
+            max-height: 80vh;
+        }
+
+        #format-json-result:-moz-full-screen > #format-json-result-btn-group {
+            margin-top: 5vh;
+        }
+
+        #format-json-result:-webkit-full-screen > #format-json-result-btn-group {
+            margin-top: 5vh;
+        }
+
+        #format-json-result:fullscreen > #format-json-result-btn-group {
+            margin-top: 5vh;
+        }
+
+        /*html:-moz-full-screen {
+            background: red;
+        }
+
+        html:-webkit-full-screen {
+            background: red;
+        }
+
+        body:-ms-fullscreen {
+            overflow: auto; !* fix for IE11 scrollbar *!
+        }
+
+        html:fullscreen {
+            background: red;
+        }*/
+        .btn-link {
+            font-size: 14px;
+            color: #F5F5F5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    <div style="margin-bottom: 20px">
+        <a class="shadow button btn-link" href="">格式化JSON</a>
+        <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
+        <a class="shadow button btn-link" href="/tool/ip.html">IP查询</a>
+    </div>
+
+    <div style="display: inline-block;width: 45vw;margin-left: 3vw;margin-right: 2vw;text-align: left">
+        <textarea id="json-textarea" placeholder="请输入JSON字符串" title="格式化JSON"></textarea>
+        <div style="margin-top: 10px;">
+            <button id="format-btn" class="shadow button" title="解析json">解析</button>
+            <button id="compress-btn" class="shadow button" title="压缩成一行">压缩</button>
+            <button id="copy-btn" class="shadow button" data-clipboard-target="#json-textarea" title="复制文本内容">
+                复制
+            </button>
+            <button id="save-btn" class="shadow button" title="保存至本地">保存</button>
+            <button id="clear-btn" class="shadow button" title="清空数据">清空</button>
+        </div>
+    </div>
+    <div style="display: inline-block;width: 45vw;margin-left: 2vw;margin-right: 3vw;float: right;text-align: left">
+        <div id="format-json-result">
+            <div id="json" title="格式化json结果"></div>
+            <div id="format-json-result-btn-group" style="margin-top: 10px">
+                <button id="collapse-expand-btn" class="shadow button" title="折叠/展开json">折叠
+                </button>
+                <button id="full-screen-btn" class="shadow button" title="全屏显示">全屏
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{(footer.html)}
+{(base_js.html)}
+<script>
+    $(function () {
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "2000",
+            "hideDuration": "2000",
+            "timeOut": "2000",
+            "extendedTimeOut": "2000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        let clipboard = new ClipboardJS('#copy-btn');
+        clipboard.on('success', function (e) {
+            e.clearSelection();
+            if ($("#json-textarea").val()) {
+                toastr.success("复制成功！");
+            } else {
+                toastr.info("json字符串为空!");
+            }
+        });
+        clipboard.on('error', function (e) {
+            toastr.info('请选择"拷贝"进行复制!');
+        });
+
+        $('#format-btn').on('click', function () {
+            formatJson($('#json-textarea').val());
+        });
+        $('#compress-btn').on('click', function () {
+            compressJson($('#json-textarea').val())
+        });
+        $('#save-btn').on('click', function () {
+            let text = $("#json-textarea").val();
+            if (text) {
+                saveFile(text);
+            } else {
+                toastr.info("文本为空!");
+            }
+        });
+        $('#clear-btn').on('click', function () {
+            clearJson();
+        });
+
+        let collapseExpandBtn = $('#collapse-expand-btn');
+        collapseExpandBtn.html("折叠");
+        collapseExpandBtn.on('click', function () {
+            let btnText = $(this).html();
+            if (btnText === "折叠") {
+                $('#json').JSONView('collapse');
+                $(this).html("展开");
+            } else {
+                $('#json').JSONView('expand');
+                $(this).html("折叠");
+            }
+        });
+
+        let fullScreenBtn = $("#full-screen-btn");
+        fullScreenBtn.html("全屏");
+        fullScreenBtn.on('click', function () {
+            let btnText = $(this).html();
+            if (btnText === "全屏") {
+                fullScreen();
+            } else {
+                exitFullScreen();
+            }
+        });
+
+        let fullscreenState = document.getElementById("full-screen-btn");
+        document.addEventListener("fullscreenchange", function () {
+                fullscreenState.innerHTML = (document.fullscreen) ? "退出" : "全屏";
+            }, false
+        );
+
+        document.addEventListener("mozfullscreenchange", function () {
+                fullscreenState.innerHTML = (document.mozFullScreen) ? "退出" : "全屏";
+            }, false
+        );
+
+        document.addEventListener("webkitfullscreenchange", function () {
+                fullscreenState.innerHTML = (document.webkitIsFullScreen) ? "退出" : "全屏";
+            }, false
+        );
+        document.addEventListener("msfullscreenchange", function () {
+                fullscreenState.innerHTML = (document.msFullscreenElement) ? "退出" : "全屏";
+            }, false
+        );
+    });
+
+    let result;
+
+    function clearJson() {
+        $("#json-textarea").val("");
+    }
+
+    function compressJson(jsonString) {
+        try {
+            eval("(" + jsonString + ")");
+            let compressJson = JSON.stringify(JSON.parse(jsonString));
+            $("#json-textarea").val(compressJson);
+        } catch (e) {
+            toastr.error("json字符串格式不正确!");
+        }
+    }
+
+    function formatJson(jsonString) {
+        try {
+            if (!jsonString) {
+                toastr.info("json字符串为空!");
+                return;
+            }
+            let jsonObject = eval("(" + jsonString + ")");
+            let json = JSON.stringify(jsonObject, undefined, 4);
+            $("#json-textarea").val(json);
+            result = json;
+            $("#json").JSONView(jsonObject);
+
+        } catch (e) {
+            toastr.error("json字符串格式不正确!");
+        }
+    }
+
+    function fullScreen() {
+        let el = document.getElementById("format-json-result");
+        let rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        if (typeof rfs !== "undefined" && rfs) {
+            rfs.call(el);
+        }
+    }
+
+    function exitFullScreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        }
+        else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
+        else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        if (typeof cfs !== "undefined" && cfs) {
+            cfs.call(el);
+        }
+    }
+
+    function fakeClick(obj) {
+        let ev = document.createEvent("MouseEvents");
+        ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        obj.dispatchEvent(ev);
+    }
+
+    function exportRaw(name, data) {
+        let urlObject = window.URL || window.webkitURL || window;
+        let export_blob = new Blob([data]);
+        let save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+        save_link.href = urlObject.createObjectURL(export_blob);
+        save_link.download = name;
+        fakeClick(save_link);
+    }
+
+    function saveFile(text) {
+        exportRaw('json-format.txt', text);
+    }
+</script>
+</body>
+</html>

@@ -64,14 +64,14 @@ end
 function _M.valid_http_referer(referer, valid_referer)
 
     if not referer then
-        ngx.log(ngx.ERR, "[valid_http_referer] referer is nil#", ngx.var.request_uri)
+        ngx.log(ngx.ERR, "[valid_http_referer] referer is nil, valid_referer#", valid_referer)
         return _M.bad_request()
     end
 
     local captures, err = ngx.re.match(referer, valid_referer)
 
     if not captures then
-        ngx.log(ngx.ERR, "[valid_http_referer] referer#", referer, " valid_referer#", valid_referer, " is invalid#", err)
+        ngx.log(ngx.ERR, "[valid_http_referer] referer#", referer, " valid_referer#", valid_referer, ", err#", err)
         return _M.bad_request()
     end
 end

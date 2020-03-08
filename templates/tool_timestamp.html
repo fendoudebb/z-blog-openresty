@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = title, keywords = keywords, description = description } )}
+    <style>
+        td {
+            margin: 0;
+        }
+
+        .btn-link {
+            font-size: 14px;
+            color: #F5F5F5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    <div style="margin-bottom: 20px">
+        <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
+        <a class="shadow button btn-link" href="">时间戳转换</a>
+        <a class="shadow button btn-link" href="/tool/ip.html">IP查询</a>
+    </div>
+    <!--    <div style="margin: auto">
+            时间戳 &nbsp;<input id="curTimestamp" class="search-input" placeholder="请输入时间戳（毫秒）">
+            <button id="transformTimestamp" class="shadow button">转换</button>
+            日期 &nbsp;<input id="formatTimestampResult" type="text" class="search-input" placeholder="日期">
+        </div>-->
+
+    <!--    <div style="text-align: center;margin-top: 20px">
+            日期 &nbsp;<input id="curDate" class="search-input" placeholder="请输入日期">
+            <button id="transformDate" class="shadow button">转换</button>
+            时间戳 &nbsp;<input id="formatDateResult" type="text" class="search-input" placeholder="时间戳（毫秒）">
+        </div>-->
+    <div>
+        <table style="margin: 0 auto" cellspacing="10">
+            <tr>
+                <td>时间戳</td>
+                <td><input id="curTimestamp" class="search-input" placeholder="请输入时间戳（毫秒）"></td>
+                <td><button id="transformTimestamp" class="shadow button">转换</button></td>
+                <td>日期</td>
+                <td><input id="formatTimestampResult" type="text" class="search-input" placeholder="日期"></td>
+            </tr>
+            <tr>
+                <td>日期</td>
+                <td><input id="curDate" class="search-input" placeholder="请输入日期"></td>
+                <td><button id="transformDate" class="shadow button">转换</button></td>
+                <td>时间戳</td>
+                <td><input id="formatDateResult" type="text" class="search-input" placeholder="时间戳（毫秒）"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+{(base_js.html)}
+<script type="text/javascript">
+    function getTwo(s) {
+        if (parseInt(s) < 10) {
+            return "0" + s;
+        } else {
+            return "" + s;
+        }
+    }
+
+    function getCurDate(timestamp) {
+        let d = new Date(parseInt(timestamp));
+        let year = d.getFullYear();
+        let month = getTwo(d.getMonth() + 1);
+        let date = getTwo(d.getDate());
+        let hour = getTwo(d.getHours());
+        let minute = getTwo(d.getMinutes());
+        let second = getTwo(d.getSeconds());
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+    }
+
+    let currentTimestamp = new Date().getTime();
+
+    $('#curTimestamp').val(currentTimestamp);
+    $('#curDate').val(getCurDate(currentTimestamp));
+
+    $('#transformTimestamp').on('click', function () {
+        let timestamp = $('#curTimestamp').val();
+        let date = getCurDate(timestamp);
+        $('#formatTimestampResult').val(date);
+    });
+    $('#transformDate').on('click', function () {
+        let date = $('#curDate').val();
+        $('#formatDateResult').val(new Date(date).getTime());
+    });
+
+</script>
+</body>
+</html>

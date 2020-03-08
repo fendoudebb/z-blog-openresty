@@ -4,7 +4,7 @@
         <li>
             <a href="/" title="首页">首页</a>
         </li>
-        {% if 'message-board.html' == request_url then %}
+        {% if '/message-board.html' == request_url then %}
         <li class="header-a-checked">
             <a href="/message-board.html" style="color: white" title="留言板">留言板</a>
         </li>
@@ -14,17 +14,17 @@
         </li>
         {% end %}
 
-        {% if 'tool/format/json.html' == request_url then %}
+        {% if '/tool/json.html' == request_url then %}
         <li class="header-a-checked">
-            <a href="/tool/format/json.html" style="color: white" title="小工具">小工具</a>
+            <a href="/tool/json.html" style="color: white" title="小工具">小工具</a>
         </li>
         {% else %}
         <li>
-            <a href="/tool/format/json.html" title="小工具">小工具</a>
+            <a href="/tool/json.html" title="小工具">小工具</a>
         </li>
         {% end %}
 
-        {% if 'tool/format/json.html' == request_url then %}
+        {% if '/english.html' == request_url then %}
         <li class="header-a-checked">
             <a href="/english.html" style="color: white" title="英语角">英语角</a>
         </li>

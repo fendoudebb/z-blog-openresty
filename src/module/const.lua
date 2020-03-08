@@ -8,6 +8,13 @@ function _M.ok(data)
     }
 end
 
+function _M.fail(msg)
+    return {
+        code = -1,
+        msg = msg or "请求失败",
+    }
+end
+
 function _M.post_not_exist()
     return {
         code = 1000,
@@ -19,6 +26,13 @@ function _M.post_like_already()
     return {
         code = 1001,
         msg = "已点过赞啦~"
+    }
+end
+
+function _M.query_ip_fail()
+    return {
+        code = 1002,
+        msg = "查询失败，请稍后再试！"
     }
 end
 

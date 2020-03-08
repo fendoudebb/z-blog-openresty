@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = title, keywords = keywords, description = description } )}
+    <style>
+        .btn-link {
+            font-size: 14px;
+            color: #F5F5F5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    <div style="margin-bottom: 20px">
+        <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
+        <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
+        <a class="shadow button btn-link" href="">IP查询</a>
+    </div>
+    <div style="margin: auto;text-align: center">
+        <p>当前IP：{{ngx.ctx.client_ip}}</p>
+        <div style="width: 300px;display: inline-block">
+            IP：<input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
+            <button id="queryIp" class="shadow button">查询</button>
+        </div>
+
+        <p id="result"></p>
+    </div>
+</div>
+{(base_js.html)}
+<script>
+    $('#queryIp').on('click', function () {
+        let ip = $('#ipInput').val();
+        if (ip == null || ip.length <= 0) {
+            $('#result').text('IP地址为空~').css('color', 'red');
+            return;
+        }
+        ip = ip.trim();
+        $.ajax({
+            method: "POST",
+            url: "/query/ip",
+            contentType: 'application/json',
+            data:JSON.stringify({"ip": ip}),
+            success: function (data) {
+                if (data.code === 0) {
+                    $('#result').text(data.data).css('color','#4CAF50');
+                } else if (data.code === 1002) {
+                    $('#result').text(data.msg).css('color', 'red');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
