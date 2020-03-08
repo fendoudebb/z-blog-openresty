@@ -3,7 +3,7 @@ local db = require "module.db"
 
 -- to_char(post_ts, 'YYYY-MM-DD HH24:MI:SS') as post_ts
 -- 判断json对象数组中是否包含，post_like 为空时是null，不为空时是true/false
--- select * , post_like @> '[{"ip":"117.187.27.178"}]' from post;
+-- select * , post_like @> '[{"ip":"127.0.0.1"}]' from post;
 
 local sql = [[
 select id, title, pv from post where post_status = 0 order by random() limit 10;
@@ -28,8 +28,7 @@ post.random_post = result[1]
 --table转字符串
 --table.concat(post.topics, ',')
 
--- 统计用
+-- 统计stat.lua用
 ngx.ctx.post_id = post.id
-ngx.ctx.post = post
 
 template.render("post.html", {post = post})
