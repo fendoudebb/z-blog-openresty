@@ -3,19 +3,12 @@ local woothee = require "resty.woothee"
 
 local _M = { _VERSION = "0.01" }
 
-local function filter_method(method, req_method)
-    if method ~= req_method then
-        ngx.log(ngx.ERR, "request_method=", req_method, ", non match=" .. method)
-        return _M.method_not_allowed(req_method)
-    end
-end
-
 function _M.filter_non_get_method(req_method)
-    filter_method('GET', req_method)
+    return "GET" == req_method
 end
 
 function _M.filter_non_post_method(req_method)
-    filter_method('POST', req_method)
+    return "POST" == req_method
 end
 
 -- 返回woothee对象
@@ -49,13 +42,13 @@ function _M.bad_request()
 end
 
 -- 405status
-function _M.method_not_allowed(method)
+function _M.method_not_allowed()
     ngx.status = ngx.HTTP_NOT_ALLOWED
     local res = {
         timestamp = ngx.time(),
         status = 405,
         error = "Method Not Allowed",
-        message = "Request method '" .. method .. "' not supported"
+        --message = "Request method '" .. method .. "' not supported"
     }
     ngx.say(json.encode(res))
     return ngx.exit(ngx.HTTP_NOT_ALLOWED)
