@@ -30,4 +30,4 @@ if not online_post_count then
     memory:set("online_post_count", online_post_count)
 end
 
-template.render("index.html", { posts = result, cur_page = page, sum_page = math.floor(online_post_count / size) })
+template.render("index.html", { posts = result, cur_page = page, sum_page = math.ceil(online_post_count / size) })
