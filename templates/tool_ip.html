@@ -45,7 +45,7 @@
             success: function (data) {
                 if (data.code === 0) {
                     $('#result').text(data.data).css('color','#4CAF50');
-                } else if (data.code === 1002) {
+                } else if (data.code === 1003) {
                     $('#result').text(data.msg).css('color', 'red');
                 }
             }

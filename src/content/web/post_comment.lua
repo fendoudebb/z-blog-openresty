@@ -31,17 +31,17 @@ local valid_referer = "/p/" .. post_id .. ".html"
 
 req.valid_http_referer(referer, valid_referer)
 
-local select_sql = [[
-select
-id
-from post where id = %d
-]]
+local select_sql = [[select comment_status from post where id = %d]]
 local result = db.query(string.format(select_sql, post_id))
 
 local post = result[1]
 
-if post == nil then
+if not post then
     return ngx.say(json.encode(const.post_not_exist()))
+end
+
+if post.comment_status ~= 0 then
+    return ngx.say(json.encode(const.post_comment_close()))
 end
 
 local sql_value = string.format([[

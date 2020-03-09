@@ -11,17 +11,17 @@ select
 id, title, keywords, description, topics, content_html, word_count, post_status,
 pv, like_count, comment_count, comment_status, to_char(create_ts, 'YYYY-MM-DD') as create_ts, post_comment,
 post_like @> '[{"ip":"%s"}]'::jsonb as is_liked
-from post where id = %d and post_status = 0
+from post where id = %d
 ]]
 
 local result = db.query(string.format(sql, ngx.ctx.client_ip, ngx.var[1]))
 
-if result[2][1] == nil then
+local post = result[2][1]
+
+if not post or post.post_status ~= 0 then
     ngx.status = ngx.HTTP_NOT_FOUND
     return template.render("404.html")
 end
-
-local post = result[2][1]
 
 post.random_post = result[1]
 

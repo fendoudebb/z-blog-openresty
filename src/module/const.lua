@@ -25,14 +25,21 @@ end
 function _M.post_like_already()
     return {
         code = 1001,
-        msg = "已点过赞啦~"
+        msg = "已点过赞啦"
+    }
+end
+
+function _M.post_comment_close()
+    return {
+        code = 1002,
+        msg = "评论已关闭"
     }
 end
 
 function _M.query_ip_fail()
     return {
-        code = 1002,
-        msg = "查询失败，请稍后再试！"
+        code = 1003,
+        msg = "查询失败，请稍后再试"
     }
 end
 

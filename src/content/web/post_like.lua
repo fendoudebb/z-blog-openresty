@@ -25,18 +25,12 @@ req.valid_http_referer(referer, valid_referer)
 --post_like @> '[{"ip":"]] .. ngx.ctx.client_ip .. [["}]'::jsonb as is_liked
 --from post where id = ]] .. ngx.var[1]
 
-local select_sql = [[
-select
-id, title, keywords, description, topics, content_html, word_count, post_status,
-pv, like_count, comment_count, comment_status, to_char(create_ts, 'YYYY-MM-DD') as create_ts, post_comment,
-post_like @> '[{"ip":"%s"}]' as is_liked
-from post where id = %d
-]]
+local select_sql = [[select post_status, post_like @> '[{"ip":"%s"}]' as is_liked from post where id = %d]]
 local result = db.query(string.format(select_sql, client_ip, post_id))
 
 local post = result[1]
 
-if post == nil then
+if not post or post.post_status ~= 0 then
     return ngx.say(json.encode(const.post_not_exist()))
 end
 

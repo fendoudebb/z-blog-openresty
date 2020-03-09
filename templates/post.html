@@ -371,6 +371,7 @@
         </div>
 
         <div id="post-comment">
+            {% if post.comment_status == 0 then %}
             <div class="shadow" style="padding: 16px 24px;text-align: left">
                 <div style="margin-bottom: 20px">
                     昵称：
@@ -384,6 +385,7 @@
                 </div>
                 <p id="error-hint" style="color: red;font-size: 14px" hidden></p>
             </div>
+            {% end %}
             {% if post.post_comment ~= nil then %}
             <ul>
                 {% for _, comment in ipairs(post.post_comment) do %}
@@ -475,17 +477,17 @@
         var nicknameLen = strLen(nickname);
         var contentLen = strLen(content);
         if (nicknameLen <= 0 || contentLen <= 0) {
-            $errorHint.html("昵称或评论不能为空~");
+            $errorHint.html("昵称或评论不能为空");
             $errorHint.show();
             return
         }
         if (nicknameLen > 16) {
-            $errorHint.html("昵称长度不能超过16位~");
+            $errorHint.html("昵称长度不能超过16位");
             $errorHint.show();
             return
         }
         if (contentLen > 1000) {
-            $errorHint.html("评论内容不能超过1000位~");
+            $errorHint.html("评论内容不能超过1000位");
             $errorHint.show();
             return
         }
@@ -503,7 +505,7 @@
                     // window.location.href=window.location.href;
                 } else {
                     $submitBtn.bind('click', clickFunc);
-                    $errorHint.html("评论失败~");
+                    $errorHint.html(data.msg);
                     $errorHint.show();
                 }
             }
