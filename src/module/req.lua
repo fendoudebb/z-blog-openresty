@@ -69,4 +69,26 @@ function _M.valid_http_referer(referer, valid_referer)
     end
 end
 
+function _M.get_page_size(args)
+    -- ngx.req.get_uri_args()
+    local page = 1;
+    local size = 20;
+    if args then
+        local arg_page = args.page
+        if type(arg_page) == "string" then
+            page = tonumber(arg_page)
+        end
+    end
+
+    if page < 1 then
+        page = 1
+    end
+
+    return {
+        page = page,
+        limit = size,
+        offset = (page - 1) * size
+    }
+end
+
 return _M

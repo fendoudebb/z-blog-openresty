@@ -1,26 +1,12 @@
 local template = require "resty.template"
 local db = require "module.db"
+local req = require "module.req"
 
-local args = ngx.req.get_uri_args()
-local page = 1;
-if args then
-    local arg_page = args.page
-    if type(arg_page) == "string" then
-        page = tonumber(arg_page)
-    end
-end
-
-if page < 1 then
-    page = 1
-end
-
-local size = 20;
-
-local offset = (page - 1) * size
+local sql_args = req.get_page_size(ngx.req.get_uri_args())
 
 local sql = "select id, title, description, pv, like_count, comment_count, topics, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where post_status = 0 order by create_ts desc limit %d offset %d"
 
-local result = db.query(string.format(sql, size, offset))
+local result = db.query(string.format(sql, sql_args.limit, sql_args.offset))
 
 local memory = ngx.shared.memory
 -- TODO 新增文章时记得重新设置
@@ -30,4 +16,4 @@ if not online_post_count then
     memory:set("online_post_count", online_post_count)
 end
 
-template.render("index.html", { posts = result, cur_page = page, sum_page = math.ceil(online_post_count / size) })
+template.render("index.html", { posts = result, cur_page = sql_args.page, sum_page = math.ceil(online_post_count / sql_args.limit) })
