@@ -112,10 +112,10 @@ function _M.query_web_stat()
 
     if not success then
         ngx.log(ngx.ERR, "set shm err#", err)
-    else
-        local capacity_bytes = memory:capacity()
-        local free_bytes = memory:free_space()
-        ngx.log(ngx.ERR, "shm capacity_bytes#" .. capacity_bytes / 1024 / 1024 .. "M; shm free_bytes#" .. free_bytes / 1024 / 1024 .. "M")
+    --else
+    --    local capacity_bytes = memory:capacity()
+    --    local free_bytes = memory:free_space()
+    --    ngx.log(ngx.ERR, "shm capacity_bytes#" .. capacity_bytes / 1024 / 1024 .. "M; shm free_bytes#" .. free_bytes / 1024 / 1024 .. "M")
     end
     local cost_time = ngx.now() - start_query
     ngx.log(ngx.ERR, "query web_stat cost#" .. cost_time)
