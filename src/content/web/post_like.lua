@@ -8,16 +8,17 @@ local post_id = ngx.ctx.body_data.post_id
 local client_ip = ngx.ctx.client_ip
 local ua = ngx.ctx.ua;
 
+local referer = ngx.var.http_referer
+local valid_referer = "/p/" .. post_id .. ".html"
+local valid_result = req.valid_http_referer(referer, valid_referer)
+if not valid_result then
+    return req.bad_request()
+end
+
 if type(post_id) ~= "number" then
     ngx.log(ngx.ERR, "[post like] post_id type ~= number#", type(post_id))
     return req.bad_request()
 end
-
-local referer = ngx.var.http_referer
-
-local valid_referer = "/p/" .. post_id .. ".html"
-
-req.valid_http_referer(referer, valid_referer)
 
 --select
 --id, title, keywords, description, topics, content_html, word_count, post_status,
@@ -31,11 +32,11 @@ local result = db.query(string.format(select_sql, client_ip, post_id))
 local post = result[1]
 
 if not post or post.post_status ~= 0 then
-    return ngx.say(json.encode(const.post_not_exist()))
+    return req.request_error(ngx.HTTP_NOT_FOUND, const.post_not_exist())
 end
 
 if post.is_liked then
-    return ngx.say(json.encode(const.post_like_already()))
+    return req.request_error(ngx.HTTP_CONFLICT, const.post_like_already())
 end
 
 local sql_value = string.format([[

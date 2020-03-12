@@ -27,46 +27,46 @@ function _M.parse_ua(ua)
     return woothee.parse(ua)
 end
 
+function _M.request_error(status_code, info)
+    ngx.status = status_code
+    ngx.say(json.encode(info))
+    return ngx.exit(status_code)
+end
+
 -- 自定义返回内容
 -- 400
 function _M.bad_request()
-    ngx.status = ngx.HTTP_BAD_REQUEST
-    local res = {
+    return _M.request_error(ngx.HTTP_BAD_REQUEST, {
         timestamp = ngx.time(),
         status = 400,
         error = "Bad Request",
         message = "Bad Request"
-    }
-    ngx.say(json.encode(res))
-    return ngx.exit(ngx.HTTP_BAD_REQUEST)
+    })
 end
 
 -- 405status
 function _M.method_not_allowed()
-    ngx.status = ngx.HTTP_NOT_ALLOWED
-    local res = {
+    return _M.request_error(ngx.HTTP_NOT_ALLOWED, {
         timestamp = ngx.time(),
         status = 405,
         error = "Method Not Allowed",
         --message = "Request method '" .. method .. "' not supported"
-    }
-    ngx.say(json.encode(res))
-    return ngx.exit(ngx.HTTP_NOT_ALLOWED)
+    })
 end
 
 function _M.valid_http_referer(referer, valid_referer)
-
     if not referer then
         ngx.log(ngx.ERR, "[valid_http_referer] referer is nil, valid_referer#", valid_referer)
-        return _M.bad_request()
+        return false
     end
 
     local captures, err = ngx.re.match(referer, valid_referer)
 
     if not captures then
         ngx.log(ngx.ERR, "[valid_http_referer] referer#", referer, " valid_referer#", valid_referer, ", err#", err)
-        return _M.bad_request()
+        return false
     end
+    return true
 end
 
 function _M.get_page_size(args)

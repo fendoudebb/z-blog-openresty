@@ -1,10 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html, { title = title, keywords = title, description = title } )}
+    <style>
+        li.shadow {
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+        .reply-area {
+            padding: 8px 12px 6px 12px;
+        }
+    </style>
 </head>
 <body>
-{{message}}
+{(header.html)}
+<div class="main">
+    <div class="content" style="text-align: center">
+        <ul style="text-align: left">
+            {% for _, m in ipairs(msg) do %}
+            <li class="shadow">
+                <div class="top-area">
+                    <span class="nickname-span">{{m.nickname}}</span>
+                    <span class="floor-span">{{m.floor}}楼</span>
+                </div>
+                {% if m.status == 0 then %}
+                <pre class="content-pre">{{m.content}}</pre>
+                {% else %}
+                <pre class="content-pre content-delete-pre">留言已删除</pre>
+                {% end %}
+                <div class="foot-area">
+                    <span class="browse-os-span">{{m.browser}} | {{m.os}}</span>
+                    <span class="time-span">{{m.create_ts}}</span>
+                </div>
+
+                {% if m.replies then %}
+                    {% for _, reply in ipairs(m.replies) do %}
+                    <div class="reply-area">
+                        <div class="nickname-span" style="color: #4CAF50">作者回复</div>
+                        <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
+                        <div>
+                            <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
+                            <span  class="time-span">{{reply.reply_date}}</span>
+                        </div>
+                    </div>
+                    {% end %}
+                {% end %}
+            </li>
+            {% end %}
+        </ul>
+
+        <div style="text-align: center;margin-top: 20px">
+            <ul class="pagination">
+                <li>
+                    {% if cur_page == 1 then %}
+                    <a class="disabled" href="javascript:void(0);">上一页</a>
+                    {% else %}
+                    <a href="?page=1">首页</a>
+                    <a href="?page={{cur_page-1}}">上一页</a>
+                    {% end %}
+                </li>
+                {% for i = 1, sum_page do %}
+                <li>
+                    <!--{if condition="$i > $currentPage - 5 && $i < $currentPage + 5"}
+                    {else /}
+                    {/if}-->
+                    {% if i > cur_page -4 and i < cur_page + 4 then %}
+                    {% if i == cur_page then %}
+                    <a class="active disabled" href="javascript:void(0);">{{i}}</a>
+                    {% else %}
+                    <a href="?page={{i}}">{{i}}</a>
+                    {% end %}
+                    {% end %}
+                </li>
+                {% end %}
+                <li>
+                    {% if cur_page < sum_page then %}
+                    <a href="?page={{cur_page+1}}">下一页</a>
+                    <a href="?page={{sum_page}}">尾页</a>
+                    {% else %}
+                    <a class="disabled" href="javascript:void(0);">下一页</a>
+                    {% end %}
+                </li>
+            </ul>
+        </div>
+
+        <div class="shadow" style="margin-top: 20px;padding: 30px;text-align: left">
+            <div style="margin-bottom: 20px">
+                昵称：
+                <label>
+                    <input id="nickname" type="text" name="nickname" placeholder="请输入昵称...">
+                </label>
+            </div>
+            <div style="position: relative">
+                <textarea id="message" title="评论区" placeholder="请输入留言..."></textarea>
+                <button id="submitBtn" class="button" title="留言">留言</button>
+            </div>
+            <p id="error-hint" style="color: red;" hidden></p>
+        </div>
+    </div>
+</div>
+{(footer.html)}
+{(base_js.html)}
+<script>
+    function strLen(str) {
+        var len = 0;
+        for (var i=0; i<str.length; i++) {
+            if (str.charCodeAt(i)>127 || str.charCodeAt(i)===94) {
+                len += 2;
+            } else {
+                len ++;
+            }
+        }
+        return len;
+    }
+
+    let $submitBtn = $('#submitBtn');
+
+    let clickFunc = function () {
+        let $errorHint = $('#error-hint');
+        let nickname = $('#nickname').val();
+        let content = $('#message').val();
+        let nicknameLen = strLen(nickname);
+        let contentLen = strLen(content);
+        if (nicknameLen <= 0 || contentLen <= 0) {
+            $errorHint.html("昵称或留言不能为空~");
+            $errorHint.show();
+            return
+        }
+        if (nicknameLen > 16) {
+            $errorHint.html("昵称长度不能超过16位~");
+            $errorHint.show();
+            return
+        }
+        if (contentLen > 1000) {
+            $errorHint.html("留言内容不能超过1000位~");
+            $errorHint.show();
+            return
+        }
+        $submitBtn.unbind();
+        var data = {'nickname': nickname, 'content': content};
+
+        $.post("/leave-a-message", data,function (data) {
+            if (data.code === 200) {
+                // window.location.reload();
+                window.location.href=window.location.href;
+            } else {
+                $submitBtn.bind('click', clickFunc);
+            }
+        });
+    };
+    $submitBtn.bind('click', clickFunc);
+
+</script>
 </body>
 </html>

@@ -30,11 +30,14 @@ local ua = ngx.ctx.ua;
 local request_method = ngx.var.request_method
 
 local req_method
+local req_param
 
 if request_method == 'GET' then
     req_method = 0
+    req_param = ngx.var.args
 elseif request_method == 'POST' then
     req_method = 1
+    req_param = ngx.req.get_body_data()
 elseif request_method == 'PUT' then
     req_method = 2
 elseif request_method == 'DELETE' then
@@ -48,7 +51,7 @@ end
 local record = {
     url = ngx.var.uri,
     req_method = req_method,
-    req_param = ngx.var.args,
+    req_param = req_param,
     ip = ngx.ctx.client_ip,
     ua = ngx.var.http_user_agent,
     referer = ngx.var.http_referer,
