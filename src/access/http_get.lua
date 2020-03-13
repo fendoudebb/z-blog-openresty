@@ -5,7 +5,7 @@ ngx.ctx.client_ip = headers["X-REAL-IP"] or headers["X_FORWARDED_FOR"] or ngx.va
 
 ngx.ctx.ua = req.parse_ua(ngx.var.http_user_agent)
 
-if not req.filter_non_get_method(ngx.var.request_method) then
+if not req.is_get_method(ngx.var.request_method) then
     return req.method_not_allowed()
 end
 

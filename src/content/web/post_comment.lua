@@ -64,7 +64,6 @@ local sql_value = string.format([[
 'floor', comment_count + 1
 ]], client_ip, db.val_escape(util.query_ip(client_ip)), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(nickname), db.val_escape(content))
 
-
 local update_sql = string.format([[
 update post set post_comment =
 (
@@ -75,6 +74,10 @@ update post set post_comment =
 where id = %d
 ]], sql_value, sql_value, post_id)
 
-db.query(update_sql)
+local update_result = db.query(update_sql) -- {"affected_rows":1}
 
-ngx.say(json.encode(const.ok()))
+if update_result.affected_rows < 1 then
+    ngx.say(json.encode(const.fail()))
+else
+    ngx.say(json.encode(const.ok()))
+end

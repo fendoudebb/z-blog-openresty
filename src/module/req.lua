@@ -3,11 +3,11 @@ local woothee = require "resty.woothee"
 
 local _M = { _VERSION = "0.01" }
 
-function _M.filter_non_get_method(req_method)
+function _M.is_get_method(req_method)
     return "GET" == req_method
 end
 
-function _M.filter_non_post_method(req_method)
+function _M.is_post_method(req_method)
     return "POST" == req_method
 end
 

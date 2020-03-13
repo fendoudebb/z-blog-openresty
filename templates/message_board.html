@@ -140,12 +140,18 @@
         $submitBtn.unbind();
         var data = {'nickname': nickname, 'content': content};
 
-        $.post("/leave-a-message", data,function (data) {
-            if (data.code === 200) {
-                // window.location.reload();
-                window.location.href=window.location.href;
-            } else {
-                $submitBtn.bind('click', clickFunc);
+        $.ajax({
+            method: "POST",
+            url: "/leave-a-message",
+            contentType: 'application/json',
+            data:JSON.stringify(data),
+            success: function (data) {
+                if (data.code === 0) {
+                    window.location.reload();
+                    // window.location.href=window.location.href;
+                } else {
+                    $submitBtn.bind('click', clickFunc);
+                }
             }
         });
     };

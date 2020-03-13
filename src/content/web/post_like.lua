@@ -63,5 +63,10 @@ update post set post_like =
 where id = %d and post_like @> '[{"ip":"%s"}]' is not true;
 ]], sql_value, sql_value, post_id, client_ip)
 
-db.query(update_sql)
-ngx.say(json.encode(const.ok()))
+local update_result = db.query(update_sql)
+
+if update_result.affected_rows < 1 then
+    ngx.say(json.encode(const.fail()))
+else
+    ngx.say(json.encode(const.ok()))
+end
