@@ -1,10 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html, { title = title, keywords = keywords, description = keywords } )}
+    <style>
+        summary {
+            cursor: pointer;
+            outline: none;
+        }
+        summary:hover {
+            color: #4CAF50;
+        }
+        details {
+            padding: 0;
+            color: #8a8a8a;
+            margin-top: 12px;
+        }
+        details summary {
+            width: -moz-fit-content;
+            width: fit-content;
+        }
+        summary::-webkit-details-marker {
+            color: #8a8a8a;
+        }
+        details:hover summary::-webkit-details-marker:hover {
+            color:#4CAF50;
+            background:white;
+        }
+        summary::-moz-list-bullet {
+            color: #8a8a8a;
+        }
+        details:hover summary::-moz-list-bullet:hover {
+            color:#4CAF50;
+            background:white;
+        }
+        pre {
+            white-space:pre-wrap;
+        }
+        li.shadow {
+            border-radius: 6px;
+            margin-bottom: 10px;
+            padding: 12px 24px;
+        }
+        .english-word {
+            margin: 0;
+            padding: 0;
+            font-size: xx-large;
+            color: black;
+            font-weight: bold;
+        }
+        .phonetic {
+            margin: 0;
+            padding: 12px 0 0 0;
+            color: #8a8a8a;
+            display: inline-block;
+            font-size: 12px;
+            font-family: Arial,monospace;
+        }
+        .example_sentence {
+            color: #8a8a8a;
+        }
+        .example_sentence b {
+            color: black;
+        }
+        .translation {
+        }
+    </style>
 </head>
 <body>
-{{message}}
+{(header.html)}
+<div class="main">
+    <div class="content" style="text-align: center">
+        <ul style="text-align: left">
+            {% for _, e in ipairs(english) do %}
+            <li class="shadow">
+                <pre class="english-word">{{e.word}}</pre>
+                {% if e.english_phonetic then %}
+                <pre class="phonetic">英  [{{e.english_phonetic}}]</pre>
+                {% end %}
+                {% if e.american_phonetic then %}
+                <pre class="phonetic">美  [{{e.american_phonetic}}]</pre>
+                {% end %}
+                {% if e.example_sentence then %}
+                {% local str = ngx.re.gsub(e.example_sentence, e.word, "<b>" .. e.word .. "</b>") %}
+                <pre class="example_sentence">例句：{% if str then %}{* str *}{% else %}{{e.example_sentence}}{% end %}</pre>
+                {% end %}
+                <details>
+                    <summary>查看翻译</summary>
+                    {% for _, t in ipairs(e.translation) do %}
+                    <pre class="translation">{{t.property}}. {{t.explanation}}</pre>
+                    {% end %}
+                    {% if e.sentence_translation then %}
+                    <pre>例句翻译：{{e.sentence_translation}}</pre>
+                    {% end %}
+                    {% if e.source then %}
+                    <pre>词语来源：{% if ngx.re.match(e.source, "http") then %}<a href="{{e.source}}" target="_blank" title="{{e.source}}">{{e.source}}</a>{% else %}{{e.source}}{% end %}</pre>
+                    {% end %}
+                    {% if e.synonyms then %}
+                    <pre>同义词：{{e.synonyms}}</pre>
+                    {% end %}
+                </details>
+            </li>
+            {% end %}
+        </ul>
+
+        <div style="text-align: center;margin-top: 20px">
+            <ul class="pagination">
+                <li>
+                    {% if cur_page == 1 then %}
+                    <a class="disabled" href="javascript:void(0);">上一页</a>
+                    {% else %}
+                    <a href="?page=1">首页</a>
+                    <a href="?page={{cur_page-1}}">上一页</a>
+                    {% end %}
+                </li>
+                {% for i = 1, sum_page do %}
+                <li>
+                    {% if i > cur_page -4 and i < cur_page + 4 then %}
+                    {% if i == cur_page then %}
+                    <a class="active disabled" href="javascript:void(0);">{{i}}</a>
+                    {% else %}
+                    <a href="?page={{i}}">{{i}}</a>
+                    {% end %}
+                    {% end %}
+                </li>
+                {% end %}
+                <li>
+                    {% if cur_page < sum_page then %}
+                    <a href="?page={{cur_page+1}}">下一页</a>
+                    <a href="?page={{sum_page}}">尾页</a>
+                    {% else %}
+                    <a class="disabled" href="javascript:void(0);">下一页</a>
+                    {% end %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{(footer.html)}
+{(base_js.html)}
 </body>
 </html>

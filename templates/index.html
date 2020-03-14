@@ -36,9 +36,6 @@
                 </li>
                 {% for i = 1, sum_page do %}
                 <li>
-                    <!--{if condition="$i > $currentPage - 5 && $i < $currentPage + 5"}
-                    {else /}
-                    {/if}-->
                     {% if i > cur_page -4 and i < cur_page + 4 then %}
                         {% if i == cur_page then %}
                             <a class="active disabled" href="javascript:void(0);">{{i}}</a>
