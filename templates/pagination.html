@@ -1,0 +1,31 @@
+<div style="text-align: center;margin-top: 20px">
+    <ul class="pagination">
+        <li>
+            {% if cur_page == 1 then %}
+            <a class="disabled" href="javascript:void(0);">上一页</a>
+            {% else %}
+            <a href="?page=1">首页</a>
+            <a href="?page={{cur_page-1}}">上一页</a>
+            {% end %}
+        </li>
+        {% for i = 1, sum_page do %}
+        <li>
+            {% if i > cur_page -4 and i < cur_page + 4 then %}
+            {% if i == cur_page then %}
+            <a class="active disabled" href="javascript:void(0);">{{i}}</a>
+            {% else %}
+            <a href="?page={{i}}">{{i}}</a>
+            {% end %}
+            {% end %}
+        </li>
+        {% end %}
+        <li>
+            {% if cur_page < sum_page then %}
+            <a href="?page={{cur_page+1}}">下一页</a>
+            <a href="?page={{sum_page}}">尾页</a>
+            {% else %}
+            <a class="disabled" href="javascript:void(0);">下一页</a>
+            {% end %}
+        </li>
+    </ul>
+</div>
