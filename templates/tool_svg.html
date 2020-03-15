@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = "SVG 转 CSS 背景图", keywords = "SVG 转 CSS 背景图", description = "SVG 转 CSS 背景图" } )}
+    <style>
+        .btn-link {
+            font-size: 14px;
+            color: #F5F5F5;
+            text-decoration: none;
+        }
+        .svg-textarea {
+            padding: 5px;
+            border: 1px solid #4CAF50;
+            border-radius: 2px;
+            background-color: #ffffffff;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+            outline: none; /*没有黄框*/
+            resize: none; /*不能拖拽*/
+            display: block;
+            font-family: "Courier New", cursive;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    <div style="margin-bottom: 20px">
+        <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
+        <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
+        <a class="shadow button btn-link" href="/tool/ip.html">IP查询</a>
+        <a class="shadow button btn-link" href="">SVG转CSS</a>
+    </div>
+
+    <div style="display: inline-block;width: 45vw;margin-left: 3vw;margin-right: 2vw;text-align: left">
+        <textarea id="input" class="svg-textarea" placeholder="请输入SVG..." title="请输入SVG..."></textarea>
+    </div>
+    <div style="display: inline-block;width: 45vw;margin-left: 2vw;margin-right: 3vw;float: right;text-align: left">
+        <textarea id="output" class="svg-textarea" placeholder="CSS背景图" title="CSS背景图"></textarea>
+    </div>
+</div>
+{(base_js.html)}
+<script type="text/javascript">
+    document.getElementById("input").addEventListener("input", function () {
+        var txt = this.value.replace("<svg", ~this.value.indexOf("xmlns") ? "<svg" : '<svg xmlns="http://www.w3.org/2000/svg"').replace(/"/g, "'").replace(/%/g, "%25").replace(/#/g, "%23").replace(/{/g, "%7B").replace(/}/g, "%7D").replace(/</g, "%3C").replace(/>/g, "%3E").replace(/\s+/g, " ");
+        document.getElementById("output").value = 'background-image: url("data:image/svg+xml,' + txt + '");';
+        document.getElementById("output").select();
+    });
+</script>
+</body>
+</html>

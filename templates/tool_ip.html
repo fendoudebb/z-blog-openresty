@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {(base.html, { title = title, keywords = keywords, description = description } )}
+    {(base.html, { title = "IP查询", keywords = "IP查询，查询IP，IP归属地", description = "IP查询，查询IP，IP归属地" } )}
     <style>
         .btn-link {
             font-size: 14px;
@@ -17,14 +17,14 @@
         <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
         <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
         <a class="shadow button btn-link" href="">IP查询</a>
+        <a class="shadow button btn-link" href="/tool/svg.html">SVG转CSS</a>
     </div>
     <div style="margin: auto;text-align: center">
         <p>当前IP：{{ngx.ctx.client_ip}}</p>
         <div style="width: 300px;display: inline-block">
-            IP：<input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
+            <input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
             <button id="queryIp" class="shadow button">查询</button>
         </div>
-
         <p id="result"></p>
     </div>
 </div>

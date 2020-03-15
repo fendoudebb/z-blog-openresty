@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {(base.html, { title = title, keywords = keywords, description = description } )}
+    {(base.html, { title = "时间戳转换", keywords = "时间戳转换，转换时间戳，格式化时间戳，时间戳格式化，时间戳", description = "时间戳转换，timestamp" } )}
     <style>
         td {
             margin: 0;
+        }
+
+        .ts-input {
+            caret-color: #4CAF50;/*光标颜色*/
+            width: 100%;
+            height: 32px;
+            line-height: 16px;
+            display: inline-block;
+            text-align: initial;
+            border: 1px solid #c8c8c8;
+            border-radius: 3px;
+            /*color: #ccc;*/
+            font-weight: 400;
+            font-size: 14px;
+            outline-color: #4CAF50;
         }
 
         .btn-link {
@@ -21,33 +36,23 @@
         <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
         <a class="shadow button btn-link" href="">时间戳转换</a>
         <a class="shadow button btn-link" href="/tool/ip.html">IP查询</a>
+        <a class="shadow button btn-link" href="/tool/svg.html">SVG转CSS</a>
     </div>
-    <!--    <div style="margin: auto">
-            时间戳 &nbsp;<input id="curTimestamp" class="search-input" placeholder="请输入时间戳（毫秒）">
-            <button id="transformTimestamp" class="shadow button">转换</button>
-            日期 &nbsp;<input id="formatTimestampResult" type="text" class="search-input" placeholder="日期">
-        </div>-->
-
-    <!--    <div style="text-align: center;margin-top: 20px">
-            日期 &nbsp;<input id="curDate" class="search-input" placeholder="请输入日期">
-            <button id="transformDate" class="shadow button">转换</button>
-            时间戳 &nbsp;<input id="formatDateResult" type="text" class="search-input" placeholder="时间戳（毫秒）">
-        </div>-->
     <div>
         <table style="margin: 0 auto" cellspacing="10">
             <tr>
                 <td>时间戳</td>
-                <td><input id="curTimestamp" class="search-input" placeholder="请输入时间戳（毫秒）"></td>
+                <td><input id="curTimestamp" class="ts-input" placeholder="请输入时间戳（毫秒）"></td>
                 <td><button id="transformTimestamp" class="shadow button">转换</button></td>
                 <td>日期</td>
-                <td><input id="formatTimestampResult" type="text" class="search-input" placeholder="日期"></td>
+                <td><input id="formatTimestampResult" type="text" class="ts-input" placeholder="日期"></td>
             </tr>
             <tr>
                 <td>日期</td>
-                <td><input id="curDate" class="search-input" placeholder="请输入日期"></td>
+                <td><input id="curDate" class="ts-input" placeholder="请输入日期"></td>
                 <td><button id="transformDate" class="shadow button">转换</button></td>
                 <td>时间戳</td>
-                <td><input id="formatDateResult" type="text" class="search-input" placeholder="时间戳（毫秒）"></td>
+                <td><input id="formatDateResult" type="text" class="ts-input" placeholder="时间戳（毫秒）"></td>
             </tr>
         </table>
     </div>
