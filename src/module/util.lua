@@ -20,7 +20,7 @@ function _M.query_ip(ip)
         keepalive_timeout = 2000 -- 毫秒
     })
 
-    if not res or res.status then
+    if (not res) or (res.status == 502) then
         if not res then
             ngx.log(ngx.ERR, "request ip taobao error#", err)
         else

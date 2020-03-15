@@ -11,9 +11,13 @@ local function record_visit_data(premature, record)
                 values(%s, %d, %s, '%s', %s, %s, '%s', '%s', '%s', '%s', '%s', '%s', %s, %.2f)
         ]]
         if record.status == 200 then
-            local captures = ngx.re.match(record.url, "/p/")
-            if captures and record.post_id then
+            local captures_post = ngx.re.match(record.url, "/p/")
+            if captures_post and record.post_id then
                 db.query("update post set pv = pv + 1 where id = " .. record.post_id)
+            end
+            local captures_search = ngx.re.match(record.url, "/search/")
+            if captures_search and record.search_stat then
+                db.query(string.format("insert into record_search(keywords, took, hits, ip, referer, browser, os, address) values(%s, %d, %d, '%s', %s, '%s', '%s', %s)", db.val_escape(record.search_stat.search), record.search_stat.took, record.search_stat.hits, record.ip, db.val_escape(record.referer), record.browser, record.os, db.val_escape(address)))
             end
             db.query(string.format(sql, "record_page_view", db.val_escape(record.url), record.req_method, db.val_escape(record.req_param), record.ip, db.val_escape(address), db.val_escape(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.val_escape(record.referer), record.cost_time))
         else
@@ -63,7 +67,8 @@ local record = {
     os_version = ua.os_version,
     status = ngx.status,
     cost_time = ngx.now() - ngx.req.start_time(),
-    post_id = ngx.ctx.post_id
+    post_id = ngx.ctx.post_id,
+    search_stat = ngx.ctx.search_stat
 }
 
 local ok, err = ngx.timer.at(0, record_visit_data, record)
