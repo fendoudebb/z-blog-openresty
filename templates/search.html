@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {(base.html, { title = title, keywords = title, description = title } )}
+    <style>
+        .content p {
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        em {
+            font-style: normal;
+            color: #D50000;
+        }
+    </style>
 </head>
 <body>
-{{search}}
+{(header.html)}
+<div class="main">
+    <div style="margin-bottom: 20px">
+        关键词：<em>{{ hits.search }}</em>
+    </div>
+    {% if hits.total > 0 then %}
+        <div class="content">
+        <ul>
+            {% for _, hit in ipairs(hits.hits) do %}
+            <li class="shadow index-post-item">
+                <a href="/p/{{ hit._source.postId }}.html" class="index-post-title-a ellipsis">{* hit.highlight.title[1] *}</a>
+                <p class="index-post-desc">{* hit.highlight.content[1] *}</p>
+                <p>
+                    <span style="color: #8a8a8a">{{ hit._source.postTime }}{% if hit._source.topics then %}，标签：{% for _, t in ipairs(hit._source.topics) do %}<a href="/topic/{{t}}.html" class="anchor-link-a" title="标签：{{t}}">{{t}}</a>&nbsp;{% end %}{% end %}</span>
+                </p>
+            </li>
+            {% end %}
+        </ul>
+        {(pagination.html)}
+    </div>
+    {% else %}
+        <div class="content" style="text-align: center">
+            <div class="shadow" style="padding: 30px">
+                未搜索到内容
+            </div>
+            <div style="margin-top: 20px">
+                <button class="shadow button" title="返回首页">
+                    <a href="/" style="color: #F5F5F5; text-decoration: none;">返回首页</a>
+                </button>
+            </div>
+        </div>
+    {% end %}
+    {(sidebar.html)}
+</div>
+{(footer.html)}
+{(base_js.html)}
 </body>
 </html>
