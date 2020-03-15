@@ -2,47 +2,28 @@
 <div class="header">
     <ul>
         <li>
-            <a href="/" title="首页">首页</a>
-        </li>
-        {% if '/message-board.html' == request_url then %}
-        <li class="header-a-checked">
-            <a href="/message-board.html" style="color: white" title="留言板">留言板</a>
-        </li>
-        {% else %}
-        <li>
-            <a href="/message-board.html" title="留言板">留言板</a>
-        </li>
-        {% end %}
-
-        {% if '/tool/json.html' == request_url then %}
-        <li class="header-a-checked">
-            <a href="/tool/json.html" style="color: white" title="小工具">小工具</a>
-        </li>
-        {% else %}
-        <li>
-            <a href="/tool/json.html" title="小工具">小工具</a>
-        </li>
-        {% end %}
-
-        {% if '/english.html' == request_url then %}
-        <li class="header-a-checked">
-            <a href="/english.html" style="color: white" title="英语角">英语角</a>
-        </li>
-        {% else %}
-        <li>
-            <a href="/english.html" title="英语角">英语角</a>
-        </li>
-        {% end %}
-            <!--<a href="https://github.com/fendoudebb" target="_blank" title="Github">Github</a>-->
+            <a href="/" title="首页" {% if "/" == request_url then %}style="color: #4CAF50"{% end %}>首页</a>
+        </li><li>
+        <a href="/message-board.html" title="留言板" {% if "/message-board.html" == request_url then %}style="color: #4CAF50"{% end %}>留言板</a>
+    </li><li>
+        <a href="/tool/json.html" title="小工具" {% if ngx.re.match(request_url, "/tool/") then %}style="color: #4CAF50"{% end %}>小工具</a>
+    </li><li>
+        <a href="/english.html" title="英语角" {% if "/english.html" == request_url then %}style="color: #4CAF50"{% end %}>英语角</a>
+    </li>
+        <!--<a href="https://github.com/fendoudebb" target="_blank" title="Github">Github</a>-->
     </ul>
-<!--    <iframe style="position:absolute;left:10px; top:15px;" src="https://ghbtns.com/github-btn.html?user=fendoudebb&repo=z-blog&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>-->
-    <!--<a class="ellipsis"  title="网址导航">网址导航</a>-->
 </div>
 <hr>
 {% if ngx.ctx.is_mobile then %}
-<form action="#" onsubmit="return false" style="padding: 0 10px">
-    <input class="search-input" placeholder="请输入关键字..." type="search" results="10">
-    <button type="button" class="search-button">搜索</button>
-</form>
+<div style="margin: 0 10px">
+    <input class="search-input" placeholder="搜索..." type="search" autocomplete="off" list="custom-datalist">
+    <datalist id="custom-datalist">
+        <option value="IDEA">PhpStorm/WebStorm/PyCharm</option>
+        <option value="Java">Spring Boot</option>
+        <option value="OpenResty">Lua</option>
+        <option value="PostgreSQL">pgadmin</option>
+        <option value="小程序">
+    </datalist>
+</div>
 <hr>
 {% end %}

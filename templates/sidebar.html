@@ -10,10 +10,14 @@ end
 {% if web_stat ~= nil then %}
 <div class="sidebar">
     <div class="shadow sidebar-widget">
-        <form action="#" onsubmit="return false">
-            <input class="search-input" placeholder="请输入关键字..." type="search" results="10">
-            <button type="button" class="search-button">搜索</button>
-        </form>
+        <input class="search-input" placeholder="搜索..." type="search" autocomplete="off" list="custom-datalist">
+        <datalist id="custom-datalist">
+            <option value="IDEA">PhpStorm/WebStorm/PyCharm</option>
+            <option value="Java">Spring Boot</option>
+            <option value="OpenResty">Lua</option>
+            <option value="PostgreSQL">pgadmin</option>
+            <option value="小程序">
+        </datalist>
     </div>
     <div class="shadow sidebar-widget">
         <h3>标签</h3>

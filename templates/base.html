@@ -162,7 +162,7 @@
     body {
         width: 100vw;
         /*overflow: hidden;*/
-        background-color: #F6F8F9;
+        background-color: #F8F8F8;
     }
 
     hr {
@@ -259,11 +259,12 @@
     }
 
     .header li:hover {
-        background-color: #4CAF50;
+        background-color: #fafafa;
+        /*background-color: #e4e6e8;*/
     }
 
     .header li:hover a {
-        color: white;
+        color: #4CAF50;
     }
 
     .header ul li a {
@@ -272,10 +273,6 @@
         font-size: 14px;
         text-decoration: none;
         color: black;
-    }
-
-    .header-a-checked {
-        background-color: #4CAF50;
     }
 
     .header a:active {
@@ -647,43 +644,27 @@
         white-space: nowrap;
     }
 
-    #submitBtn {
-        position: absolute;
-        right: -11px;
-        bottom: 0;
-        margin: 0
-    }
-
     .search-input {
         caret-color: #4CAF50;/*光标颜色*/
-        box-sizing: border-box;/*解决超出父容器宽度问题*/
-        width: 75%;
-        max-width: 75%;
-        height: 34px;
-        line-height: 17px;
+        width: 100%;
+        height: 32px;
+        line-height: 16px;
+        display: inline-block;
         text-align: initial;
-        padding: 0 3% 0 3%;
-        background-color: #fff;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 18 18'%3E%3Cpath fill='%23c8c8c8' d='M18 16.5l-5.14-5.18h-.35a7 7 0 1 0-1.19 1.19v.35L16.5 18l1.5-1.5zM12 7A5 5 0 1 1 2 7a5 5 0 0 1 10 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 10px center/16px;
+        padding-left: 30px;
         border: 1px solid #c8c8c8;
-        border-radius: 3px 0 0 3px;
+        border-radius: 3px;
         /*color: #ccc;*/
         font-weight: 400;
         font-size: 14px;
         outline-color: #4CAF50;
     }
 
-    .search-button {
-        cursor:pointer;
-        float:right;
-        outline-color:#4CAF50;
-        text-align: center;
-        width: 25%;
-        height:34px;
-        line-height: 17px;
-        background: #4CAF50;
-        color: #fff;
-        border: 1px solid #4CAF50;
-        border-radius: 0 3px 3px 0;
+    /*移除datalist下拉箭头*/
+    input::-webkit-calendar-picker-indicator {
+        display: none;
+        -webkit-appearance: none;
     }
 
     input{
