@@ -15,7 +15,7 @@
             outline: none; /*没有黄框*/
             resize: none; /*不能拖拽*/
             display: block;
-            font-family: "Courier New", cursive;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
         }
 
         #json {
@@ -30,6 +30,7 @@
             max-width: 100%;
             min-height: 60vh;
             max-height: 60vh;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
         }
 
         #json * {
@@ -117,12 +118,7 @@
 <body>
 {(header.html)}
 <div class="main">
-    <div style="margin-bottom: 20px">
-        <a class="shadow button btn-link" href="">格式化JSON</a>
-        <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
-        <a class="shadow button btn-link" href="/tool/ip.html">IP查询</a>
-        <a class="shadow button btn-link" href="/tool/svg.html">SVG转CSS</a>
-    </div>
+    <p>格式化JSON</p>
 
     <div style="display: inline-block;width: 45vw;margin-left: 3vw;margin-right: 2vw;text-align: left">
         <textarea id="json-textarea" placeholder="请输入JSON字符串" title="格式化JSON"></textarea>
@@ -147,6 +143,7 @@
             </div>
         </div>
     </div>
+    {(tools.html)}
 </div>
 {(footer.html)}
 {(base_js.html)}

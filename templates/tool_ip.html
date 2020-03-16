@@ -13,20 +13,18 @@
 <body>
 {(header.html)}
 <div class="main">
-    <div style="margin-bottom: 20px">
-        <a class="shadow button btn-link" href="/tool/json.html">格式化JSON</a>
-        <a class="shadow button btn-link" href="/tool/timestamp.html">时间戳转换</a>
-        <a class="shadow button btn-link" href="">IP查询</a>
-        <a class="shadow button btn-link" href="/tool/svg.html">SVG转CSS</a>
-    </div>
-    <div style="margin: auto;text-align: center">
-        <p>当前IP：{{ngx.ctx.client_ip}}</p>
-        <div style="width: 300px;display: inline-block">
-            <input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
-            <button id="queryIp" class="shadow button">查询</button>
+    <p>IP查询</p>
+    <div class="content" style="text-align: center">
+        <div class="shadow" style="padding: 50px">
+            <p>当前IP：{{ngx.ctx.client_ip}}</p>
+            <div style="width: 300px;display: inline-block">
+                <input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
+                <button id="queryIp" class="shadow button">查询</button>
+            </div>
+            <p id="result"></p>
         </div>
-        <p id="result"></p>
     </div>
+    {(tools.html)}
 </div>
 {(base_js.html)}
 <script>

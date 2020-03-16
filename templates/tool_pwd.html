@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = "随机密码生成器", keywords = "随机密码生成器", description = "随机密码生成器" } )}
+    <style>
+        .btn-link {
+            font-size: 14px;
+            color: #F5F5F5;
+            text-decoration: none;
+        }
+
+        .pwd-textarea {
+            padding: 5px;
+            border: 1px solid #4CAF50;
+            border-radius: 2px;
+            background-color: #ffffffff;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+            outline: none; /*没有黄框*/
+            resize: none; /*不能拖拽*/
+            display: block;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+        }
+
+        #container { padding: 50px }
+        #container ul { margin: 0; padding: 0; border-top: 1px solid #eee; list-style: none; font-size: 14px; }
+        #container li { clear: both; overflow: hidden; padding: .5em 0; border-bottom: 1px solid #eee; }
+        .pure-form label { display: block; overflow: hidden; margin: 0; }
+        .pure-form span { float: left; margin: 6px 0; }
+        #container input { float: right; margin-top: 9px; }
+        #special_characters, #exclude_characters, #password_length, #password_quantity { margin-top: 0; width: 5em; text-align: right; }
+        #special_characters, #exclude_characters { width: 60%; }
+        #generate { margin: 1em 0; }
+
+        #container input[type="checkbox"]{
+            -webkit-appearance: checkbox;
+        }
+
+        #container input[type="text"], #container input[type="number"] {
+            caret-color: #4CAF50;/*光标颜色*/
+            height: 24px;
+            line-height: 12px;
+            display: inline-block;
+            text-align: initial;
+            border: 1px solid #c8c8c8;
+            border-radius: 3px;
+            /*color: #ccc;*/
+            font-weight: 400;
+            font-size: 14px;
+            outline-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    <p>随机密码生成器</p>
+    <div class="content" style="text-align: center">
+        <div class="shadow">
+            <form id="container" class="pure-form">
+                <ul>
+                    <li><label><input type="checkbox" name="include_number" checked=""><span>数字</span></label></li>
+                    <li><label><input type="checkbox" name="include_lowercaseletters" checked=""><span>小写字母</span></label></li>
+                    <li><label><input type="checkbox" name="include_uppercaseletters" checked=""><span>大写字母</span></label></li>
+                    <li><label><input type="checkbox" name="password_unique"><span>字符不重复</span></label></li>
+                    <li><label><span>特殊符号</span><input type="text" name="special_characters" placeholder="需要添加的特殊符号"></label></li>
+                    <li><label><span>排除字符</span><input type="text" name="exclude_characters" placeholder="如：i, l, 1, L, o, 0, O"></label></li>
+                    <li><label><span>密码长度</span><input type="number" name="password_length" min="0" value="8"></label></li>
+                    <li><label><span>密码数量</span><input type="number" name="password_quantity" min="0" value="1"></label></li>
+                </ul>
+                <button type="button" id="generate" class="shadow button btn-link">生成密码</button>
+                <textarea name="output" class="pwd-textarea"></textarea>
+            </form>
+        </div>
+    </div>
+    {(tools.html)}
+</div>
+{(base_js.html)}
+<script type="text/javascript">
+
+    var form = document.getElementById('container');
+    function rand(max) {
+        return Math.floor(Math.random() * max);
+    }
+    document.getElementById('generate').onclick = function () {
+        var chars = '';
+        var passwords = [];
+        var passwordUnique = form.password_unique.checked;
+        var quantity = Number(form.password_quantity.value);
+        if (form.include_number.checked) chars += '0123456789';
+        if (form.include_lowercaseletters.checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+        if (form.include_uppercaseletters.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (form.special_characters.value) chars += form.special_characters.value;
+        if (form.exclude_characters.value) chars = chars.replace(new RegExp(form.exclude_characters.value.split('').join('|'), 'g'), '');
+        while (passwords.length < quantity) {
+            var _chars = chars.split('');
+            var password = '';
+            for (var i = 0, l = form.password_length.value; i < l; i++) {
+                if (_chars.length < 1) break;
+                var idx = rand(_chars.length);
+                password += _chars[idx];
+                if (passwordUnique) _chars.splice(idx, 1);
+            }
+            if (passwords.indexOf(password) === -1) passwords.push(password);
+        }
+        form.output.value = passwords.join('\n');
+    };
+    form.output.onfocus = function () {
+        this.select();
+    };
+    function loadConfig() {
+        var config = JSON.parse(localStorage.getItem('passwordConfig'));
+        Object.keys(config).forEach(function (name) {
+            var value = config[name];
+            var input = form[name];
+            if (input.type === 'checkbox') {
+                input.checked = value;
+            } else {
+                input.value = value;
+            }
+        });
+    }
+    function saveConfig() {
+        var config = {};
+        [].forEach.call(form.getElementsByTagName('input'), function (input) {
+            config[input.name] = input.type === 'checkbox' ? input.checked : input.value;
+        });
+        localStorage.setItem('passwordConfig', JSON.stringify(config));
+    }
+    [].forEach.call(form.getElementsByTagName('input'), function (input) {
+        input.addEventListener('change', saveConfig);
+    });
+    if (localStorage.getItem('passwordConfig')) {
+        loadConfig();
+    }
+</script>
+</body>
+</html>
