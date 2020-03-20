@@ -6,3 +6,14 @@
 - [pgmoon](https://github.com/leafo/pgmoon)：`PostgreSQL`的`Lua`驱动
 - [lua-resty-woothee](https://github.com/woothee/lua-resty-woothee)：基于`Woothee`的`User-Agent`解析器
 - [lua-resty-http](https://github.com/woothee/lua-resty-woothee)：`OpenResty`和`ngx_lua`中的`HTTP`客户端
+
+## 安装依赖
+```bash
+luarocks install lua-resty-template
+luarocks install pgmoon
+luarocks install lua-resty-woothee
+luarocks install lua-resty-http
+```
+
+luarocks安装可参考  
+[OpenResty整合luarocks-Windows10](https://www.zhangbj.com/p/523.html)
