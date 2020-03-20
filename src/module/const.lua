@@ -43,4 +43,11 @@ function _M.query_ip_fail()
     }
 end
 
+function _M.login_fail()
+    return {
+        code = 2000,
+        msg = "用户名或密码不正确"
+    }
+end
+
 return _M

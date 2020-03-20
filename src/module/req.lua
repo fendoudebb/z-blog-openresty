@@ -44,6 +44,16 @@ function _M.bad_request()
     })
 end
 
+-- 401
+function _M.unauthorized()
+    return _M.request_error(ngx.HTTP_UNAUTHORIZED , {
+        timestamp = ngx.time(),
+        status = 401,
+        error = "unauthorized",
+        message = "unauthorized"
+    })
+end
+
 -- 405status
 function _M.method_not_allowed()
     return _M.request_error(ngx.HTTP_NOT_ALLOWED, {
