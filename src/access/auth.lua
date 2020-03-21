@@ -1,5 +1,4 @@
 local json = require "cjson.safe"
-local const = require "module.const"
 local req = require "module.req"
 
 if not req.is_post_method(ngx.var.request_method) then
