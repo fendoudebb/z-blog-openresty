@@ -46,7 +46,7 @@ end
 
 -- 401
 function _M.unauthorized()
-    return _M.request_error(ngx.HTTP_UNAUTHORIZED , {
+    return _M.request_error(ngx.HTTP_UNAUTHORIZED, {
         timestamp = ngx.time(),
         status = 401,
         error = "unauthorized",
@@ -82,16 +82,8 @@ end
 function _M.get_page_size(args)
     -- ngx.req.get_uri_args()
     -- ngx.ctx.body_data
-    local page = 1;
-    local size = 20;
-    if args then
-        local arg_page = args.page
-        if type(arg_page) == "string" then
-            page = tonumber(arg_page)
-        else
-            page = arg_page
-        end
-    end
+    local page = tonumber(args.page or 1)
+    local size = tonumber(args.size or 20)
 
     if page < 1 then
         page = 1
