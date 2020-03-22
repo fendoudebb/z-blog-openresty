@@ -13,9 +13,11 @@ end
 local req_url = ngx.var[1]
 
 local sql
-if req_url == "add" then -- 增
+if req_url == "add" then
+    -- 增
     sql = "update post set topics = array_append(topics, %s) where id = %d"
-else -- 删
+else
+    -- 删
     sql = "update post set topics = array_remove(topics, %s) where id = %d"
 end
 

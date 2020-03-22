@@ -19,5 +19,5 @@ local result = db.query(string.format(sql, sql_args.limit, sql_args.offset))
 
 ngx.say(json.encode(const.ok({
     count = result[1][1].count,
-    post = result[2]
+    posts = result[2]
 })))

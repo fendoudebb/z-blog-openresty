@@ -46,7 +46,7 @@ if post.comment_status ~= 0 then
 end
 
 local sql_value = string.format([[
-'id', nextval('post_comment_id_seq')::regclass,
+'id', nextval('post_comment_id_seq'),
 'ip', '%s',
 'address', %s,
 'comment_date', '%s',
