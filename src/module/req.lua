@@ -81,12 +81,15 @@ end
 
 function _M.get_page_size(args)
     -- ngx.req.get_uri_args()
+    -- ngx.ctx.body_data
     local page = 1;
     local size = 20;
     if args then
         local arg_page = args.page
         if type(arg_page) == "string" then
             page = tonumber(arg_page)
+        else
+            page = arg_page
         end
     end
 
