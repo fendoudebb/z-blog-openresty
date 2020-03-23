@@ -1,4 +1,4 @@
-<project name="z_blog_openresty" default="dist" basedir=".">
+<project name="z-blog-openresty" default="dist" basedir=".">
     <description>
         run lua-learn
     </description>
