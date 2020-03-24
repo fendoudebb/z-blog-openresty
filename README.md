@@ -17,3 +17,10 @@ luarocks install lua-resty-http
 
 luarocks安装可参考  
 [OpenResty整合luarocks-Windows10](https://www.zhangbj.com/p/523.html)
+
+## 初始化数据库
+```sql
+initdb
+createuser z-blog
+createdb -O z-blog z-blog
+```
