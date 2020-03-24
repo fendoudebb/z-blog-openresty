@@ -94,6 +94,8 @@ end
 --    ngx.log(ngx.ERR, json.encode(res.body))
 --end
 
+-- 统计标签数量
+-- select  count(1) as topic_count, unnest(topics) unnest_arr from post group by unnest_arr order by topic_count desc
 function _M.query_web_stat()
     local start_query = ngx.now()
     local result = db.query([[
