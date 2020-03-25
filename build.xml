@@ -1,6 +1,6 @@
-<project name="z-blog-openresty" default="dist" basedir=".">
+<project name="z_blog_openresty" default="dist" basedir=".">
     <description>
-        run lua-learn
+        run z-blog-openresty
     </description>
     <!-- set global properties for this build -->
     <property name="openresty-home" location="D:\lua\openresty-1.15.8.2-win32"/>
@@ -11,7 +11,7 @@
 
     <echo>######开发版本的ant配置#####</echo>
     <target name="clean" depends="">
-        <echo>清理openresty目录 ${dist}下的conf,logs,janus,januslib</echo>
+        <echo>清理openresty目录 ${dist}下的conf,logs</echo>
 <!--        <delete file="${target-conf}/nginx.conf"/>-->
 <!--        <delete dir="${target-src}"/>-->
         <delete>
