@@ -56,7 +56,15 @@ elseif req_url == "delete" then
     end
 
 else
+    local comment_id = ngx.ctx.body_data.comment_id
+    if type(comment_id) ~= "number" then
+        return req.bad_request()
+    end
+    local content = ngx.ctx.body_data.content
+    if type(content) ~= "string" then
+        return req.bad_request()
+    end
     -- 回复评论
-    sql = "update post set topics = array_remove(topics, %s) where id = %d"
+    ngx.say(json.encode(const.ok(content)))
 end
 
