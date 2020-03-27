@@ -40,7 +40,7 @@ if post.is_liked then
 end
 
 local sql_value = string.format([[
-'id', nextval('post_like_id_seq')::regclass,
+'id', nextval('post_like_id_seq'),
 'ip', '%s',
 'address', %s,
 'like_date', '%s',

@@ -17,12 +17,17 @@ local req_url = ngx.var[1]
 --    )
 --    select jsonb_agg(data) as comments from t
 
+-- select jsonb_agg(comment_arr) as comments from post, jsonb_array_elements(post_comment) as comment_arr where id = %d limit %d offset %d
+
 local sql
 if req_url == "list" then
     -- 评论列表
     sql = [[
     select jsonb_array_length(post_comment) as count from post where id = %d;
-    select jsonb_agg(comment_arr) as comments from post, jsonb_array_elements(post_comment) as comment_arr where id = %d limit %d offset %d
+    with t as (
+        select jsonb_array_elements(post_comment) as data from post where id = %d limit %d offset %d
+    )
+    select jsonb_agg(data) as comments from t
     ]]
     sql = string.format(sql, post_id, post_id, sql_args.limit, sql_args.offset)
 
@@ -32,7 +37,6 @@ if req_url == "list" then
         count = result[1][1].count,
         comments = result[2][1].comments
     })))
-
 elseif req_url == "delete" then
     local comment_id = ngx.ctx.body_data.comment_id
     if type(comment_id) ~= "number" then
@@ -54,7 +58,6 @@ elseif req_url == "delete" then
     else
         ngx.say(json.encode(const.fail()))
     end
-
 else
     local comment_id = ngx.ctx.body_data.comment_id
     if type(comment_id) ~= "number" then
