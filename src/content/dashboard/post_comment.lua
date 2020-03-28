@@ -49,9 +49,7 @@ elseif req_url == "delete" then
         post_comment, ARRAY[(select index-1 from jsonb_array_elements(post_comment) WITH ORDINALITY arr(element, index) where element ->> 'id' = '%d')::text, 'status'], '"OFFLINE"', false
     ) where id = %d
     ]]
-    sql = string.format(sql, comment_id, post_id)
-
-    local result = db.query(sql)
+    local result = db.query(string.format(sql, comment_id, post_id))
 
     if result then
         ngx.say(json.encode(const.ok()))
@@ -67,7 +65,44 @@ else
     if type(content) ~= "string" then
         return req.bad_request()
     end
+
+    local ua = req.parse_ua(ngx.var.http_user_agent)
+
+    local sql_value = string.format([[
+    'id', nextval('post_comment_id_seq'),
+    'ip', '%s',
+    'reply_date', '%s',
+    'reply_timestamp', %d,
+    'ua', %s,
+    'browser', '%s',
+    'browser_platform', '%s',
+    'browser_version', '%s',
+    'browser_vendor', '%s',
+    'os', '%s',
+    'os_version', '%s',
+    'content', %s,
+    'status', 'ONLINE'
+    ]], ngx.ctx.client_ip, ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(content))
+
+
     -- 回复评论
-    ngx.say(json.encode(const.ok(content)))
+    sql = [[
+    with t as (
+    select (index-1)::text as i, element->>'replies' as replies from post, jsonb_array_elements(post_comment) WITH ORDINALITY arr(element, index) where element ->> 'id' = '%d'
+    )
+    update post set post_comment = case when (select replies from t) is null then
+    jsonb_set(
+        post_comment, ARRAY[(select i from t),'replies'],jsonb_build_array(jsonb_build_object(%s))
+    )
+    else
+    jsonb_insert(
+        post_comment, ARRAY[(select i from t),'replies','0'],jsonb_build_object(%s)
+    )
+    end
+    where id = %d
+    ]]
+
+    db.query(string.format(sql, comment_id, sql_value, sql_value, post_id))
+    ngx.say(json.encode(const.ok()))
 end
 
