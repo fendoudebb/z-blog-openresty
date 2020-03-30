@@ -4,7 +4,7 @@ local req = require "module.req"
 
 local sql_args = req.get_page_size(ngx.req.get_uri_args())
 
-local sql = "select id, nickname, content, floor, to_char(create_ts, 'YYYY-MM-DD') as create_ts, status, browser, os, replies from message_board order by create_ts desc limit %d offset %d"
+local sql = "select id, nickname, content, floor, to_char(create_ts, 'YYYY-MM-DD') as create_ts, status, browser, os, replies from message_board order by id desc limit %d offset %d"
 
 local result = db.query(string.format(sql, sql_args.limit, sql_args.offset))
 

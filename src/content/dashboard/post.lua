@@ -23,7 +23,7 @@ end
 local order_cause = ""
 
 if rank_type == nil then
-    order_cause = "create_ts"
+    order_cause = "id"
 elseif rank_type == "pv" then
     order_cause = "pv"
 elseif rank_type == "comment_count" then

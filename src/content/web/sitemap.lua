@@ -35,7 +35,7 @@ xmlroot(
 					xmlelement(name changefreq, 'daily'),
 					xmlelement(name priority, 0.8)
 				)
-			order by create_ts desc)
+			order by id desc)
 		)
 	)
 	,version '1.0', standalone yes)::text as sitemap

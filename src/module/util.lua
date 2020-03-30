@@ -104,9 +104,9 @@ function _M.query_web_stat()
         select count(*) from post where post_status = 0;
         select count(*) from ip_pool;
         select count(*) from record_page_view;
-        select id, title, pv from post where post_status = 0 order by pv desc, create_ts desc limit 5;
-        select id, title, like_count from post where post_status = 0 order by like_count desc, create_ts desc limit 5;
-        select id, title, comment_count from post where post_status = 0 order by comment_count desc, create_ts desc limit 5;
+        select id, title, pv from post where post_status = 0 order by pv desc, id desc limit 5;
+        select id, title, like_count from post where post_status = 0 order by like_count desc, id desc limit 5;
+        select id, title, comment_count from post where post_status = 0 order by comment_count desc, id desc limit 5;
     ]])
 
     local memory = ngx.shared.memory
