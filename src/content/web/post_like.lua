@@ -51,7 +51,7 @@ local sql_value = string.format([[
 'browser_version', '%s',
 'browser_vendor', '%s',
 'os', '%s',
-'os_version', '%s']], client_ip, db.val_escape(util.query_ip(client_ip)), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
+'os_version', '%s']], client_ip, db.val_escape(util.query_ip(client_ip).address), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
 
 local update_sql = string.format([[
 update post set post_like =

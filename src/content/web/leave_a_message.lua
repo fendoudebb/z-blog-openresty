@@ -27,12 +27,12 @@ if not content then
 end
 
 local sql = [[
-insert into message_board(nickname, content, floor, ip, ua, address, os, browser) values(
-%s, %s, (select max(floor) from message_board) + 1, '%s', %s, '%s', '%s', '%s'
+insert into message_board(nickname, content, floor, ip_id, ua, os, browser) values(
+%s, %s, (select max(floor) from message_board) + 1, %s, %s, '%s', '%s'
 )
 ]]
 
-local insert_result = db.query(string.format(sql, db.val_escape(nickname), db.val_escape(content), client_ip, db.val_escape(ngx.var.http_user_agent), util.query_ip(client_ip), ua.os, ua.name))
+local insert_result = db.query(string.format(sql, db.val_escape(nickname), db.val_escape(content), util.query_ip(client_ip).id, db.val_escape(ngx.var.http_user_agent), ua.os, ua.name))
 
 if insert_result.affected_rows < 1 then
     ngx.say(json.encode(const.fail()))

@@ -17,7 +17,7 @@ if type(query_ip) ~= "string" then
     return req.bad_request()
 end
 
-local address = util.query_ip(query_ip);
+local address = util.query_ip(query_ip).address;
 
 if address then
     ngx.say(json.encode(const.ok(address)))
