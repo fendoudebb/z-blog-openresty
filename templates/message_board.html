@@ -36,11 +36,11 @@
                 {% if m.replies then %}
                     {% for _, reply in ipairs(m.replies) do %}
                     <div class="reply-area">
-                        <div class="nickname-span" style="color: #4CAF50">作者回复</div>
+                        <div class="nickname-span"><span style="color: #4CAF50">{{reply.nickname}}</span> 回复 <span style="color: #4CAF50">@{{reply.reply_nickname}}</span></div>
                         <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
                         <div>
                             <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                            <span  class="time-span">{{reply.reply_date}}</span>
+                            <span  class="time-span">{{reply.create_ts}}</span>
                         </div>
                     </div>
                     {% end %}
