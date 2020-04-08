@@ -13,7 +13,7 @@ end
 
 -- 参照pgmoon:escape_literal
 function _M.val_escape(val)
-    if val then
+    if val and val ~= ngx.null then
         -- 防止SQL注入，OpenResty自带
         return ndk.set_var.set_quote_pgsql_str(val)
     else
