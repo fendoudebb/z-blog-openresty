@@ -50,4 +50,11 @@ function _M.login_fail()
     }
 end
 
+function _M.word_repeated()
+    return {
+        code = 2001,
+        msg = "单词已存在"
+    }
+end
+
 return _M

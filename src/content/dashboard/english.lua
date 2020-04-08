@@ -44,6 +44,10 @@ else
         sql = string.format(sql, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, id)
     else
         -- 增
+        local result = db.query("select id from english where word = " .. word)
+        if result[1].id then
+            return ngx.say(json.encode(const.word_repeated()))
+        end
         sql = "insert into english(word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source) values(%s, %s, %s, %s, %s, %s, %s, %s)"
         sql = string.format(sql, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source)
     end
