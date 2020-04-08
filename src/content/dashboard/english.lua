@@ -17,7 +17,7 @@ if req_url == "list" then
     local sql_args = req.get_page_size(ngx.ctx.body_data)
     sql = [[
     select count(*) from english %s;
-    select id, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, to_char(create_ts, 'YYYY-MM-DD') from english %s order by id desc limit %d offset %d
+    select id, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') from english %s order by id desc limit %d offset %d
     ]]
     sql = string.format(sql, where_cause, where_cause, sql_args.limit, sql_args.offset)
     local result = db.query(sql)
@@ -40,12 +40,12 @@ else
             return req.bad_request()
         end
         -- 改
-        sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s where id = %d"
+        sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s, update_ts = current_timestamp where id = %d"
         sql = string.format(sql, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, id)
     else
         -- 增
         local result = db.query("select id from english where word = " .. word)
-        if result[1].id then
+        if result[1] and result[1].id then
             return ngx.say(json.encode(const.word_repeated()))
         end
         sql = "insert into english(word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source) values(%s, %s, %s, %s, %s, %s, %s, %s)"
