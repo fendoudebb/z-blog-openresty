@@ -11,7 +11,7 @@ if req_url == "list" then
 
     local word = ngx.ctx.body_data.word
     if type(word) == "string" then
-        where_cause = "where word = " .. db.val_escape(word)
+        where_cause = "where word=" .. db.val_escape(word)
     end
 
     local sql_args = req.get_page_size(ngx.ctx.body_data)
@@ -40,11 +40,11 @@ else
             return req.bad_request()
         end
         -- 改
-        sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s, update_ts = current_timestamp where id = %d"
+        sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s, update_ts=current_timestamp where id=%d"
         sql = string.format(sql, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, id)
     else
         -- 增
-        local result = db.query("select id from english where word = " .. word)
+        local result = db.query("select id from english where word=" .. word)
         if result[1] and result[1].id then
             return ngx.say(json.encode(const.word_repeated()))
         end

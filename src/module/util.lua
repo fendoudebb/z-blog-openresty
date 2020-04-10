@@ -7,7 +7,7 @@ local _M = { _VERSION = "0.01"}
 function _M.query_ip(ip)
     --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
     -- select concat('ab', null, 'cd') => abcd
-    local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip = '%s'::inet limit 1"
+    local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip='%s'::inet limit 1"
     local prop = db.query(string.format(select_sql, ip))[1];
     -- 第一次查询ip未成功，但已经入库，prop虽然不等于nil，但prop.address还是为nil
     if prop ~= nil and prop.address then
@@ -87,7 +87,7 @@ function _M.query_ip(ip)
         -- 更新或插入
         local sql
         if prop then
-            sql = string.format("update ip_pool set country = %s, region = %s, city = %s, isp = %s, country_id = %s, region_id= %s, city_id= %s, isp_id = %s where id = %s returning id",
+            sql = string.format("update ip_pool set country=%s, region=%s, city=%s, isp=%s, country_id=%s, region_id=%s, city_id=%s, isp_id=%s, update_ts=current_timestamp where id=%d returning id",
                     country,
                     region,
                     city,
@@ -138,13 +138,13 @@ function _M.query_web_stat()
     local start_query = ngx.now()
     local result = db.query([[
         select name from topic order by sort;
-        select website, url from link where status = 0 order by sort;
-        select count(*) from post where post_status = 0;
+        select website, url from link where status=0 order by sort;
+        select count(*) from post where post_status=0;
         select count(*) from ip_pool;
         select count(*) from record_page_view;
-        select id, title, pv from post where post_status = 0 order by pv desc, id desc limit 5;
-        select id, title, like_count from post where post_status = 0 order by like_count desc, id desc limit 5;
-        select id, title, comment_count from post where post_status = 0 order by comment_count desc, id desc limit 5;
+        select id, title, pv from post where post_status=0 order by pv desc, id desc limit 5;
+        select id, title, like_count from post where post_status=0 order by like_count desc, id desc limit 5;
+        select id, title, comment_count from post where post_status=0 order by comment_count desc, id desc limit 5;
     ]])
 
     local memory = ngx.shared.memory

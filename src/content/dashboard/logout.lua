@@ -17,6 +17,3 @@ local login_key = "dashboard-login-" .. token
 memory:delete(login_key)
 
 ngx.say(json.encode(const.ok()))
-
-
-

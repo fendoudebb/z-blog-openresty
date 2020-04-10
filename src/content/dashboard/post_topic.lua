@@ -15,10 +15,10 @@ local req_url = ngx.var[1]
 local sql
 if req_url == "add" then
     -- 增
-    sql = "update post set topics = array_append(topics, %s) where id = %d"
+    sql = "update post set topics=array_append(topics, %s), update_ts=current_timestamp where id = %d"
 else
     -- 删
-    sql = "update post set topics = array_remove(topics, %s) where id = %d"
+    sql = "update post set topics=array_remove(topics, %s), update_ts=current_timestamp where id = %d"
 end
 
 db.query(string.format(sql, db.val_escape(topic), post_id))

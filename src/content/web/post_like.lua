@@ -26,7 +26,7 @@ end
 --post_like @> '[{"ip":"]] .. ngx.ctx.client_ip .. [["}]'::jsonb as is_liked
 --from post where id = ]] .. ngx.var[1]
 
-local select_sql = [[select post_status, post_like @> '[{"ip":"%s"}]' as is_liked from post where id = %d]]
+local select_sql = [[select post_status, post_like @> '[{"ip":"%s"}]' as is_liked from post where id=%d]]
 local result = db.query(string.format(select_sql, client_ip, post_id))
 
 local post = result[1]
@@ -54,12 +54,12 @@ local sql_value = string.format([[
 'os_version', '%s']], client_ip, db.val_escape(util.query_ip(client_ip).address), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version)
 
 local update_sql = string.format([[
-update post set post_like =
+update post set post_like=
 (
     case when post_like is not null then jsonb_build_object(%s) || post_like
     else jsonb_build_array(jsonb_build_object(%s))
     end
-), like_count = like_count + 1
+), like_count=like_count+1
 where id = %d and post_like @> '[{"ip":"%s"}]' is not true;
 ]], sql_value, sql_value, post_id, client_ip)
 

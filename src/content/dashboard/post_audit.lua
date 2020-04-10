@@ -11,7 +11,7 @@ if type(id) ~= "number" or type(status) ~= "number" or status > 1 then
 end
 
 local sql = [[
-update post set post_status = %d where id = %d
+update post set post_status=%d where id=%d
 ]]
 
 local update_result = db.query(string.format(sql, status, id))

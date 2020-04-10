@@ -18,7 +18,7 @@ if type(post_id) ~= "number" then
 end
 
 local result = db.query([[
-select id, title, pv from post where post_status = 0 order by random() limit 10
+select id, title, pv from post where post_status=0 order by random() limit 10
 ]])
 
 local res = const.ok({ post = result })

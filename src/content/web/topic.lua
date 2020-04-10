@@ -8,8 +8,8 @@ local topic = ngx.var[1]
 local escape_topic = db.val_escape(topic)
 
 local sql = [[
-select id, title, description, pv, like_count, comment_count, topics, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where post_status = 0 and %s=ANY(topics) limit %d offset %d;
-select count(*) as count from post where post_status = 0 and %s=ANY(topics);
+select id, title, description, pv, like_count, comment_count, topics, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where post_status=0 and %s=ANY(topics) limit %d offset %d;
+select count(*) as count from post where post_status=0 and %s=ANY(topics);
 ]]
 
 local result = db.query(string.format(sql, escape_topic, sql_args.limit, sql_args.offset, escape_topic))

@@ -39,7 +39,7 @@ xmlroot(
 		)
 	)
 	,version '1.0', standalone yes)::text as sitemap
-from post where post_status = 0
+from post where post_status=0
 ]], xmlns, baidu_element, base_url, baidu_element, base_url))
 
 ngx.say(result[1].sitemap)

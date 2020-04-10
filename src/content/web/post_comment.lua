@@ -32,7 +32,7 @@ if not content then
     return req.bad_request()
 end
 
-local select_sql = [[select post_status, comment_status from post where id = %d]]
+local select_sql = [[select post_status, comment_status from post where id=%d]]
 local result = db.query(string.format(select_sql, post_id))
 
 local post = result[1]
@@ -70,8 +70,8 @@ update post set post_comment =
     case when post_comment is not null then jsonb_build_object(%s) || post_comment
     else jsonb_build_array(jsonb_build_object(%s))
     end
-), comment_count = comment_count + 1
-where id = %d
+), comment_count=comment_count+1
+where id=%d
 ]], sql_value, sql_value, post_id)
 
 local update_result = db.query(update_sql) -- {"affected_rows":1}

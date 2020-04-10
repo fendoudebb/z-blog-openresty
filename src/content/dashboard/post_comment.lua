@@ -23,9 +23,9 @@ local sql
 if req_url == "list" then
     -- 评论列表
     sql = [[
-    select jsonb_array_length(post_comment) as count from post where id = %d;
+    select jsonb_array_length(post_comment) as count from post where id=%d;
     with t as (
-        select jsonb_array_elements(post_comment) as data from post where id = %d limit %d offset %d
+        select jsonb_array_elements(post_comment) as data from post where id=%d limit %d offset %d
     )
     select jsonb_agg(data) as comments from t
     ]]
@@ -45,9 +45,9 @@ elseif req_url == "delete" then
     -- 删除评论
     -- 此处element ->> 'id' = '100'中的id的value必须是''单引号引起来的
     sql = [[
-    update post set post_comment = jsonb_set(
+    update post set post_comment=jsonb_set(
         post_comment, ARRAY[(select index-1 from jsonb_array_elements(post_comment) WITH ORDINALITY arr(element, index) where element ->> 'id' = '%d')::text, 'status'], '"OFFLINE"', false
-    ) where id = %d
+    ) where id=%d
     ]]
     local result = db.query(string.format(sql, comment_id, post_id))
 
@@ -90,7 +90,7 @@ else
     with t as (
     select (index-1)::text as i, element->>'replies' as replies from post, jsonb_array_elements(post_comment) WITH ORDINALITY arr(element, index) where element ->> 'id' = '%d'
     )
-    update post set post_comment = case when (select replies from t) is null then
+    update post set post_comment=case when (select replies from t) is null then
     jsonb_set(
         post_comment, ARRAY[(select i from t),'replies'],jsonb_build_array(jsonb_build_object(%s))
     )
@@ -99,7 +99,7 @@ else
         post_comment, ARRAY[(select i from t),'replies','0'],jsonb_build_object(%s)
     )
     end
-    where id = %d
+    where id=%d
     ]]
 
     db.query(string.format(sql, comment_id, sql_value, sql_value, post_id))

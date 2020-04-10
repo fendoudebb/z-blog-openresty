@@ -17,7 +17,7 @@ select id, title, pv, post_status, prop, like_count, comment_count, topics, to_c
 local where_cause = ""
 
 if type(post_id) == "number" then
-    where_cause = "where id = " .. post_id
+    where_cause = "where id=" .. post_id
 end
 
 local order_cause = ""

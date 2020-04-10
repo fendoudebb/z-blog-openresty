@@ -6,12 +6,12 @@ local db = require "module.db"
 -- select * , post_like @> '[{"ip":"127.0.0.1"}]' from post;
 
 local sql = [[
-select id, title, pv from post where post_status = 0 order by random() limit 10;
+select id, title, pv from post where post_status=0 order by random() limit 10;
 select
 id, title, keywords, description, topics, content_html, word_count, post_status,
 pv, like_count, comment_count, comment_status, to_char(create_ts, 'YYYY-MM-DD') as create_ts, post_comment,
 post_like @> '[{"ip":"%s"}]'::jsonb as is_liked
-from post where id = %d
+from post where id=%d
 ]]
 
 local result = db.query(string.format(sql, ngx.ctx.client_ip, ngx.var[1]))

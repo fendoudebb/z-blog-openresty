@@ -57,4 +57,11 @@ function _M.word_repeated()
     }
 end
 
+function _M.topic_repeated()
+    return {
+        code = 2002,
+        msg = "标签已存在"
+    }
+end
+
 return _M
