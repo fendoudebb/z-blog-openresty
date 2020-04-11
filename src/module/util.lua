@@ -10,7 +10,8 @@ function _M.query_ip(ip)
     local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip='%s'::inet limit 1"
     local prop = db.query(string.format(select_sql, ip))[1];
     -- 第一次查询ip未成功，但已经入库，prop虽然不等于nil，但prop.address还是为nil
-    if prop ~= nil and prop.address then
+    -- Lua中除了nil和false是假，其他的都是真，空字符串也为真
+    if prop ~= nil and prop.address ~= "" then
         return {
             id = prop.id,
             address = prop.address
@@ -29,18 +30,22 @@ function _M.query_ip(ip)
             ngx.log(ngx.ERR, "request ip taobao header status=502")
         end
         -- insert on conflict do update 需设置唯一约束（主键也是唯一约束）
-        --local insert_ip_unknown = "insert into ip_unknown(ip) values('%s') on conflict(ip) do update set update_ts = current_timestamp"
-        --db.query(string.format(insert_ip_unknown, ip))
+        local insert_sql = "insert into ip_unknown(ip) values('%s') on conflict(ip) do update set update_ts = current_timestamp"
+        db.query(string.format(insert_sql, ip))
 
+        local id
         if not prop then
             local insert_ip_pool = "insert into ip_pool(ip) values('%s') returning id"
             -- {"1":{"id":54503},"affected_rows":1}
             -- 插入失败返回nil
             local result = db.query(string.format(insert_ip_pool, ip))
-            return {
-                id = result[1]
-            }
+            id = result[1]
+        else
+            id = prop.id
         end
+        return {
+            id = id
+        }
     else
         -- {"code":0,"data":{"ip":"41.249.255.142","country":"摩洛哥","area":"","region":"XX","city":"XX","county":"XX","isp":"XX","country_id":"MA","area_id":"","region_id":"xx","city_id":"xx","county_id":"xx","isp_id":"xx"}}
         ngx.log(ngx.ERR, 'request ip taobao success-body#', res.body)

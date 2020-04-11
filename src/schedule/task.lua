@@ -13,10 +13,15 @@ end
 local task_query_unknown_ip = function(premature)
     if not premature then
 
-        local result = db.query("select ip from ip_pool where country is not null limit 1")[1]
+        local result = db.query("select ip from ip_unknown limit 1")[1]
         if result ~= nil then
-            util.query_ip(result.ip)
+            local prop = util.query_ip(result.ip)
+            if prop.address ~= nil then
+                local sql = "delete from ip_unknown where ip = '%s'"
+                db.query(string.format(sql, result.ip))
+            end
         end
+
         --local running_count = ngx.timer.running_count()
         --local pending_count = ngx.timer.pending_count()
         --ngx.log(ngx.ERR, "test ngx.timer.every#running_count=", running_count, ", pending_count=", pending_count)
