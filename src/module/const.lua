@@ -64,4 +64,11 @@ function _M.topic_repeated()
     }
 end
 
+function _M.link_repeated()
+    return {
+        code = 2003,
+        msg = "友链已存在"
+    }
+end
+
 return _M
