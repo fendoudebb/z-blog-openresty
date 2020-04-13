@@ -35,10 +35,7 @@ else
     local example_sentence = db.val_escape(ngx.ctx.body_data.example_sentence)
     local sentence_translation = db.val_escape(ngx.ctx.body_data.sentence_translation)
     local source = db.val_escape(ngx.ctx.body_data.source)
-    if id then
-        if type(id) ~= "number" then
-            return req.bad_request()
-        end
+    if type(id) == "number" then
         -- 改
         sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s, update_ts=current_timestamp where id=%d"
         sql = string.format(sql, word, synonyms, english_phonetic, american_phonetic, translation, example_sentence, sentence_translation, source, id)

@@ -28,9 +28,9 @@ if req_url == "list" then
 else
     local id = ngx.ctx.body_data.id
     local name = db.val_escape(ngx.ctx.body_data.name)
-    if id then
+    if type(id) == "number" then
         local sort = ngx.ctx.body_data.sort
-        if type(id) ~= "number" or type(sort) ~= "number" then
+        if type(sort) ~= "number" then
             return req.bad_request()
         end
         -- 改
@@ -42,7 +42,7 @@ else
         if result[1] and result[1].id then
             return ngx.say(json.encode(const.topic_repeated()))
         end
-        sql = "insert into topic(name, sort) values(%s, (select max(sort) from topic)+1)"
+        sql = "insert into topic(name, sort) values(%s, COALESCE((select max(sort) from topic), 0)+1)"
         sql = string.format(sql, name)
     end
     db.query(sql)
