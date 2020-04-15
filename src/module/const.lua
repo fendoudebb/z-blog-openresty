@@ -71,4 +71,11 @@ function _M.link_repeated()
     }
 end
 
+function _M.message_board_not_exist()
+    return {
+        code = 2004,
+        msg = "留言不存在"
+    }
+end
+
 return _M
