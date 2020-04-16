@@ -28,7 +28,7 @@ end
 
 local sql = [[
 insert into message_board(nickname, content, floor, ip_id, ua, os, browser) values(
-%s, %s, (select max(floor) from message_board) + 1, %s, %s, '%s', '%s'
+%s, %s, COALESCE((select max(floor) from message_board), 0)+1, %s, %s, '%s', '%s'
 )
 ]]
 
