@@ -5,7 +5,7 @@
 - [lua-resty-template](https://github.com/bungle/lua-resty-template)：适用`Nginx`和`OpenResty`的`HTML`模板渲染引擎
 - [pgmoon](https://github.com/leafo/pgmoon)：`PostgreSQL`的`Lua`驱动
 - [lua-resty-woothee](https://github.com/woothee/lua-resty-woothee)：基于`Woothee`的`User-Agent`解析器
-- [lua-resty-http](https://github.com/woothee/lua-resty-woothee)：`OpenResty`和`ngx_lua`中的`HTTP`客户端
+- [lua-resty-http](https://github.com/ledgetech/lua-resty-http)：`OpenResty`和`ngx_lua`中的`HTTP`客户端
 
 ## 安装依赖
 ```bash
@@ -21,6 +21,5 @@ luarocks安装可参考
 ## 初始化数据库
 ```sql
 initdb
-createuser z-blog
-createdb -O z-blog z-blog
+psql -d postgres -f pg_schema.sql
 ```
