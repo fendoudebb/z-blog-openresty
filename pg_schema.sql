@@ -16,7 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Roles
+--
+
+DROP ROLE IF EXISTS "z-blog";
+
+CREATE ROLE "z-blog";
+ALTER ROLE "z-blog" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+
 DROP DATABASE IF EXISTS "z-blog";
+
 --
 -- Name: z-blog; Type: DATABASE; Schema: -; Owner: z-blog
 --
