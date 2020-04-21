@@ -78,4 +78,11 @@ function _M.message_board_not_exist()
     }
 end
 
+function _M.dashboard_user_repeated()
+    return {
+        code = 2005,
+        msg = "管理用户已存在"
+    }
+end
+
 return _M
