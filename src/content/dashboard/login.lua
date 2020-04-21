@@ -17,7 +17,7 @@ if not password then
 end
 
 local sql = [[
-select id, password, roles from "user" where username=%s
+select id, password, roles from dashboard_user where username=%s
 ]]
 
 local result = db.query(string.format(sql, db.val_escape(username)))
