@@ -17,7 +17,7 @@ if req_url == "list" then
     local sql_args = req.get_page_size(ngx.ctx.body_data)
     sql = [[
     select count(*) from dashboard_user %s;
-    select id, username, roles, status, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts, to_char(update_ts, 'YYYY-MM-DD hh24:MI:ss') as update_ts from dashboard_user %s limit %d offset %d
+    select id, username, roles, status, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts, to_char(update_ts, 'YYYY-MM-DD hh24:MI:ss') as update_ts from dashboard_user %s order by id limit %d offset %d
     ]]
     sql = string.format(sql, where_cause, where_cause, sql_args.limit, sql_args.offset)
     local result = db.query(sql)
@@ -28,22 +28,36 @@ if req_url == "list" then
 else
     local id = ngx.ctx.body_data.id
     local username = db.val_escape(ngx.ctx.body_data.username)
-    local password = db.val_escape(ngx.ctx.body_data.password)
-    local roles = db.val_escape(json.encode(ngx.ctx.body_data.roles))
+    local roles_table = ngx.ctx.body_data.roles
+    if not roles_table then
+        return req.bad_request()
+    end
+
+    local roles = "array[%s]"
+
+    local roles_str = ""
+    for _, v in ipairs(ngx.ctx.body_data.roles) do
+        roles_str = roles_str ..db.val_escape(v)
+    end
+
+    roles = string.format(roles, roles_str)
+
+    local result = db.query("select id from dashboard_user where username=" .. username)
+    if result[1] and result[1].id and result[1].id ~= id then
+        return ngx.say(json.encode(const.dashboard_user_repeated()))
+    end
+
     if type(id) == "number" then
         -- 改
-        local status = db.val_escape(ngx.ctx.body_data.status)
-        if type(id) == "number" then
-
+        local status = ngx.ctx.body_data.status
+        if type(status) ~= "number" then
+            return req.bad_request()
         end
-        sql = "update dashboard_user set username=%s, password=%s, roles=%s, update_ts=current_timestamp where id=%d"
-        sql = string.format(sql, username, password, roles, id)
+        sql = "update dashboard_user set username=%s, roles=%s, status=%d, update_ts=current_timestamp where id=%d"
+        sql = string.format(sql, username, roles, status, id)
     else
         -- 增
-        local result = db.query("select id from dashboard_user where username=" .. username)
-        if result[1] and result[1].id then
-            return ngx.say(json.encode(const.dashboard_user_repeated()))
-        end
+        local password = db.val_escape(ngx.ctx.body_data.password)
         sql = "insert into dashboard_user(username, password, roles) values(%s, %s, %s)"
         sql = string.format(sql, username, password, roles)
     end
