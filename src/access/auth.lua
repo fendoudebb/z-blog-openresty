@@ -18,9 +18,22 @@ if not user_info_json_str then
     return ngx.say(json.encode(req.unauthorized()))
 end
 
+local user_info = json.decode(user_info_json_str)
+
+local headers = ngx.req.get_headers()
+local client_ip = headers["X-REAL-IP"] or headers["X_FORWARDED_FOR"] or ngx.var.remote_addr or "0.0.0.0"
+
+if user_info.client_ip ~= client_ip then
+    return ngx.say(json.encode(req.unauthorized()))
+end
+
+if user_info.ua ~= ngx.var.http_user_agent then
+    return ngx.say(json.encode(req.unauthorized()))
+end
+
 memory:expire(login_key, 604800)
 
-ngx.ctx.user_info = json.decode(user_info_json_str)
+ngx.ctx.user_info = user_info
 
 ngx.req.read_body()
 local body_data = ngx.req.get_body_data()
