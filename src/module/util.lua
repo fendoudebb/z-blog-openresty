@@ -19,7 +19,7 @@ function _M.query_ip(ip)
     end
 
     local httpc = http.new()
-    local res, err = httpc:request_uri('http://ip.taobao.com/service/getIpInfo.php?ip=' .. ip, {
+    local res, err = httpc:request_uri('http://ip.taobao.com/getIpInfo.php?ip=' .. ip, {
         keepalive_timeout = 2000 -- 毫秒
     })
 
@@ -47,47 +47,50 @@ function _M.query_ip(ip)
             id = id
         }
     else
+        -- {"code":0,"data":{"ip":"111.225.148.62","country":"中国","area":"","region":"河北","city":"张家口","county":"XX","isp":"电信","country_id":"CN","area_id":"","region_id":"130000","city_id":"130700","county_id":"xx","isp_id":"100017"}}
         -- {"code":0,"data":{"ip":"41.249.255.142","country":"摩洛哥","area":"","region":"XX","city":"XX","county":"XX","isp":"XX","country_id":"MA","area_id":"","region_id":"xx","city_id":"xx","county_id":"xx","isp_id":"xx"}}
+        -- {"code":"0","data":{"CITY_EN":"Shenzhen","QUERY_IP":"113.87.160.228","CITY_CODE":"440300","CITY_CN":"深圳","COUNTY_EN":"null","LONGITUDE":"","PROVINCE_CN":"广东","TZONE":"","PROVINCE_EN":"Guangdong","ISP_EN":"China-Telecom","AREA_CODE":"80","PROVINCE_CODE":"440000","ISP_CN":"电信","AREA_CN":"华南","COUNTRY_CN":"中国","AREA_EN":"HuaNan","COUNTRY_EN":"China","COUNTY_CN":"null","COUNTY_CODE":"null","ASN":"null","LATITUDE":"","COUNTRY_CODE":"CN","ISP_CODE":"100017"}}
+        -- {"code":"0","data":{"CITY_EN":"xx","QUERY_IP":"46.219.210.147","CITY_CODE":"xx","CITY_CN":"XX","COUNTY_EN":"null","LONGITUDE":"","PROVINCE_CN":"XX","TZONE":"","PROVINCE_EN":"xx","ISP_EN":"xx","AREA_CODE":"xx","PROVINCE_CODE":"xx","ISP_CN":"XX","AREA_CN":"XX","COUNTRY_CN":"乌克兰","AREA_EN":"xx","COUNTRY_EN":"Ukraine","COUNTY_CN":"null","COUNTY_CODE":"null","ASN":"null","LATITUDE":"","COUNTRY_CODE":"UA","ISP_CODE":"xx"}}
         ngx.log(ngx.ERR, 'request ip taobao success-body#', res.body)
 
         local json_data = json.decode(res.body).data
 
-        if json_data.region == json_data.city then
+        if json_data.PROVINCE_CN == json_data.CITY_CN then
             json_data.city = nil
         end
 
-        if json_data.region == 'XX' then
+        if json_data.PROVINCE_CN == 'XX' then
             json_data.region = nil
         end
 
-        if json_data.city == 'XX' then
-            json_data.city = nil
+        if json_data.CITY_CN == 'XX' then
+            json_data.CITY_CN = nil
         end
 
-        if json_data.isp == 'XX' then
-            json_data.isp = nil
+        if json_data.ISP_CN == 'XX' then
+            json_data.ISP_CN = nil
         end
 
-        if json_data.region_id == 'xx' then
+        if json_data.PROVINCE_CODE == 'xx' then
             json_data.region_id = nil
         end
 
-        if json_data.city_id == 'xx' then
-            json_data.city_id = nil
+        if json_data.CITY_CODE == 'xx' then
+            json_data.CITY_CODE = nil
         end
 
-        if json_data.isp_id == 'xx' then
+        if json_data.ISP_CODE == 'xx' then
             json_data.isp_id = nil
         end
 
-        local country = db.val_escape(json_data.country)
-        local region = db.val_escape(json_data.region)
-        local city = db.val_escape(json_data.city)
-        local isp = db.val_escape(json_data.isp)
-        local country_id = db.val_escape(json_data.country_id)
-        local region_id = db.val_escape(json_data.region_id)
-        local city_id = db.val_escape(json_data.city_id)
-        local isp_id = db.val_escape(json_data.isp_id)
+        local country = db.val_escape(json_data.COUNTRY_CN)
+        local region = db.val_escape(json_data.PROVINCE_CN)
+        local city = db.val_escape(json_data.CITY_CN)
+        local isp = db.val_escape(json_data.ISP_CN)
+        local country_id = db.val_escape(json_data.COUNTRY_CODE)
+        local region_id = db.val_escape(json_data.PROVINCE_CODE)
+        local city_id = db.val_escape(json_data.CITY_CODE)
+        local isp_id = db.val_escape(json_data.ISP_CODE)
 
         -- 更新或插入
         local sql
