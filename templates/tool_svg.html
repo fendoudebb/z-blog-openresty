@@ -3,11 +3,6 @@
 <head>
     {(base.html, { title = "SVG 转 CSS 背景图", keywords = "SVG 转 CSS 背景图", description = "SVG 转 CSS 背景图" } )}
     <style>
-        .btn-link {
-            font-size: 14px;
-            color: #F5F5F5;
-            text-decoration: none;
-        }
         .svg-textarea {
             padding: 5px;
             border: 1px solid #4CAF50;
@@ -27,6 +22,7 @@
 <body>
 {(header.html)}
 <div class="main">
+    {(tools.html)}
     <p>SVG 转 CSS 背景图</p>
 
     <div style="display: inline-block;width: 45vw;margin-left: 3vw;margin-right: 2vw;text-align: left">
@@ -35,8 +31,8 @@
     <div style="display: inline-block;width: 45vw;margin-left: 2vw;margin-right: 3vw;float: right;text-align: left">
         <textarea id="output" class="svg-textarea" placeholder="CSS背景图" title="CSS背景图"></textarea>
     </div>
-    {(tools.html)}
 </div>
+{(footer.html)}
 {(base_js.html)}
 <script type="text/javascript">
     document.getElementById("input").addEventListener("input", function () {

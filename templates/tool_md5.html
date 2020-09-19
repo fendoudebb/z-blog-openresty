@@ -25,17 +25,13 @@
             font-family: Menlo, Monaco, Consolas, Courier New, monospace;
         }
 
-        .btn-link {
-            font-size: 14px;
-            color: #F5F5F5;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
 {(header.html)}
 <div class="main">
-    <p>md5加密</p>
+    {(tools.html)}
+    <p>MD5加密</p>
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 50px 25px;">
             <div><label for="rawStr">原始字符串</label><input id="rawStr" class="ts-input" placeholder="请输入待加密字符串..." value="test"></div>
@@ -48,8 +44,8 @@
             <div style="margin-top: 20px;"><label for="md5Str">转换结果</label><input id="md5Str" class="ts-input" placeholder="转换结果"></div>
         </div>
     </div>
-    {(tools.html)}
 </div>
+{(footer.html)}
 {(base_js.html)}
 <script type="text/javascript">
     function md5(string) {

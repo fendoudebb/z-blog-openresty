@@ -3,12 +3,6 @@
 <head>
     {(base.html, { title = "随机密码生成器", keywords = "随机密码生成器", description = "随机密码生成器" } )}
     <style>
-        .btn-link {
-            font-size: 14px;
-            color: #F5F5F5;
-            text-decoration: none;
-        }
-
         .pwd-textarea {
             padding: 5px;
             border: 1px solid #4CAF50;
@@ -56,6 +50,7 @@
 <body>
 {(header.html)}
 <div class="main">
+    {(tools.html)}
     <p>随机密码生成器</p>
     <div class="content" style="text-align: center">
         <div class="shadow">
@@ -75,8 +70,8 @@
             </form>
         </div>
     </div>
-    {(tools.html)}
 </div>
+{(footer.html)}
 {(base_js.html)}
 <script type="text/javascript">
 

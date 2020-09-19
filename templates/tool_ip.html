@@ -2,17 +2,11 @@
 <html lang="zh">
 <head>
     {(base.html, { title = "IP查询", keywords = "IP查询，查询IP，IP归属地", description = "IP查询，查询IP，IP归属地" } )}
-    <style>
-        .btn-link {
-            font-size: 14px;
-            color: #F5F5F5;
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
 {(header.html)}
 <div class="main">
+    {(tools.html)}
     <p>IP查询</p>
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 50px">
@@ -24,8 +18,8 @@
             <p id="result"></p>
         </div>
     </div>
-    {(tools.html)}
 </div>
+{(footer.html)}
 {(base_js.html)}
 <script>
     $('#queryIp').on('click', function () {

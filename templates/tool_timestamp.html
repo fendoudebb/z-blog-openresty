@@ -22,17 +22,12 @@
             font-size: 14px;
             outline-color: #4CAF50;
         }
-
-        .btn-link {
-            font-size: 14px;
-            color: #F5F5F5;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
 {(header.html)}
 <div class="main">
+    {(tools.html)}
     <p>时间戳转换</p>
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 50px;">
@@ -44,8 +39,8 @@
             <button id="transformDate" class="shadow button">转换</button>
         </div>
     </div>
-    {(tools.html)}
 </div>
+{(footer.html)}
 {(base_js.html)}
 <script type="text/javascript">
     function getTwo(s) {
