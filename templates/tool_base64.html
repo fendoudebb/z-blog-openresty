@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = "BASE64加解密", keywords = "BASE64加解密", description = "BASE64加解密" } )}
+    <style>
+        label {
+            display: inline-block;
+            min-width: 100px; /*或者 width: 100px;*/
+        }
+
+        .ts-input {
+            caret-color: #4CAF50; /*光标颜色*/
+            width: 60%;
+            height: 32px;
+            line-height: 16px;
+            display: inline-block;
+            text-align: initial;
+            border: 1px solid #c8c8c8;
+            border-radius: 3px;
+            /*color: #ccc;*/
+            font-weight: 400;
+            font-size: 14px;
+            outline-color: #4CAF50;
+            padding: 0 5px;
+            font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+        }
+
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    {(tools.html)}
+    <p>BASE64加解密</p>
+    <div class="content" style="text-align: center">
+        <div class="shadow" style="padding: 50px 25px;">
+            <div><label for="rawStr">字符串</label><input id="rawStr" required class="ts-input" placeholder="请输入字符串..." value="test"></div>
+            <p id="hintStr" style="color: red" hidden>字符串不合法</p>
+            <div style="margin-top: 20px">
+                <button class="shadow button" onclick="resultStr.value=encode(rawStr.value)">加密</button>
+                <button class="shadow button" onclick="resultStr.value=decode(rawStr.value)">解密</button>
+            </div>
+            <div style="margin-top: 20px;"><label for="resultStr">结果</label><input id="resultStr" class="ts-input" placeholder="结果"></div>
+        </div>
+    </div>
+</div>
+{(footer.html)}
+{(base_js.html)}
+<script type="text/javascript">
+    function encode(str) {
+        return window.btoa(window.unescape(window.encodeURIComponent(str)))
+    }
+
+    function decode(str) {
+        try {
+            return window.decodeURIComponent(window.escape(window.atob(str)))
+        } catch (_) {
+            let hintStr = document.getElementById("hintStr");
+            if (hintStr.hidden) {
+                hintStr.hidden = false;
+                window.setTimeout(function () {
+                    hintStr.hidden = true;
+                }, 3000);
+            }
+            return null;
+        }
+    }
+</script>
+</body>
+</html>
