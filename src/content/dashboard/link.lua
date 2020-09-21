@@ -30,10 +30,10 @@ elseif req_url == "audit" then
     ngx.say(json.encode(const.ok()))
 else
     local id = ngx.ctx.body_data.id
-    local website = db.val_escape(ngx.ctx.body_data.website)
-    local webmaster = db.val_escape(ngx.ctx.body_data.webmaster)
-    local webmaster_email = db.val_escape(ngx.ctx.body_data.webmaster_email)
-    local url = db.val_escape(ngx.ctx.body_data.url)
+    local website = db.quote(ngx.ctx.body_data.website)
+    local webmaster = db.quote(ngx.ctx.body_data.webmaster)
+    local webmaster_email = db.quote(ngx.ctx.body_data.webmaster_email)
+    local url = db.quote(ngx.ctx.body_data.url)
     --if id and id ~= ngx.null then -- 如果前端传null过来需要判断是否等于ngx.null
     if type(id) == "number" then
         local sort = ngx.ctx.body_data.sort

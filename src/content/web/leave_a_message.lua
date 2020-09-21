@@ -32,7 +32,7 @@ insert into message_board(nickname, content, floor, ip_id, ua, os, browser) valu
 )
 ]]
 
-local insert_result = db.query(string.format(sql, db.val_escape(nickname), db.val_escape(content), util.query_ip(client_ip).id, db.val_escape(ngx.var.http_user_agent), ua.os, ua.name))
+local insert_result = db.query(string.format(sql, db.quote(nickname), db.quote(content), util.query_ip(client_ip).id, db.quote(ngx.var.http_user_agent), ua.os, ua.name))
 
 if insert_result.affected_rows < 1 then
     ngx.say(json.encode(const.fail()))

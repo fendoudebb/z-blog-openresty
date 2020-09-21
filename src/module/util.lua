@@ -5,7 +5,7 @@ local db = require "module.db"
 local _M = { _VERSION = "0.01"}
 
 function _M.query_ip(ip)
-    --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.val_escape(ip) .. "::inet limit 1")
+    --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.quote(ip) .. "::inet limit 1")
     -- select concat('ab', null, 'cd') => abcd
     local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip='%s'::inet limit 1"
     local prop = db.query(string.format(select_sql, ip))[1];
@@ -83,14 +83,14 @@ function _M.query_ip(ip)
             json_data.isp_id = nil
         end
 
-        local country = db.val_escape(json_data.COUNTRY_CN)
-        local region = db.val_escape(json_data.PROVINCE_CN)
-        local city = db.val_escape(json_data.CITY_CN)
-        local isp = db.val_escape(json_data.ISP_CN)
-        local country_id = db.val_escape(json_data.COUNTRY_CODE)
-        local region_id = db.val_escape(json_data.PROVINCE_CODE)
-        local city_id = db.val_escape(json_data.CITY_CODE)
-        local isp_id = db.val_escape(json_data.ISP_CODE)
+        local country = db.quote(json_data.COUNTRY_CN)
+        local region = db.quote(json_data.PROVINCE_CN)
+        local city = db.quote(json_data.CITY_CN)
+        local isp = db.quote(json_data.ISP_CN)
+        local country_id = db.quote(json_data.COUNTRY_CODE)
+        local region_id = db.quote(json_data.PROVINCE_CODE)
+        local city_id = db.quote(json_data.CITY_CODE)
+        local isp_id = db.quote(json_data.ISP_CODE)
 
         -- 更新或插入
         local sql

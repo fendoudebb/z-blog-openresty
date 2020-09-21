@@ -11,7 +11,7 @@ if req_url == "list" then
 
     local username = ngx.ctx.body_data.username
     if type(username) == "string" then
-        where_cause = "where username=" .. db.val_escape(name)
+        where_cause = "where username=" .. db.quote(name)
     end
 
     local sql_args = req.get_page_size(ngx.ctx.body_data)
@@ -27,7 +27,7 @@ if req_url == "list" then
     })))
 else
     local id = ngx.ctx.body_data.id
-    local username = db.val_escape(ngx.ctx.body_data.username)
+    local username = db.quote(ngx.ctx.body_data.username)
     local roles_table = ngx.ctx.body_data.roles
     if not roles_table then
         return req.bad_request()
@@ -37,7 +37,7 @@ else
 
     local roles_str = ""
     for _, v in ipairs(ngx.ctx.body_data.roles) do
-        roles_str = roles_str ..db.val_escape(v)
+        roles_str = roles_str ..db.quote(v)
     end
 
     roles = string.format(roles, roles_str)
@@ -57,7 +57,7 @@ else
         sql = string.format(sql, username, roles, status, id)
     else
         -- 增
-        local password = db.val_escape(ngx.ctx.body_data.password)
+        local password = db.quote(ngx.ctx.body_data.password)
         sql = "insert into dashboard_user(username, password, roles) values(%s, %s, %s)"
         sql = string.format(sql, username, password, roles)
     end

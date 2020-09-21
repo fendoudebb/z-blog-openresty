@@ -11,7 +11,7 @@ if req_url == "list" then
 
     local word = ngx.ctx.body_data.word
     if type(word) == "string" then
-        where_cause = "where word=" .. db.val_escape(word)
+        where_cause = "where word=" .. db.quote(word)
     end
 
     local sql_args = req.get_page_size(ngx.ctx.body_data)
@@ -27,14 +27,14 @@ if req_url == "list" then
     })))
 else
     local id = ngx.ctx.body_data.id
-    local word = db.val_escape(ngx.ctx.body_data.word)
-    local synonyms = db.val_escape(ngx.ctx.body_data.synonyms)
-    local english_phonetic = db.val_escape(ngx.ctx.body_data.english_phonetic)
-    local american_phonetic = db.val_escape(ngx.ctx.body_data.american_phonetic)
-    local translation = db.val_escape(json.encode(ngx.ctx.body_data.translation))
-    local example_sentence = db.val_escape(ngx.ctx.body_data.example_sentence)
-    local sentence_translation = db.val_escape(ngx.ctx.body_data.sentence_translation)
-    local source = db.val_escape(ngx.ctx.body_data.source)
+    local word = db.quote(ngx.ctx.body_data.word)
+    local synonyms = db.quote(ngx.ctx.body_data.synonyms)
+    local english_phonetic = db.quote(ngx.ctx.body_data.english_phonetic)
+    local american_phonetic = db.quote(ngx.ctx.body_data.american_phonetic)
+    local translation = db.quote(json.encode(ngx.ctx.body_data.translation))
+    local example_sentence = db.quote(ngx.ctx.body_data.example_sentence)
+    local sentence_translation = db.quote(ngx.ctx.body_data.sentence_translation)
+    local source = db.quote(ngx.ctx.body_data.source)
     if type(id) == "number" then
         -- 改
         sql = "update english set word=%s, synonyms=%s, english_phonetic=%s, american_phonetic=%s, translation=%s, example_sentence=%s, sentence_translation=%s, source=%s, update_ts=current_timestamp where id=%d"

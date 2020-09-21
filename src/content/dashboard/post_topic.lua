@@ -21,6 +21,6 @@ else
     sql = "update post set topics=array_remove(topics, %s), update_ts=current_timestamp where id = %d"
 end
 
-db.query(string.format(sql, db.val_escape(topic), post_id))
+db.query(string.format(sql, db.quote(topic), post_id))
 
 ngx.say(json.encode(const.ok()))

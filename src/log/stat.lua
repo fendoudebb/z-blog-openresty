@@ -17,12 +17,12 @@ local function record_visit_data(premature, record)
             end
             local captures_search = ngx.re.match(record.url, "/search/")
             if captures_search and record.search_stat then
-                db.query(string.format("insert into record_search(keywords, took, hits, ip_id, referer, browser, os) values(%s, %d, %d, %s, %s, '%s', '%s')", db.val_escape(record.search_stat.search), record.search_stat.took, record.search_stat.hits, ip_id, db.val_escape(record.referer), record.browser, record.os))
+                db.query(string.format("insert into record_search(keywords, took, hits, ip_id, referer, browser, os) values(%s, %d, %d, %s, %s, '%s', '%s')", db.quote(record.search_stat.search), record.search_stat.took, record.search_stat.hits, ip_id, db.quote(record.referer), record.browser, record.os))
             end
-            db.query(string.format(sql, "record_page_view", db.val_escape(record.url), record.req_method, db.val_escape(record.req_param), ip_id, db.val_escape(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.val_escape(record.referer), record.cost_time))
+            db.query(string.format(sql, "record_page_view", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time))
         else
             -- 错误统计
-            db.query(string.format(sql, "record_invalid_request", db.val_escape(record.url), record.req_method, db.val_escape(record.req_param), ip_id, db.val_escape(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.val_escape(record.referer), record.cost_time))
+            db.query(string.format(sql, "record_invalid_request", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time))
         end
         -- TODO debug用
         ngx.log(ngx.ERR, json.encode(record))

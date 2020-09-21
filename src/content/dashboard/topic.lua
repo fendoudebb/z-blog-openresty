@@ -11,7 +11,7 @@ if req_url == "list" then
 
     local name = ngx.ctx.body_data.name
     if type(name) == "string" then
-        where_cause = "where name=" .. db.val_escape(name)
+        where_cause = "where name=" .. db.quote(name)
     end
 
     local sql_args = req.get_page_size(ngx.ctx.body_data)
@@ -27,7 +27,7 @@ if req_url == "list" then
     })))
 else
     local id = ngx.ctx.body_data.id
-    local name = db.val_escape(ngx.ctx.body_data.name)
+    local name = db.quote(ngx.ctx.body_data.name)
     if type(id) == "number" then
         local sort = ngx.ctx.body_data.sort
         if type(sort) ~= "number" then

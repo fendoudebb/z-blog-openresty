@@ -62,7 +62,7 @@ local sql_value = string.format([[
 'content', %s,
 'status', 'ONLINE',
 'floor', comment_count + 1
-]], client_ip, db.val_escape(util.query_ip(client_ip).address), ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(nickname), db.val_escape(content))
+]], client_ip, db.quote(util.query_ip(client_ip).address), ngx.today(), ngx.time(), db.quote(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.quote(nickname), db.quote(content))
 
 local update_sql = string.format([[
 update post set post_comment =

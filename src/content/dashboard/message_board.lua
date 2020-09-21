@@ -33,7 +33,7 @@ elseif req_url == "audit" then
 elseif req_url == "reply" then
     -- 回复
     local reply_id = ngx.ctx.body_data.reply_id
-    local content = db.val_escape(ngx.ctx.body_data.content)
+    local content = db.quote(ngx.ctx.body_data.content)
     --if id and id ~= ngx.null then -- 如果前端传null过来需要判断是否等于ngx.null
     if type(reply_id) ~= "number" then
         return req.bad_request()
@@ -52,14 +52,14 @@ elseif req_url == "reply" then
     local ip_id = util.query_ip(client_ip).id
     local user_agent = ngx.var.http_user_agent
     local ua = req.parse_ua(user_agent)
-    local os = db.val_escape(ua.os)
-    local browser = db.val_escape(ua.name)
+    local os = db.quote(ua.os)
+    local browser = db.quote(ua.name)
 
     sql = [[
     insert into message_board(nickname, content, ua, os, browser, ip_id, reply_id, root_id) values('作者回复', %s, %s, %s, %s, %s, %s, %s);
     update message_board set reply_count=reply_count+1, update_ts=current_timestamp where id = %d
     ]]
-    sql = string.format(sql, content, db.val_escape(user_agent), os, browser, ip_id, reply_id, root_id, reply_id)
+    sql = string.format(sql, content, db.quote(user_agent), os, browser, ip_id, reply_id, root_id, reply_id)
     db.query(sql)
 
     ngx.say(json.encode(const.ok()))

@@ -82,7 +82,7 @@ else
     'os_version', '%s',
     'content', %s,
     'status', 'ONLINE'
-    ]], ngx.ctx.client_ip, ngx.today(), ngx.time(), db.val_escape(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.val_escape(content))
+    ]], ngx.ctx.client_ip, ngx.today(), ngx.time(), db.quote(ngx.var.http_user_agent), ua.name, ua.category, ua.version, ua.vendor, ua.os, ua.os_version, db.quote(content))
 
 
     -- 回复评论
