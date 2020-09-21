@@ -23,7 +23,7 @@ local user_info = json.decode(user_info_json_str)
 local headers = ngx.req.get_headers()
 local client_ip = headers["X-REAL-IP"] or headers["X_FORWARDED_FOR"] or ngx.var.remote_addr or "0.0.0.0"
 
-if user_info.client_ip ~= client_ip then
+if user_info.ip ~= client_ip then
     return ngx.say(json.encode(req.unauthorized()))
 end
 
