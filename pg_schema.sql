@@ -300,8 +300,7 @@ ALTER SEQUENCE public.ip_pool_id_seq OWNED BY public.ip_pool.id;
 CREATE TABLE public.ip_unknown (
     ip text NOT NULL,
     create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id integer DEFAULT nextval('public.ip_pool_id_seq'::regclass)
+    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -589,8 +588,6 @@ CREATE TABLE public.record_invalid_request (
     url text NOT NULL,
     req_method smallint,
     req_param text,
-    ip text,
-    ip_address text,
     ip_id bigint,
     cost_time numeric(6,2),
     browser text,

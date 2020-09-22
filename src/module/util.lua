@@ -7,8 +7,9 @@ local _M = { _VERSION = "0.01"}
 function _M.query_ip(ip)
     --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.quote(ip) .. "::inet limit 1")
     -- select concat('ab', null, 'cd') => abcd
-    local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip='%s'::inet limit 1"
-    local prop = db.query(string.format(select_sql, ip))[1];
+    local quote_ip = db.quote(ip)
+    local select_sql = "select id, concat(country, region, city, isp) as address from ip_pool where ip=%s::inet limit 1"
+    local prop = db.query(string.format(select_sql, quote_ip))[1];
     -- 第一次查询ip未成功，但已经入库，prop虽然不等于nil，但prop.address还是为nil
     -- Lua中除了nil和false是假，其他的都是真，空字符串也为真
     if prop ~= nil and prop.address ~= "" then
@@ -30,15 +31,15 @@ function _M.query_ip(ip)
             ngx.log(ngx.ERR, "request ip taobao header status=502")
         end
         -- insert on conflict do update 需设置唯一约束（主键也是唯一约束）
-        local insert_sql = "insert into ip_unknown(ip) values('%s') on conflict(ip) do update set update_ts = current_timestamp"
-        db.query(string.format(insert_sql, ip))
+        local insert_sql = "insert into ip_unknown(ip) values(%s) on conflict(ip) do update set update_ts = current_timestamp"
+        db.query(string.format(insert_sql, quote_ip))
 
         local id
         if not prop then
-            local insert_ip_pool = "insert into ip_pool(ip) values('%s') returning id"
+            local insert_ip_pool = "insert into ip_pool(ip) values(%s) returning id"
             -- {"1":{"id":54503},"affected_rows":1}
             -- 插入失败返回nil
-            local result = db.query(string.format(insert_ip_pool, ip))
+            local result = db.query(string.format(insert_ip_pool, quote_ip))
             id = result[1]
         else
             id = prop.id
@@ -107,8 +108,8 @@ function _M.query_ip(ip)
                     prop.id
             )
         else
-            sql = string.format("insert into ip_pool(ip, country, region, city, isp, country_id, region_id, city_id, isp_id) values('%s'::inet, %s, %s, %s, %s, %s, %s, %s, %s) returning id",
-                    ip,
+            sql = string.format("insert into ip_pool(ip, country, region, city, isp, country_id, region_id, city_id, isp_id) values(%s::inet, %s, %s, %s, %s, %s, %s, %s, %s) returning id",
+                    quote_ip,
                     country,
                     region,
                     city,
