@@ -26,30 +26,39 @@ while true do
         -- ["Content-Disposition","form-data; name=\"image\"; filename=\"aa.aa.png\"","Content-Disposition: form-data; name=\"image\"; filename=\"aa.png\""]
 
         -- 限制 image 字段
-        local m_form_data = ngx.re.match(res[2], [[form-data; name="(.+)";]])
+        local param_info = ngx.re.match(res[2], [[form-data; name="(.+)";]])
         -- {"0":"form-data; name=\"image\";","1":"image"}
-        ngx.log(ngx.ERR, json.encode(res[2]))
-        ngx.log(ngx.ERR, json.encode(m_form_data))
+        --ngx.log(ngx.ERR, json.encode(res[2]))
+        --ngx.log(ngx.ERR, json.encode(param_info))
 
-        if m_form_data then
-            local form_data = m_form_data[1]
-            if form_data ~= "image" then
-                ngx.log(ngx.ERR, "upload img invalid param#" .. form_data)
-                ngx.say(json.encode(const.fail("invalid param#" .. form_data)))
+        if param_info then
+            local param = param_info[1]
+            if param ~= "image" then
+                ngx.log(ngx.ERR, "upload img invalid param#" .. param)
+                ngx.say(json.encode(const.fail("invalid param#" .. param)))
                 return
             end
-        end
 
-        local m_file_name = ngx.re.match(res[2], [[filename="(.+)\.(.+)"]])
-        --  {"0":"filename=\"aa.aa.png\"","1":"aa.aa","2":"png"}
+            local file_info = ngx.re.match(res[2], [[filename="(.+)\.(.+)"]])
+            --  {"0":"filename=\"aa.aa.png\"","1":"aa.aa","2":"png"}
+            ngx.log(ngx.ERR, json.encode(file_info))
 
-        if m_file_name then
-            file_name = ngx.md5(ngx.now() .. m_file_name[1]) .. "." .. m_file_name[2]
-            file = io.open(root_path .. file_name, "w+b")
-            if not file then
-                ngx.log(ngx.ERR, "upload img failed to open file#" .. root_path .. file_name)
-                ngx.say(json.encode(const.fail("failed to open file#" .. file_name)))
-                return
+            if file_info then
+                local file_extension = file_info[2]
+                local typ_match = ngx.re.match(file_extension, [[(png)|(jpeg)|(jpg)|(gif)|(svg)|(bmp)|(webp)]], "i")
+
+                if not typ_match then
+                    ngx.log(ngx.ERR, "upload img file type error#" .. file_extension)
+                    ngx.say(json.encode(const.fail("file type error#" .. file_extension)))
+                end
+
+                file_name = ngx.md5(ngx.now() .. file_info[1]) .. "." .. file_extension:lower()
+                file = io.open(root_path .. file_name, "w+b")
+                if not file then
+                    ngx.log(ngx.ERR, "upload img failed to open file#" .. root_path .. file_name)
+                    ngx.say(json.encode(const.fail("failed to open file#" .. file_name)))
+                    return
+                end
             end
         end
     elseif typ == "body" then
@@ -69,8 +78,8 @@ while true do
 end
 
 if not file_name then
-    ngx.log(ngx.ERR, "upload img no file#" .. ngx.var.http_user_agent)
-    ngx.say(json.encode(const.fail("missing param")))
+    ngx.log(ngx.ERR, "upload img invalid file#" .. ngx.var.http_user_agent)
+    ngx.say(json.encode(const.fail("invalid file")))
     return
 end
 
