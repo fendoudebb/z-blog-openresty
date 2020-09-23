@@ -50,6 +50,7 @@ while true do
                 if not typ_match then
                     ngx.log(ngx.ERR, "upload img file type error#" .. file_extension)
                     ngx.say(json.encode(const.fail("file type error#" .. file_extension)))
+                    return
                 end
 
                 file_name = ngx.md5(ngx.now() .. file_info[1]) .. "." .. file_extension:lower()
