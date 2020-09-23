@@ -5,8 +5,6 @@ local req = require "module.req"
 
 local req_url = ngx.var[1]
 
-ngx.log(ngx.ERR, json.encode(req_url))
-
 local sql_args = req.get_page_size(ngx.ctx.body_data)
 
 if req_url == "list" then

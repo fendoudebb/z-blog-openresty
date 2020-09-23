@@ -3,6 +3,10 @@ local woothee = require "resty.woothee"
 
 local _M = { _VERSION = "0.01" }
 
+function _M.get_ip_from_headers(headers)
+    return headers["X-REAL-IP"] or headers["X_FORWARDED_FOR"] or ngx.var.remote_addr or "0.0.0.0"
+end
+
 function _M.is_get_method(req_method)
     return "GET" == req_method
 end

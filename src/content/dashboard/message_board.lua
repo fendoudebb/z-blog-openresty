@@ -47,8 +47,7 @@ elseif req_url == "reply" then
     -- root_id不存在则等于id
     local root_id = result.root_id or result.id
 
-    local headers = ngx.req.get_headers()
-    local client_ip = headers["X-REAL-IP"] or headers["X_FORWARDED_FOR"] or ngx.var.remote_addr or "0.0.0.0"
+    local client_ip = req.get_ip_from_headers(ngx.req.get_headers())
     local ip_id = util.query_ip(client_ip).id
     local user_agent = ngx.var.http_user_agent
     local ua = req.parse_ua(user_agent)
