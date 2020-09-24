@@ -28,8 +28,13 @@
         #special_characters, #exclude_characters { width: 60%; }
         #generate { margin: 1em 0; }
 
-        #container input[type="checkbox"]{
+        #container input[type="checkbox"] {
             -webkit-appearance: checkbox;
+            cursor: pointer;
+        }
+
+        #container input[type="checkbox"] + span {
+            cursor: pointer;
         }
 
         #container input[type="text"], #container input[type="number"] {
@@ -56,9 +61,9 @@
         <div class="shadow">
             <form id="container" class="pure-form">
                 <ul>
-                    <li><label><input type="checkbox" name="include_number" checked=""><span>数字</span></label></li>
-                    <li><label><input type="checkbox" name="include_lowercaseletters" checked=""><span>小写字母</span></label></li>
-                    <li><label><input type="checkbox" name="include_uppercaseletters" checked=""><span>大写字母</span></label></li>
+                    <li><label><input type="checkbox" name="include_number" checked><span>数字</span></label></li>
+                    <li><label><input type="checkbox" name="include_lowercaseletters" checked><span>小写字母</span></label></li>
+                    <li><label><input type="checkbox" name="include_uppercaseletters" checked><span>大写字母</span></label></li>
                     <li><label><input type="checkbox" name="password_unique"><span>字符不重复</span></label></li>
                     <li><label><span>特殊符号</span><input type="text" name="special_characters" placeholder="需要添加的特殊符号"></label></li>
                     <li><label><span>排除字符</span><input type="text" name="exclude_characters" placeholder="如：i, l, 1, L, o, 0, O"></label></li>
