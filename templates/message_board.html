@@ -3,12 +3,23 @@
 <head>
     {(base.html, { title = title, keywords = title, description = title } )}
     <style>
-        li.shadow {
+        .content > ul > li {
             border-radius: 6px;
             margin-bottom: 30px;
         }
+
         .reply-area {
             padding: 8px 12px 6px 12px;
+        }
+
+        .reply-btn {
+            cursor: pointer;
+        }
+
+        .reply-div {
+            margin: 20px 0 20px 0;
+            padding: 30px;
+            text-align: left;
         }
     </style>
 </head>
@@ -18,33 +29,38 @@
     <div class="content" style="text-align: center">
         <ul style="text-align: left">
             {% for _, m in ipairs(msg) do %}
-            <li class="shadow">
-                <div class="top-area">
-                    <span class="nickname-span">{{m.nickname}}</span>
-                    <span class="floor-span">{{m.floor}}楼</span>
-                </div>
-                {% if m.status == 0 then %}
-                <pre class="content-pre">{{m.content}}</pre>
-                {% else %}
-                <pre class="content-pre content-delete-pre">留言已删除</pre>
-                {% end %}
-                <div class="foot-area">
-                    <span class="browse-os-span">{{m.browser}} | {{m.os}}</span>
-                    <span class="time-span">{{m.create_ts}}</span>
-                </div>
+            <li>
+                <div class="shadow">
+                    <div id="{{m.id}}" class="top-area">
+                        <span class="nickname-span">{{m.nickname}}</span>
+                        <span class="floor-span"><span>{{m.floor}}楼</span> - <span class="reply-btn" onclick="replyMessage({{m.id}}, '{{m.nickname}}')">回复</span></span>
+                    </div>
+                    {% if m.status == 0 then %}
+                    <pre class="content-pre">{{m.content}}</pre>
+                    {% else %}
+                    <pre class="content-pre content-delete-pre">留言已删除</pre>
+                    {% end %}
+                    <div class="foot-area">
+                        <span class="browse-os-span">{{m.browser}} | {{m.os}}</span>
+                        <span class="time-span">{{m.create_ts}}</span>
+                    </div>
 
-                {% if m.replies then %}
+                    {% if m.replies then %}
                     {% for _, reply in ipairs(m.replies) do %}
-                    <div class="reply-area">
-                        <div class="nickname-span"><span style="color: #4CAF50">{{reply.nickname}}</span> 回复 <span style="color: #4CAF50">@{{reply.reply_nickname}}</span></div>
-                        <pre class="content-pre"  style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
+                    <div id="{{reply.id}}" class="reply-area">
+                        <div class="nickname-span">
+                            <span style="color: #4CAF50">{{reply.nickname}}</span> 回复 <span style="color: #4CAF50">@{{reply.reply_nickname}}</span>
+                            <span class="floor-span reply-btn" onclick="replyMessage({{reply.id}}, '{{reply.nickname}}')">回复</span>
+                        </div>
+                        <pre class="content-pre" style="padding: 8px 0;min-height: 0">{{reply.content}}</pre>
                         <div>
                             <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
-                            <span  class="time-span">{{reply.create_ts}}</span>
+                            <span class="time-span">{{reply.create_ts}}</span>
                         </div>
                     </div>
                     {% end %}
-                {% end %}
+                    {% end %}
+                </div>
             </li>
             {% end %}
         </ul>
@@ -60,7 +76,8 @@
             </div>
             <div style="position: relative">
                 <textarea id="message" title="评论区" placeholder="请输入留言..."></textarea>
-                <button id="submitBtn" class="button" title="留言">留言</button>
+                <button id="submitBtn" class="button" title="留言"
+                        onclick="clickFunc($('#submitBtn'), $('#error-hint'), $('#nickname').val(), $('#message').val())">留言</button>
             </div>
             <p id="error-hint" style="color: red;" hidden></p>
         </div>
@@ -69,24 +86,42 @@
 {(footer.html)}
 {(base_js.html)}
 <script>
+    function replyMessage(id, nickname) {
+        $("li>.reply-div").remove();
+        let element = document.getElementById(id);
+        let li = element.parentElement.parentElement;
+        $(li).append(`
+<div class="shadow reply-div">
+    <div style="margin-bottom: 20px">
+        昵称：
+        <label>
+            <input id="nicknameReply" type="text" name="nickname" placeholder="请输入昵称..." autofocus>
+        </label>
+    </div>
+    <div style="position: relative">
+        <textarea id="messageReply" title="评论区" placeholder="回复 @${nickname}"></textarea>
+        <button id="submitReplyBtn" class="button" title="回复"
+        onclick="clickFunc($('#submitReplyBtn'), $('#errorHintReply'), $('#nicknameReply').val(), $('#messageReply').val(), ${id})">回复</button>
+    </div>
+    <p id="errorHintReply" style="color: red;" hidden></p>
+</div>
+        `)
+    }
+
     function strLen(str) {
         var len = 0;
-        for (var i=0; i<str.length; i++) {
-            if (str.charCodeAt(i)>127 || str.charCodeAt(i)===94) {
+        for (var i = 0; i < str.length; i++) {
+            if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
                 len += 2;
             } else {
-                len ++;
+                len++;
             }
         }
         return len;
     }
 
-    let $submitBtn = $('#submitBtn');
-
-    let clickFunc = function () {
-        let $errorHint = $('#error-hint');
-        let nickname = $('#nickname').val();
-        let content = $('#message').val();
+    let clickFunc = function ($submitBtn, $errorHint, nickname, content, reply_id) {
+        console.log($errorHint);
         let nicknameLen = strLen(nickname);
         let contentLen = strLen(content);
         if (nicknameLen <= 0 || contentLen <= 0) {
@@ -105,24 +140,25 @@
             return
         }
         $submitBtn.unbind();
-        var data = {'nickname': nickname, 'content': content};
+        var data = {'nickname': nickname, 'content': content, 'reply_id': reply_id};
 
         $.ajax({
             method: "POST",
             url: "/leave-a-message",
             contentType: 'application/json',
-            data:JSON.stringify(data),
+            data: JSON.stringify(data),
             success: function (data) {
                 if (data.code === 0) {
-                    window.location.reload();
-                    // window.location.href=window.location.href;
+                    // window.location.reload();
+                    window.location.href=location.href;
                 } else {
+                    $errorHint.html(data.msg);
+                    $errorHint.show();
                     $submitBtn.bind('click', clickFunc);
                 }
             }
         });
     };
-    $submitBtn.bind('click', clickFunc);
 
 </script>
 </body>

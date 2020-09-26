@@ -8,7 +8,7 @@
             min-width: 100px; /*或者 width: 100px;*/
         }
 
-        .ts-input {
+        .base64-input {
             caret-color: #4CAF50; /*光标颜色*/
             width: 60%;
             height: 32px;
@@ -34,13 +34,13 @@
     <p>BASE64加解密</p>
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 50px 25px;">
-            <div><label for="rawStr">字符串</label><input id="rawStr" required class="ts-input" placeholder="请输入字符串..." value="test"></div>
+            <div><label for="rawStr">字符串</label><input id="rawStr" required class="base64-input" placeholder="请输入字符串..." value="test"></div>
             <p id="hintStr" style="color: red" hidden>字符串不合法</p>
             <div style="margin-top: 20px">
                 <button class="shadow button" onclick="resultStr.value=encode(rawStr.value)">加密</button>
                 <button class="shadow button" onclick="resultStr.value=decode(rawStr.value)">解密</button>
             </div>
-            <div style="margin-top: 20px;"><label for="resultStr">结果</label><input id="resultStr" class="ts-input" placeholder="结果"></div>
+            <div style="margin-top: 20px;"><label for="resultStr">结果</label><input id="resultStr" class="base64-input" placeholder="结果"></div>
         </div>
     </div>
 </div>

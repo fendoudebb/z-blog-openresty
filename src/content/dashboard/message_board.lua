@@ -37,7 +37,7 @@ elseif req_url == "reply" then
     --if id and id ~= ngx.null then -- 如果前端传null过来需要判断是否等于ngx.null
     if type(reply_id) ~= "number" then
         return req.bad_request()
-    end
+        end
 
     local result = db.query("select id, root_id from message_board where id=" .. reply_id)[1]
     if not result or not result.id then
@@ -55,7 +55,7 @@ elseif req_url == "reply" then
     local browser = db.quote(ua.name)
 
     sql = [[
-    insert into message_board(nickname, content, ua, os, browser, ip_id, reply_id, root_id) values('作者回复', %s, %s, %s, %s, %s, %s, %s);
+    insert into message_board(nickname, content, ua, os, browser, ip_id, reply_id, root_id) values('作者', %s, %s, %s, %s, %s, %s, %s);
     update message_board set reply_count=reply_count+1, update_ts=current_timestamp where id = %d
     ]]
     sql = string.format(sql, content, db.quote(user_agent), os, browser, ip_id, reply_id, root_id, reply_id)

@@ -501,8 +501,8 @@
             data: JSON.stringify(data),
             success: function (data) {
                 if (data.code === 0) {
-                    window.location.reload();
-                    // window.location.href=window.location.href;
+                    // window.location.reload();
+                    window.location.href=location.href;
                 } else {
                     $submitBtn.bind('click', clickFunc);
                     $errorHint.html(data.msg);

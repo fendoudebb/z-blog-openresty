@@ -8,7 +8,7 @@
             min-width: 100px; /*或者 width: 100px;*/
         }
 
-        .ts-input {
+        .md5-input {
             caret-color: #4CAF50; /*光标颜色*/
             width: 60%;
             height: 32px;
@@ -34,14 +34,14 @@
     <p>MD5加密</p>
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 50px 25px;">
-            <div><label for="rawStr">原始字符串</label><input id="rawStr" class="ts-input" placeholder="请输入待加密字符串..." value="test"></div>
+            <div><label for="rawStr">原始字符串</label><input id="rawStr" class="md5-input" placeholder="请输入待加密字符串..." value="test"></div>
             <div style="margin-top: 20px">
                 <button class="shadow button" onclick="md5Str.value=md5(rawStr.value)">32位小写</button>
                 <button class="shadow button" onclick="md5Str.value=md5(rawStr.value).toUpperCase()">32位大写</button>
                 <button class="shadow button" onclick="md5Str.value=md5(rawStr.value).substring(8,24)">16位小写</button>
                 <button class="shadow button" onclick="md5Str.value=md5(rawStr.value).substring(8,24).toUpperCase()">16位大写</button>
             </div>
-            <div style="margin-top: 20px;"><label for="md5Str">转换结果</label><input id="md5Str" class="ts-input" placeholder="转换结果"></div>
+            <div style="margin-top: 20px;"><label for="md5Str">转换结果</label><input id="md5Str" class="md5-input" placeholder="转换结果"></div>
         </div>
     </div>
 </div>

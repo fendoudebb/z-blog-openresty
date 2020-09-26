@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = "URL编解码", keywords = "URL编解码", description = "URL编解码" } )}
+    <style>
+        label {
+            display: inline-block;
+            min-width: 100px; /*或者 width: 100px;*/
+        }
+
+        .url-input {
+            caret-color: #4CAF50; /*光标颜色*/
+            width: 60%;
+            height: 32px;
+            line-height: 16px;
+            display: inline-block;
+            text-align: initial;
+            border: 1px solid #c8c8c8;
+            border-radius: 3px;
+            /*color: #ccc;*/
+            font-weight: 400;
+            font-size: 14px;
+            outline-color: #4CAF50;
+            padding: 0 5px;
+            font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+        }
+
+        .url-textarea {
+            padding: 5px;
+            border: 1px solid #4CAF50;
+            border-radius: 2px;
+            background-color: #ffffffff;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 20vh;
+            outline: none; /*没有黄框*/
+            display: block;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+        }
+
+    </style>
+</head>
+<body>
+{(header.html)}
+<div class="main">
+    {(tools.html)}
+    <p>URL编解码</p>
+    <div class="content" style="text-align: center">
+        <div class="shadow" style="padding: 50px 25px;">
+            <div><label for="rawStr">字符串</label><input id="rawStr" required class="url-input" placeholder="请输入字符串..." value="http://localhost/test/测试"></div>
+            <p id="hintStr" style="color: red" hidden>字符串不合法</p>
+            <div style="margin-top: 20px">
+                <button class="shadow button" onclick="encode(rawStr.value)">编码</button>
+                <button class="shadow button" onclick="decode(rawStr.value)">解码</button>
+            </div>
+            <div style="margin-top: 20px;"><label for="result1Str">结果：不会对特殊符号编码</label><textarea id="result1Str" class="url-textarea" placeholder="不会对特殊符号编码"></textarea></div>
+            <div style="margin-top: 20px;"><label for="result2Str">结果：会对特殊符号编码</label><textarea id="result2Str" class="url-textarea" placeholder="会对特殊符号编码"></textarea></div>
+        </div>
+    </div>
+</div>
+{(footer.html)}
+{(base_js.html)}
+<script type="text/javascript">
+    function encode(str) {
+        let result1Str = document.getElementById("result1Str");
+        let result2Str = document.getElementById("result2Str");
+        result1Str.value = window.encodeURI(str);
+        result2Str.value = window.encodeURIComponent(str);
+    }
+
+    function decode(str) {
+        let result1Str = document.getElementById("result1Str");
+        let result2Str = document.getElementById("result2Str");
+        result1Str.value = window.decodeURI(str);
+        result2Str.value = window.decodeURIComponent(str);
+    }
+</script>
+</body>
+</html>
