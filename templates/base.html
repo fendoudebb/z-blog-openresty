@@ -93,10 +93,10 @@
 <!-- 添加到主屏 -->
 <meta name="mobile-web-app-capable" content="yes">
 
-<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-dark.min.css" media="none"
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.1/styles/atom-one-dark.min.css" media="none"
       onload="if(media!='all')media='all'">
 <noscript>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.1/styles/atom-one-dark.min.css">
 </noscript>
 <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-jsonview/1.2.3/jquery.jsonview.min.css" media="none"
       onload="if(media!='all')media='all'">
@@ -732,7 +732,7 @@
     console.log("程序员技术之旅\n\n开源地址：https://github.com/fendoudebb/z-blog-openresty\n\n")
 </script>
 
-{% if not config.is_debug() then%}
+{% if host ~= "localhost" then%}
 <!--Google AdSense Start-->
 <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
