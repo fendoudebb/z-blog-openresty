@@ -3,7 +3,8 @@ local const = require "module.const"
 local upload = require "resty.upload"
 
 --local root_path = "z_blog_openresty/resources/img/" .. ngx.re.gsub(ngx.today(), "-", "") .. "/"
-local root_path = "z_blog_openresty/resources/uploads/img/"
+local relative_path = "uploads/img/"
+local root_path = "z_blog_openresty/resources/" .. relative_path
 
 local chunk_size = 4096
 local form = upload:new(chunk_size)
@@ -28,8 +29,6 @@ while true do
         -- 限制 image 字段
         local param_info = ngx.re.match(res[2], [[form-data; name="(.+)";]])
         -- {"0":"form-data; name=\"image\";","1":"image"}
-        --ngx.log(ngx.ERR, json.encode(res[2]))
-        --ngx.log(ngx.ERR, json.encode(param_info))
 
         if param_info then
             local param = param_info[1]
@@ -41,7 +40,6 @@ while true do
 
             local file_info = ngx.re.match(res[2], [[filename="(.+)\.(.+)"]])
             --  {"0":"filename=\"aa.aa.png\"","1":"aa.aa","2":"png"}
-            ngx.log(ngx.ERR, json.encode(file_info))
 
             if file_info then
                 local file_extension = file_info[2]
@@ -53,7 +51,7 @@ while true do
                     return
                 end
 
-                file_name = ngx.md5(ngx.now() .. file_info[1]) .. "." .. file_extension:lower()
+                file_name = ngx.md5(ngx.now() .. ngx.var.pid .. file_info[1]) .. "." .. file_extension:lower()
                 file = io.open(root_path .. file_name, "w+b")
                 if not file then
                     ngx.log(ngx.ERR, "upload img failed to open file#" .. root_path .. file_name)
@@ -84,6 +82,6 @@ if not file_name then
     return
 end
 
-local file_url = "https://www.zhangbj.com/uploads/img/" .. file_name
+local file_url = string.format("%s://%s/%s/%s", ngx.var.scheme, ngx.var.host, relative_path, file_name)
 
 ngx.say(json.encode(const.ok(file_url)))
