@@ -17,7 +17,7 @@
             {% for _, post in ipairs(posts) do %}
             <li class="shadow index-post-item">
                 <a href="/p/{{post.id}}.html" class="index-post-title-a ellipsis" title="{{post.title}}">{{post.title}}</a>
-                <p class="index-post-desc">{{post.description}}</p>
+                <p class="index-post-desc">{*post.description*}</p>
                 <p>
                     <span style="color: #8a8a8a">{{post.create_ts}}，阅读：{{post.pv}}{% if not ngx.ctx.is_mobile then %}，评论：<a href="/p/{{post.id}}.html#post-comment" class="anchor-link-a">{{post.comment_count}}</a>，点赞：<a href="/p/{{post.id}}.html#post-like" class="anchor-link-a">{{post.like_count}}</a>{% end %}{% if post.topics then %}，标签：{% for _, topic in ipairs(post.topics) do %}<a href="/topic/{{topic}}.html" class="anchor-link-a" title="标签：{{topic}}">{{topic}}</a>&nbsp;{% end %}{% end %}</span>
                 </p>
