@@ -12,7 +12,7 @@
 <body>
 {(header.html)}
 <div class="main">
-    {% if not posts then %}
+    {% if not posts or #posts < 1 then %}
     <div class="content" style="text-align: center">
         <div class="shadow" style="padding: 30px">
             该标签下暂无文章

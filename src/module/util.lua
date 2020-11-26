@@ -1,8 +1,41 @@
 local json = require "cjson.safe"
 local http = require "resty.http"
 local db = require "module.db"
+local html = require "module.html"
 
 local _M = { _VERSION = "0.01"}
+
+function _M.sync_es(post_id)
+
+    local sql = "select id, title, topics, post_status, content_html, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where id=%d"
+
+    local post = db.query(string.format(sql, post_id))[1]
+
+    local param = {
+        postId = post.id,
+        postTime = post.create_ts,
+        offline = post.post_status ~= 0,
+        topics = post.topics,
+        title = post.title,
+        content = html.strip_tags(post.content_html)
+    }
+
+    local httpc = http.new()
+    local res, err = httpc:request_uri("http://127.0.0.1:9200/post/_doc/" .. post.id, {
+        method = "PUT",
+        body = json.encode(param),
+        headers = {
+            ["Content-Type"] = "application/json",
+        },
+        keepalive_timeout = 2000 -- 毫秒
+    })
+
+    if not res then
+        ngx.log(ngx.ERR, "sync es error#", err)
+    else
+        ngx.log(ngx.ERR, "sync es success#", res.body)
+    end
+end
 
 function _M.query_ip(ip)
     --local result = db.query("select country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool where ip = " .. db.quote(ip) .. "::inet limit 1")

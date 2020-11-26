@@ -87,7 +87,7 @@ function _M.get_page_size(args)
     -- ngx.req.get_uri_args()
     -- ngx.ctx.body_data
     local page = tonumber(args.page or 1)
-    local size = tonumber(args.size or 10)
+    local size = tonumber(args.size or 20)
 
     if page < 1 then
         page = 1

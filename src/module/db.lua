@@ -1,4 +1,5 @@
 local pgmoon = require "pgmoon"
+local encode_array = require("pgmoon.arrays").encode_array
 
 local _M = { _VERSION = "0.01"}
 
@@ -13,6 +14,7 @@ end
 
 -- 参照pgmoon:escape_literal
 function _M.quote(val)
+    -- ngx.null 等于 null
     if val and val ~= ngx.null then
         -- 防止SQL注入，OpenResty自带
         return ndk.set_var.set_quote_pgsql_str(val)
@@ -31,6 +33,15 @@ function _M.quote(val)
     --else
     --    return "null"
     --end
+end
+
+-- pgmoon 插入数组时进行编码
+function _M.encode_arr(arr)
+    if type(arr) == 'table' and #arr > 0 then
+        return encode_array(arr)
+    else
+        return "null"
+    end
 end
 
 function _M.query(sql)

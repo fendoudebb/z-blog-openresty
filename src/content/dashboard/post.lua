@@ -59,8 +59,86 @@ elseif req_url == "audit" then
     if update_result.affected_rows < 1 then
         ngx.say(json.encode(const.fail()))
     else
+        ngx.ctx.post_id = id
         ngx.say(json.encode(const.ok()))
     end
+elseif req_url == "info" then
+    local id = ngx.ctx.body_data.id
+
+    if type(id) ~= "number" or id < 1 then
+        return req.bad_request()
+    end
+
+    local sql = [[
+        select id, title, content, post_status, prop, topics from post where id=%d limit 1
+    ]]
+
+    local result = db.query(string.format(sql, id))
+
+    ngx.say(json.encode(const.ok(result[1])))
+
+elseif req_url == "publish" then
+    local id = ngx.ctx.body_data.id
+    local title = ngx.ctx.body_data.title
+    local topics = ngx.ctx.body_data.topics
+    local content = ngx.ctx.body_data.content
+    local content_html = ngx.ctx.body_data.content_html
+    local word_count = ngx.ctx.body_data.word_count
+    local prop = ngx.ctx.body_data.prop
+    local post_status = ngx.ctx.body_data.post_status
+    local description = ngx.ctx.body_data.description
+    local keywords = ngx.ctx.body_data.keywords
+
+    local sql
+
+    if id then
+        -- update
+        if type(id) ~= "number" or id < 1 then
+            return req.bad_request()
+        end
+
+        sql = [[
+            update post set title=%s, description=%s, topics=%s, content=%s, content_html=%s, word_count=%d, prop=%d, post_status=%d, keywords=%s
+            where id=%d
+        ]]
+
+        sql = string.format(sql, db.quote(title), db.quote(description), db.encode_arr(topics), db.quote(content), db.quote(content_html), word_count, prop, post_status, db.quote(keywords), id)
+
+    else
+        -- insert
+
+        sql = [[
+            insert into post(id, uid, title, description, topics, content, content_html, word_count, prop, post_status, keywords)
+            values((select max(id) from post) + 1, %d, %s, %s, %s, %s, %s, %d, %d, %d, %s) returning id
+        ]]
+
+        sql = string.format(sql, ngx.ctx.user_info.id, db.quote(title), db.quote(description), db.encode_arr(topics), db.quote(content), db.quote(content_html), word_count, prop, post_status, db.quote(keywords))
+
+    end
+
+    local result = db.query(sql)
+
+    if result and result.affected_rows > 0 then
+        local post_id
+        if id then
+            post_id = id
+        else
+            post_id = result[1].id
+        end
+        ngx.ctx.post_id = post_id
+        ngx.say(json.encode(const.ok({
+            id = post_id
+        })))
+    else
+        ngx.say(json.encode(const.fail()))
+    end
+
+    --local pure_text = html.strip_tags(content_html)
+    --local pure_text_count = utf8.len(pure_text)
+    --local word_count = #(pure_text):gsub('[\128-\191]', '')
+
+    --ngx.log(ngx.ERR, word_count)
+    --ngx.log(ngx.ERR, #("我是谁123我abc,，。\ta"):gsub('[\128-\191]', ''))
 
 end
 

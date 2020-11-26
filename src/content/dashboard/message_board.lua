@@ -11,7 +11,12 @@ if req_url == "list" then
     local sql_args = req.get_page_size(ngx.ctx.body_data)
     sql = [[
     select count(*) from message_board where root_id is null;
+    with t as
+    (
     select id, nickname, content, floor, like_count, reply_count, status, ua, os, browser, ip_id, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from message_board where root_id is null order by id desc limit %d offset %d
+    )
+    select t.*, t2.ip, t2.address from t left join
+    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id;
     ]]
     sql = string.format(sql, sql_args.limit, sql_args.offset)
     local result = db.query(sql)
@@ -72,7 +77,12 @@ else
     local sql_args = req.get_page_size(ngx.ctx.body_data)
     sql = [[
     select count(*) from message_board where root_id=%d;
+    with t as
+    (
     select id, nickname, content, floor, like_count, reply_count, status, ua, os, browser, ip_id, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from message_board where root_id=%d order by id desc limit %d offset %d
+    )
+    select t.*, t2.ip, t2.address from t left join
+    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id;
     ]]
     sql = string.format(sql, id, id, sql_args.limit, sql_args.offset)
     local result = db.query(sql)

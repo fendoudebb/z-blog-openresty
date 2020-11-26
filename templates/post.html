@@ -343,8 +343,10 @@
     <div class="content">
         <div class="shadow">
             <h1>{{post.title}}</h1>
-            {% for _, t in ipairs(post.topics) do %}
-            <a href="/topic/{{t}}.html" class="badge-a" title="{{t}}">{{t}}</a>
+            {% if post.topics then %}
+                {% for _, t in ipairs(post.topics) do %}
+                <a href="/topic/{{t}}.html" class="badge-a" title="{{t}}">{{t}}</a>
+                {% end %}
             {% end %}
             {% if post.comment_count > 0 then %}
             <a href="/p/{{post.id}}.html#post-comment" class="badge-a">评论 {{post.comment_count}}</a>

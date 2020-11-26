@@ -9,7 +9,7 @@ local sql = "select id, title, description, pv, like_count, comment_count, topic
 local result = db.query(string.format(sql, sql_args.limit, sql_args.offset))
 
 local memory = ngx.shared.memory
--- TODO 新增文章时记得重新设置
+-- sync_es.lua 中清除缓存
 local online_post_count = memory:get("online_post_count")
 if not online_post_count then
     online_post_count = db.query("select count(*) as count from post where post_status = 0")[1].count

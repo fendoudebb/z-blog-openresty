@@ -23,4 +23,6 @@ end
 
 db.query(string.format(sql, db.quote(topic), post_id))
 
+ngx.ctx.post_id = post_id
+
 ngx.say(json.encode(const.ok()))
