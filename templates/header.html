@@ -1,14 +1,14 @@
-{% local request_url = ngx.var.uri %}
+{% local request_uri = ngx.var.uri %}
 <div class="header">
     <ul>
         <li>
-            <a href="/" title="首页" {% if "/" == request_url then %}style="color: #4CAF50"{% end %}>首页</a>
+            <a href="/" title="首页" {% if "/" == request_uri then %}style="color: #4CAF50"{% end %}>首页</a>
         </li><li>
-        <a href="/message-board.html" title="留言板" {% if "/message-board.html" == request_url then %}style="color: #4CAF50"{% end %}>留言板</a>
+        <a href="/message-board.html" title="留言板" {% if "/message-board.html" == request_uri then %}style="color: #4CAF50"{% end %}>留言板</a>
     </li><li>
-        <a href="/tool/json.html" title="小工具" {% if ngx.re.match(request_url, "/tool/") then %}style="color: #4CAF50"{% end %}>小工具</a>
+        <a href="/tool/json.html" title="小工具" {% if ngx.re.match(request_uri, "/tool/") then %}style="color: #4CAF50"{% end %}>小工具</a>
     </li><li>
-        <a href="/english.html" title="英语角" {% if "/english.html" == request_url then %}style="color: #4CAF50"{% end %}>英语角</a>
+        <a href="/english.html" title="英语角" {% if "/english.html" == request_uri then %}style="color: #4CAF50"{% end %}>英语角</a>
     </li>
         <!--<a href="https://github.com/fendoudebb" target="_blank" title="Github">Github</a>-->
     </ul>

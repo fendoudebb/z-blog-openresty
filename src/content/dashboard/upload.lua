@@ -82,6 +82,6 @@ if not file_name then
     return
 end
 
-local file_url = string.format("%s://%s/%s/%s", ngx.var.scheme, ngx.var.host, relative_path, file_name)
+local file_url = string.format("/%s%s", relative_path, file_name)
 
 ngx.say(json.encode(const.ok(file_url)))

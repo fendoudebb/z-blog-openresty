@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {% local scheme = ngx.var.scheme %}
-    {% local host = ngx.var.host %}
-    {(base.html, { title = post.title, keywords = post.keywords, description = post.description, scheme = scheme, host = host } )}
+    {(base.html, { title = post.title, keywords = post.keywords, description = post.description } )}
     <style>
 
         .table-area {
@@ -369,7 +367,7 @@
 
             <p style="text-align: center;color: #8a8a8a;margin: 50px 0">————&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEND&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp————</p>
             <p style="text-align: center;margin-bottom: 30px;color: red;"><strong>扫描下方二维码关注公众号和小程序↓↓↓</strong></p>
-            <img src="{{scheme}}://{{host}}/qrcode.png" title="扫描二维码关注我" alt="扫描二维码关注我">
+            <img src="/qrcode.png" title="扫描二维码关注我" alt="扫描二维码关注我">
         </div>
 
         <div id="post-comment">
