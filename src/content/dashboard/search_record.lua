@@ -17,8 +17,6 @@ local sql = [[
 
 sql = string.format(sql, "record_search", "record_search", sql_args.limit, sql_args.offset)
 
-ngx.log(ngx.ERR, sql)
-
 local result = db.query(sql)
 
 ngx.say(json.encode(const.ok({
