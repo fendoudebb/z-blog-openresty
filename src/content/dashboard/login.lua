@@ -21,7 +21,7 @@ select id, password, roles from dashboard_user where username=%s
 ]]
 
 local result = db.query(string.format(sql, db.quote(username)))
-ngx.log(ngx.ERR, json.encode(result))
+
 local user = result[1]
 
 if not user or password ~= user.password then
