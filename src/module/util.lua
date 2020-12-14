@@ -5,6 +5,19 @@ local html = require "module.html"
 
 local _M = { _VERSION = "0.01"}
 
+function _M.find(t, val)
+    if type(t) ~= "table" then
+        return false
+    end
+
+    for _, v in ipairs(t) do
+        if v == val then
+            return true
+        end
+    end
+    return false
+end
+
 function _M.sync_es(post_id)
 
     local sql = "select id, title, topics, post_status, content_html, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where id=%d"
