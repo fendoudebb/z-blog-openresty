@@ -58,6 +58,16 @@ function _M.unauthorized()
     })
 end
 
+-- 403
+function _M.forbidden()
+    return _M.request_error(ngx.HTTP_FORBIDDEN, {
+        timestamp = ngx.time(),
+        status = 403,
+        error = "forbidden",
+        message = "forbidden"
+    })
+end
+
 -- 405status
 function _M.method_not_allowed()
     return _M.request_error(ngx.HTTP_NOT_ALLOWED, {

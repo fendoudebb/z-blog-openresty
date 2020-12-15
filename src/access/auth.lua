@@ -1,5 +1,6 @@
 local json = require "cjson.safe"
 local req = require "module.req"
+local util = require "module.util"
 
 if not req.is_post_method(ngx.var.request_method) then
     return req.method_not_allowed()
@@ -25,13 +26,31 @@ local user_info = json.decode(user_info_json_str)
 local client_ip = req.get_ip_from_headers(ngx.req.get_headers())
 
 if user_info.ip ~= client_ip then
-    ngx.log(ngx.ERR, "auth ip mismatch, login ip#" .. user_info.ip .. ", request ip#" .. client_ip)
+    ngx.log(ngx.ERR, "auth ip mismatch, request ip#" .. client_ip .. ", user info#" .. json.encode(user_info))
     return req.unauthorized()
 end
 
 if user_info.ua ~= ngx.var.http_user_agent then
-    ngx.log(ngx.ERR, "auth ua mismatch, login ua#" .. user_info.ua .. ", request ip#" .. ngx.var.http_user_agent)
+    ngx.log(ngx.ERR, "auth ua mismatch, request ua#" .. ngx.var.http_user_agent .. ", user info#" .. json.encode(user_info))
     return req.unauthorized()
+end
+
+if not util.find(user_info.roles, "ROLE_ADMIN") then
+    local action = ngx.var[1]
+    if action then
+        local admin_action = {
+            "add",
+            "delete",
+            "upsert",
+            "audit",
+            "reply",
+            "publish"
+        }
+        if util.find(admin_action, action) then
+            ngx.log(ngx.ERR, "auth permission deny, request uri#" .. ngx.var.uri .. ", user info#" .. json.encode(user_info))
+            return req.forbidden()
+        end
+    end
 end
 
 memory:expire(login_key, 604800)
