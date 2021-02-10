@@ -1,21 +1,36 @@
 server {
-    listen       [::]:80;
+    listen 443 ssl http2;
     server_name  localhost;
     default_type  text/html;
     charset utf-8;
 
-    lua_code_cache off;
+    # 为 SNI 域名动态处理颁发或返回证书
+    ssl_certificate_by_lua_block {
+        auto_ssl:ssl_certificate()
+    }
+
+    # 定义静态的 ssl 证书文件用于 nginx 的启动
+    #
+    # 生成备用的自签名证书
+    #
+    # openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
+    #   -subj '/CN=sni-support-required-for-valid-ssl' \
+    #   -keyout /usr/local/openresty/ssl/resty-auto-ssl-fallback.key \
+    #   -out /usr/local/openresty/ssl/resty-auto-ssl-fallback.crt
+    ssl_certificate /usr/local/openresty/ssl/resty-auto-ssl-fallback.crt;
+    ssl_certificate_key /usr/local/openresty/ssl/resty-auto-ssl-fallback.key;
+
+    lua_code_cache on;
+
 
     # 默认读取 body
     # 强制本模块读取请求体，此方法不推荐，使用 ngx.req.read_body 代替
     # lua_need_request_body on;
 
     # 设置`lua-resty-templates`模板路径
-    # Windows OpenResty nginx.exe在conf, lua等文件夹同一级，z_blog_openresty工程文件夹也在conf, lua等文件夹同一级，故z_blog_openresty/template相对路径可使用
-    set $template_root z_blog_openresty/templates;
     # Linux OpenResty nginx命令在conf, lua等文件夹同一级中的sbin文件夹下，故z_blog_openresty在conf, lua等文件夹同一级的话，需要往上退出一个文件夹。
     # Linux OpenResty 若将sbin下的nginx命令移动到conf, lua等文件夹同一级，则可以和Windows版本设置$template_root命令一直，不用再使用../，直接使用z_blog_openresty/template
-    #set $template_root ../z_blog_openresty/templates;
+    set $template_root ../z_blog_openresty/templates;
 
     # socket超时时间，比如链接PostgreSQL数据库5秒还连不上自动断开
     lua_socket_connect_timeout 2s;
@@ -149,4 +164,35 @@ server {
         content_by_lua_file z_blog_openresty/src/content/web/not_found.lua;
     }
 
+}
+
+# HTTP server
+server {
+    listen 80;
+
+    # 该节点路径用于 Let's Encrypt 域名校验
+    location /.well-known/acme-challenge/ {
+        content_by_lua_block {
+            auto_ssl:challenge_server()
+        }
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# 内部开启一个监听8999的服务用于处理认证任务
+server {
+    listen 127.0.0.1:8999;
+
+    # 增加 body buffer size 以保证所有的 POST 请求能正常解析返回的 POST 报文并保存到内存中
+    client_body_buffer_size 128k;
+    client_max_body_size 128k;
+
+    location / {
+        content_by_lua_block {
+            auto_ssl:hook_server()
+        }
+    }
 }

@@ -1,0 +1,92 @@
+#user  nobody;
+worker_processes  auto;
+
+error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+
+#pid        logs/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    log_format  main  '[$time_local] $remote_addr $remote_user "$request" '
+    '$status $body_bytes_sent "$http_referer" '
+    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log logs/access.log main;
+
+    include       mime.types;
+    default_type application/json;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+#    more_set_headers 'Server: guess';
+    more_clear_headers 'Server';
+
+    server_tokens off; # 隐藏版本号
+
+    gzip on;
+    gzip_min_length 1k;
+    gzip_buffers 4 16k;
+    #gzip_http_version 1.0;
+    gzip_comp_level 4;
+    gzip_types text/xml application/json text/plain application/javascript text/css image/jpeg image/gif image/png;
+    gzip_vary on;
+    gzip_disable "MSIE [1-6]\.";
+
+    resolver 8.8.8.8;
+
+    # 从 v0.5.0rc29 发行版开始 $prefix 或 ${prefix} 来指示 server prefix（通常通过 -p PATH 指定）
+    # Linux 若OpenResty 指定的 --prefix 为 /usr/local/openresty 则 nginx 真实的 --prefix 为 /usr/local/openresty/nginx，z_blog_openresty工程放置在/usr/local/openresty/nginx下
+    lua_package_path '$prefix/z_blog_openresty/src/?.lua;$prefix/../luarocks/share/lua/5.1/?.lua;$prefix/../luarocks/share/lua/5.1/?/init.lua;;';
+    lua_package_cpath '$prefix/../luarocks/lib/lua/5.1/?.so;;';
+
+    lua_shared_dict memory 5m;
+
+    # auto_ssl 共享内存用于处理证书数据。1MB大约能处理约 100 个单独的域名
+    lua_shared_dict auto_ssl 1m;
+
+    # auto_ssl_settings 共享内存用于临时存储各种设置，比如认证任务用到的密钥等，不能改变或去掉这个配置。
+    lua_shared_dict auto_ssl_settings 64k;
+
+
+    # 初始化设置任务
+    init_by_lua_block {
+        auto_ssl = (require "resty.auto-ssl").new()
+
+        -- 用于保存配置、临时文件和证书文件的文件夹，文件夹必须保证 nginx worker 进程可写，默认/etc/resty-auto-ssl
+        auto_ssl:set("dir", "/usr/local/openresty/ssl/resty-auto-ssl")
+
+        -- 认证任务监听端口，默认8999
+        auto_ssl:set("hook_server_port", 8999)
+
+        -- 更新检查评率，单位秒，默认86400（一天）
+        auto_ssl:set("renew_check_interval", 172800)
+
+        -- 定义一个函数用于决定哪个域名自动处理和注册新证书。默认是不允许任务域名。所以该配置也是必须项。
+        -- 替换 example.com 为自己的域名，直接返回 true 表示所有请求进来的域名都颁发证书
+        auto_ssl:set("allow_domain", function(domain)
+          -- return ngx.re.match(domain, "^(example.com|example.net)$", "ijo")
+          -- return ngx.re.match(domain, "example.com$", "ijo")
+          return true
+        end)
+
+        auto_ssl:init()
+    }
+
+    init_worker_by_lua_file z_blog_openresty/src/schedule/task.lua;
+
+    #将  auto_ssl:init_worker() 添加到 task.lua 中
+    #init_worker_by_lua_block {
+    #    auto_ssl:init_worker()
+    #}
+
+    # $prefix 只适用于 lua_package_path/lua_package_cpath 指令
+    include './conf/server-*.conf';
+
+}
