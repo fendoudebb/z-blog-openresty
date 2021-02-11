@@ -8,7 +8,7 @@ local topic = ngx.var[1]
 local quote_topic = db.quote(topic)
 
 local sql = [[
-select id, title, description, pv, like_count, comment_count, topics, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where post_status=0 and %s=ANY(topics) limit %d offset %d;
+select id, title, description, pv, like_count, comment_count, topics, to_char(create_ts, 'YYYY-MM-DD') as create_ts from post where post_status=0 and %s=ANY(topics) order by id desc limit %d offset %d;
 select count(*) as count from post where post_status=0 and %s=ANY(topics);
 ]]
 
