@@ -20,7 +20,10 @@ end
         </datalist>
     </div>
     <div class="shadow sidebar-widget">
-        <h3>标签</h3>
+        <div>
+            <h3 style="display: inline">标签</h3>
+            <a class="sidebar-topic-more" href="/topic-list.html" title="查看更多标签"><span>更多</span></a>
+        </div>
         <div class="sidebar-topic">
             {% for _, topic in ipairs(web_stat[1]) do %}
             <a href="/topic/{{topic.name}}.html" title="{{topic.name}}"><span>{{topic.name}}</span></a>

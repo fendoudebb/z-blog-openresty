@@ -25,7 +25,7 @@ local function record_visit_data(premature, record)
             db.query(string.format(sql, "record_invalid_request", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time))
         end
         -- TODO debug用
-        ngx.log(ngx.ERR, json.encode(record))
+        --ngx.log(ngx.ERR, json.encode(record))
     end
 end
 

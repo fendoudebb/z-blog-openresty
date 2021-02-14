@@ -200,6 +200,7 @@ function _M.query_web_stat()
         select id, title, pv from post where post_status=0 order by pv desc, id desc limit 5;
         select id, title, like_count from post where post_status=0 order by like_count desc, id desc limit 5;
         select id, title, comment_count from post where post_status=0 order by comment_count desc, id desc limit 5;
+        select count(1) as count, unnest(topics) as name from post group by name order by count desc;
     ]])
 
     local memory = ngx.shared.memory

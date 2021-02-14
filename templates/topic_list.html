@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {(base.html, { title = title, keywords = title, description = title } )}
+    <style>
+        .shadow {
+            margin-bottom: 8px;
+            padding: 16px 24px;
+            word-wrap: break-word;
+        }
+
+        .topic-a:active {
+            color: #999;
+        }
+
+        .topic-a:hover span {
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+{(header.html)}
+{%
+local json = require "cjson.safe"
+local memory = ngx.shared.memory
+local web_stat = memory:get("web_stat")
+if web_stat ~= nil then
+web_stat = json.decode(web_stat)
+end
+%}
+<div class="main">
+    <div class="content">
+        <div class="shadow">
+            <h1>标签列表</h1>
+            {% for _, topic in ipairs(web_stat[9]) do %}
+            <a class="topic-a" href="/topic/{{topic.name}}.html" title="{{topic.name}}"><span>{{topic.name}} - {{topic.count}}篇</span></a>
+            {% end %}
+            <p style="text-align: center;color: #8a8a8a;margin: 50px 0">————&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEND&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp————</p>
+            <p style="text-align: center;margin-bottom: 30px;color: red;"><strong>扫描下方二维码关注公众号和小程序↓↓↓</strong></p>
+            <img src="/qrcode.png" title="扫描二维码关注我" alt="扫描二维码关注我">
+        </div>
+
+    </div>
+    {(sidebar.html)}
+</div>
+{(footer.html)}
+{(base_js.html)}
+</body>
+</html>
