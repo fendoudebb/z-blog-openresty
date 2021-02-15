@@ -86,7 +86,7 @@ function _M.query_ip(ip)
             -- {"1":{"id":54503},"affected_rows":1}
             -- 插入失败返回nil
             local result = db.query(string.format(insert_ip_pool, quote_ip))
-            id = result[1]
+            id = result[1].id
         else
             id = prop.id
         end
