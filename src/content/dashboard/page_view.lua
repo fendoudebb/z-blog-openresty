@@ -14,7 +14,7 @@ local sql = [[
     select id, url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from %s order by id desc limit %d offset %d
     )
     select t.*, t2.ip, t2.address from t left join
-    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id;
+    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id order by t.id desc;
 ]]
 if req_url == "list" then
     --select id, url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from record_page_view order by id desc limit %d offset %d
