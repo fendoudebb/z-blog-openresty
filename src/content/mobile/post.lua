@@ -21,9 +21,10 @@ if not post or post.post_status ~= 0 then
     return req.request_error(ngx.HTTP_NOT_FOUND, const.post_not_exist())
 end
 
--- 统计stat.lua用
-ngx.ctx.post_id = post.id
-
 local res = const.ok({post = post})
 
 ngx.say(json.encode(res))
+
+-- 统计stat.lua用
+ngx.ctx.post_id = post.id
+ngx.ctx.is_mini_program = true

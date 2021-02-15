@@ -7,9 +7,13 @@ local function record_visit_data(premature, record)
 
         local ip_id = util.query_ip(record.ip).id
         local sql = [[
-                insert into %s(url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time)
-                values(%s, %d, %s, %s, %s, '%s', '%s', '%s', '%s', '%s', '%s', %s, %.2f)
+                insert into %s(url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time, source)
+                values(%s, %d, %s, %s, %s, '%s', '%s', '%s', '%s', '%s', '%s', %s, %.2f, %d)
         ]]
+        local source = 0
+        if record.is_mini_program then
+            source = 1
+        end
         if record.status == 200 then
             local captures_post = ngx.re.match(record.url, "/p/")
             if captures_post and record.post_id then
@@ -17,12 +21,12 @@ local function record_visit_data(premature, record)
             end
             local captures_search = ngx.re.match(record.url, "/search/")
             if captures_search and record.search_stat then
-                db.query(string.format("insert into record_search(keywords, took, hits, ip_id, referer, browser, os) values(%s, %d, %d, %s, %s, '%s', '%s')", db.quote(record.search_stat.search), record.search_stat.took, record.search_stat.hits, ip_id, db.quote(record.referer), record.browser, record.os))
+                db.query(string.format("insert into record_search(keywords, took, hits, ip_id, referer, browser, os, ua) values(%s, %d, %d, %s, %s, '%s', '%s', %s)", db.quote(record.search_stat.search), record.search_stat.took, record.search_stat.hits, ip_id, db.quote(record.referer), record.browser, record.os, db.quote(record.ua)))
             end
-            db.query(string.format(sql, "record_page_view", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time))
+            db.query(string.format(sql, "record_page_view", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time, source))
         else
             -- 错误统计
-            db.query(string.format(sql, "record_invalid_request", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time))
+            db.query(string.format(sql, "record_invalid_request", db.quote(record.url), record.req_method, db.quote(record.req_param), ip_id, db.quote(record.ua), record.browser, record.browser_platform, record.browser_version, record.browser_vendor, record.os, record.os_version, db.quote(record.referer), record.cost_time,source))
         end
         -- TODO debug用
         --ngx.log(ngx.ERR, json.encode(record))
@@ -68,7 +72,8 @@ local record = {
     status = ngx.status,
     cost_time = ngx.now() - ngx.req.start_time(),
     post_id = ngx.ctx.post_id,
-    search_stat = ngx.ctx.search_stat
+    search_stat = ngx.ctx.search_stat,
+    is_mini_program = ngx.ctx.is_mini_program
 }
 
 local ok, err = ngx.timer.at(0, record_visit_data, record)

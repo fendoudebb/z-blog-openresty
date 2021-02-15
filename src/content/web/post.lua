@@ -28,7 +28,7 @@ post.random_post = result[1]
 --table转字符串
 --table.concat(post.topics, ',')
 
+template.render("post.html", {post = post})
+
 -- 统计stat.lua用
 ngx.ctx.post_id = post.id
-
-template.render("post.html", {post = post})

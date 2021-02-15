@@ -105,4 +105,5 @@ else
     return req.request_error(ngx.HTTP_NOT_FOUND, const.post_not_exist())
 end
 
-
+-- 统计stat.lua用
+ngx.ctx.is_mini_program = true

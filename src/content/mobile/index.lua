@@ -19,11 +19,7 @@ if topic and topic ~= '' then
     where = ' and ' .. db.quote(topic) .. '=ANY(topics)'
 end
 
-ngx.log(ngx.ERR, "topic#", type(topic))
-
 sql = string.format(sql, where, sql_args.limit, sql_args.offset, where)
-
-ngx.log(ngx.ERR, "sql#", sql)
 
 local result = db.query(sql)
 
@@ -31,3 +27,5 @@ local res = const.ok({ posts = result[1], currentPage = sql_args.page, totalPage
 
 ngx.say(json.encode(res))
 
+-- 统计stat.lua用
+ngx.ctx.is_mini_program = true
