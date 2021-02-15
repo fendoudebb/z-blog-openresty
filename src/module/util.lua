@@ -170,7 +170,7 @@ function _M.query_ip(ip)
         local result = db.query(sql)
         return {
             id = result[1],
-            address =  json_data.country .. (json_data.region or "") .. (json_data.city or "") .. (json_data.isp or "")
+            address =  (json_data.country or "") .. (json_data.region or "") .. (json_data.city or "") .. (json_data.isp or "")
         }
 
     end
