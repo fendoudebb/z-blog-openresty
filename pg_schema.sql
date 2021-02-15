@@ -54,50 +54,34 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: message_board; Type: TABLE; Schema: public; Owner: z-blog
+-- Name: dashboard_user; Type: TABLE; Schema: public; Owner: z-blog
 --
 
-CREATE TABLE public.message_board (
+CREATE TABLE public.dashboard_user (
     id integer NOT NULL,
-    nickname text NOT NULL,
-    content text NOT NULL,
-    status smallint DEFAULT 0 NOT NULL,
-    floor integer,
-    like_count integer DEFAULT 0 NOT NULL,
-    reply_count integer DEFAULT 0 NOT NULL,
-    ip_id bigint DEFAULT 0 NOT NULL,
-    replies jsonb,
-    reply_id integer,
-    root_id integer,
-    os text NOT NULL,
-    browser text NOT NULL,
-    ua text NOT NULL,
+    username text NOT NULL,
+    password text NOT NULL,
+    roles text[] NOT NULL,
     create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    status smallint DEFAULT 0 NOT NULL
 );
 
 
-ALTER TABLE public.message_board OWNER TO "z-blog";
+ALTER TABLE public.dashboard_user OWNER TO "z-blog";
 
 --
--- Name: TABLE message_board; Type: COMMENT; Schema: public; Owner: z-blog
+-- Name: TABLE dashboard_user; Type: COMMENT; Schema: public; Owner: z-blog
 --
 
-COMMENT ON TABLE public.message_board IS '留言板';
-
-
---
--- Name: COLUMN message_board.status; Type: COMMENT; Schema: public; Owner: z-blog
---
-
-COMMENT ON COLUMN public.message_board.status IS '评论状态（0：正常，1：删除）';
+COMMENT ON TABLE public.dashboard_user IS '管理系统用户';
 
 
 --
--- Name: comment_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
+-- Name: dashboard_user_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
 --
 
-CREATE SEQUENCE public.comment_id_seq
+CREATE SEQUENCE public.dashboard_user_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -106,13 +90,13 @@ CREATE SEQUENCE public.comment_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.comment_id_seq OWNER TO "z-blog";
+ALTER TABLE public.dashboard_user_id_seq OWNER TO "z-blog";
 
 --
--- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: z-blog
+-- Name: dashboard_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: z-blog
 --
 
-ALTER SEQUENCE public.comment_id_seq OWNED BY public.message_board.id;
+ALTER SEQUENCE public.dashboard_user_id_seq OWNED BY public.dashboard_user.id;
 
 
 --
@@ -324,9 +308,9 @@ CREATE TABLE public.link (
     webmaster text NOT NULL,
     webmaster_email text,
     status smallint DEFAULT 0 NOT NULL,
-    sort smallint DEFAULT 0 NOT NULL,
     create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    sort smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -383,6 +367,68 @@ ALTER SEQUENCE public.link_id_seq OWNED BY public.link.id;
 
 
 --
+-- Name: message_board; Type: TABLE; Schema: public; Owner: z-blog
+--
+
+CREATE TABLE public.message_board (
+    id integer NOT NULL,
+    nickname text NOT NULL,
+    content text NOT NULL,
+    floor integer,
+    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    status smallint DEFAULT 0 NOT NULL,
+    ua text NOT NULL,
+    os text NOT NULL,
+    browser text NOT NULL,
+    replies jsonb,
+    ip_id bigint DEFAULT 0 NOT NULL,
+    reply_id integer,
+    root_id integer,
+    like_count integer DEFAULT 0 NOT NULL,
+    reply_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.message_board OWNER TO "z-blog";
+
+--
+-- Name: TABLE message_board; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON TABLE public.message_board IS '留言板';
+
+
+--
+-- Name: COLUMN message_board.status; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON COLUMN public.message_board.status IS '评论状态（0：正常，1：删除）';
+
+
+--
+-- Name: message_board_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
+--
+
+CREATE SEQUENCE public.message_board_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.message_board_id_seq OWNER TO "z-blog";
+
+--
+-- Name: message_board_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: z-blog
+--
+
+ALTER SEQUENCE public.message_board_id_seq OWNED BY public.message_board.id;
+
+
+--
 -- Name: post; Type: TABLE; Schema: public; Owner: z-blog
 --
 
@@ -390,9 +436,8 @@ CREATE TABLE public.post (
     id integer NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
     title text NOT NULL,
-    topics text[],
-    keywords text,
     description text NOT NULL,
+    topics text[],
     content text NOT NULL,
     content_html text NOT NULL,
     word_count integer DEFAULT 0 NOT NULL,
@@ -402,10 +447,11 @@ CREATE TABLE public.post (
     like_count integer DEFAULT 0 NOT NULL,
     comment_count integer DEFAULT 0 NOT NULL,
     comment_status smallint DEFAULT 0 NOT NULL,
+    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     post_comment jsonb,
     post_like jsonb,
-    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    keywords text
 );
 
 
@@ -440,24 +486,17 @@ COMMENT ON COLUMN public.post.title IS '文章标题';
 
 
 --
--- Name: COLUMN post.topics; Type: COMMENT; Schema: public; Owner: z-blog
---
-
-COMMENT ON COLUMN public.post.topics IS '标签数组';
-
-
---
--- Name: COLUMN post.keywords; Type: COMMENT; Schema: public; Owner: z-blog
---
-
-COMMENT ON COLUMN public.post.keywords IS '关键词';
-
-
---
 -- Name: COLUMN post.description; Type: COMMENT; Schema: public; Owner: z-blog
 --
 
 COMMENT ON COLUMN public.post.description IS '文章描述';
+
+
+--
+-- Name: COLUMN post.topics; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON COLUMN public.post.topics IS '标签数组';
 
 
 --
@@ -538,6 +577,13 @@ COMMENT ON COLUMN public.post.update_ts IS '更新时间';
 
 
 --
+-- Name: COLUMN post.keywords; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON COLUMN public.post.keywords IS '关键词';
+
+
+--
 -- Name: post_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
 --
 
@@ -588,8 +634,7 @@ CREATE TABLE public.record_invalid_request (
     url text NOT NULL,
     req_method smallint,
     req_param text,
-    ip_id bigint,
-    cost_time numeric(6,2),
+    ua text NOT NULL,
     browser text,
     browser_platform text,
     browser_version text,
@@ -597,8 +642,10 @@ CREATE TABLE public.record_invalid_request (
     os text,
     os_version text,
     referer text,
-    ua text NOT NULL,
-    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    cost_time numeric(6,2),
+    ip_id bigint,
+    source smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -626,6 +673,13 @@ COMMENT ON COLUMN public.record_invalid_request.browser_vendor IS '浏览器-制
 
 
 --
+-- Name: COLUMN record_invalid_request.source; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON COLUMN public.record_invalid_request.source IS '0：网站，1：微信小程序';
+
+
+--
 -- Name: record_page_view_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
 --
 
@@ -648,10 +702,7 @@ CREATE TABLE public.record_page_view (
     url text NOT NULL,
     req_method smallint,
     req_param text,
-    ip text,
-    ip_address text,
-    ip_id bigint,
-    cost_time numeric(6,2),
+    ua text NOT NULL,
     browser text,
     browser_platform text,
     browser_version text,
@@ -659,8 +710,10 @@ CREATE TABLE public.record_page_view (
     os text,
     os_version text,
     referer text,
-    ua text NOT NULL,
-    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    cost_time numeric(6,2),
+    ip_id bigint,
+    source smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -688,6 +741,13 @@ COMMENT ON COLUMN public.record_page_view.browser_vendor IS '浏览器-制造商
 
 
 --
+-- Name: COLUMN record_page_view.source; Type: COMMENT; Schema: public; Owner: z-blog
+--
+
+COMMENT ON COLUMN public.record_page_view.source IS '0：网站，1：微信小程序';
+
+
+--
 -- Name: record_search; Type: TABLE; Schema: public; Owner: z-blog
 --
 
@@ -696,13 +756,12 @@ CREATE TABLE public.record_search (
     keywords text NOT NULL,
     took integer DEFAULT 0 NOT NULL,
     hits integer DEFAULT 0 NOT NULL,
-    ip text NOT NULL,
-    address text,
-    ip_id bigint,
+    referer text,
     browser text NOT NULL,
     os text NOT NULL,
-    referer text,
-    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    ip_id bigint,
+    ua text
 );
 
 
@@ -782,48 +841,10 @@ ALTER SEQUENCE public.topic_id_seq OWNED BY public.topic.id;
 
 
 --
--- Name: user; Type: TABLE; Schema: public; Owner: z-blog
+-- Name: dashboard_user id; Type: DEFAULT; Schema: public; Owner: z-blog
 --
 
-CREATE TABLE public."user" (
-    id integer NOT NULL,
-    username text NOT NULL,
-    password text NOT NULL,
-    roles text[] NOT NULL,
-    create_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    update_ts timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
-
-ALTER TABLE public."user" OWNER TO "z-blog";
-
---
--- Name: TABLE "user"; Type: COMMENT; Schema: public; Owner: z-blog
---
-
-COMMENT ON TABLE public."user" IS '管理系统用户';
-
-
---
--- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: z-blog
---
-
-CREATE SEQUENCE public.user_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_id_seq OWNER TO "z-blog";
-
---
--- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: z-blog
---
-
-ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
+ALTER TABLE ONLY public.dashboard_user ALTER COLUMN id SET DEFAULT nextval('public.dashboard_user_id_seq'::regclass);
 
 
 --
@@ -851,7 +872,7 @@ ALTER TABLE ONLY public.link ALTER COLUMN id SET DEFAULT nextval('public.link_id
 -- Name: message_board id; Type: DEFAULT; Schema: public; Owner: z-blog
 --
 
-ALTER TABLE ONLY public.message_board ALTER COLUMN id SET DEFAULT nextval('public.comment_id_seq'::regclass);
+ALTER TABLE ONLY public.message_board ALTER COLUMN id SET DEFAULT nextval('public.message_board_id_seq'::regclass);
 
 
 --
@@ -866,13 +887,6 @@ ALTER TABLE ONLY public.record_search ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.topic ALTER COLUMN id SET DEFAULT nextval('public.topic_id_seq'::regclass);
-
-
---
--- Name: user id; Type: DEFAULT; Schema: public; Owner: z-blog
---
-
-ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
 
 
 --
@@ -972,10 +986,10 @@ ALTER TABLE ONLY public.topic
 
 
 --
--- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: z-blog
+-- Name: dashboard_user user_pkey; Type: CONSTRAINT; Schema: public; Owner: z-blog
 --
 
-ALTER TABLE ONLY public."user"
+ALTER TABLE ONLY public.dashboard_user
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
 
 
@@ -997,7 +1011,7 @@ CREATE UNIQUE INDEX unique_ip ON public.ip_pool USING btree (ip);
 -- Name: unique_username_index; Type: INDEX; Schema: public; Owner: z-blog
 --
 
-CREATE UNIQUE INDEX unique_username_index ON public."user" USING btree (username);
+CREATE UNIQUE INDEX unique_username_index ON public.dashboard_user USING btree (username);
 
 
 --
