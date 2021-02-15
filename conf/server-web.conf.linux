@@ -35,6 +35,27 @@ server {
     # socket超时时间，比如链接PostgreSQL数据库5秒还连不上自动断开
     lua_socket_connect_timeout 2s;
 
+    location = /m/index {
+        default_type 'application/json;charset=utf-8';
+        access_by_lua_file z_blog_openresty/src/access/http_get.lua;
+        content_by_lua_file z_blog_openresty/src/content/mobile/index.lua;
+        log_by_lua_file z_blog_openresty/src/log/stat.lua;
+    }
+
+    location ~ ^/m/p/([0-9]+)$ {
+        default_type 'application/json;charset=utf-8';
+        access_by_lua_file z_blog_openresty/src/access/http_get.lua;
+        content_by_lua_file z_blog_openresty/src/content/mobile/post.lua;
+        log_by_lua_file z_blog_openresty/src/log/stat.lua;
+    }
+
+    location ~ ^/m/search/([\s\S]+)$ {
+        default_type 'application/json;charset=utf-8';
+        access_by_lua_file z_blog_openresty/src/access/http_get.lua;
+        content_by_lua_file z_blog_openresty/src/content/mobile/search.lua;
+        log_by_lua_file z_blog_openresty/src/log/stat.lua;
+    }
+
     location /admin {
         alias z_blog_openresty/admin;
         try_files $uri $uri/ /index.html last;
@@ -52,7 +73,7 @@ server {
     }
 
     location ~* ^/uploads/img/.*?\.(jpe?g|png|gif|svg)$ {
-        valid_referers none blocked server_names ~($host);
+        valid_referers none blocked server_names ~($host) servicewechat.com; # 微信小程序
         if ($invalid_referer) {
             return 403;
         }
