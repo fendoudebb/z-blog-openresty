@@ -8,7 +8,7 @@ local req_url = ngx.var[1]
 local sql_args = req.get_page_size(ngx.ctx.body_data)
 
 local sql = [[
-    select count(*) from %s;
+    select last_value as count from %s;
     with t as
     (
     select id, url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from %s order by id desc limit %d offset %d
@@ -18,10 +18,10 @@ local sql = [[
 ]]
 if req_url == "list" then
     --select id, url, req_method, req_param, ip_id, ua, browser, browser_platform, browser_version, browser_vendor, os, os_version, referer, cost_time, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from record_page_view order by id desc limit %d offset %d
-    sql = string.format(sql, "record_page_view", "record_page_view", sql_args.limit, sql_args.offset)
+    sql = string.format(sql, "record_page_view_id_seq", "record_page_view", sql_args.limit, sql_args.offset)
 
 elseif req_url == "invalid-list" then
-    sql = string.format(sql, "record_invalid_request", "record_invalid_request", sql_args.limit, sql_args.offset)
+    sql = string.format(sql, "record_invalid_request_id_seq", "record_invalid_request", sql_args.limit, sql_args.offset)
 end
 
 local result = db.query(sql)
