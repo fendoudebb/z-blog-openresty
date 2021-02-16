@@ -12,7 +12,7 @@ local sql = [[
     select id, keywords, took, hits, ip_id, referer, browser, os, to_char(create_ts, 'YYYY-MM-DD hh24:MI:ss') as create_ts from %s order by id desc limit %d offset %d
     )
     select t.*, t2.ip, t2.address from t left join
-    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id;
+    (select id, ip, country || COALESCE(region,'') || COALESCE(city,'') || COALESCE(isp,'') as address from ip_pool t1 where t1.id in (select ip_id from t)) t2 on t.ip_id = t2.id order by t.id desc;
 ]]
 
 sql = string.format(sql, "record_search", "record_search", sql_args.limit, sql_args.offset)
