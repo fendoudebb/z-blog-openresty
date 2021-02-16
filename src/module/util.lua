@@ -168,10 +168,17 @@ function _M.query_ip(ip)
 
         end
         local result = db.query(sql)
-        return {
-            id = result[1].id,
-            address =  (json_data.country or "") .. (json_data.region or "") .. (json_data.city or "") .. (json_data.isp or "")
-        }
+        if result then
+            return {
+                id = result[1].id,
+                address =  (json_data.country or "") .. (json_data.region or "") .. (json_data.city or "") .. (json_data.isp or "")
+            }
+        else
+            ngx.log(ngx.ERR, "concurrent query ip#", ip)
+           -- 并发时可能两个线程同时查询外部服务 导致插入duplicate key
+           -- 不会无限递归 最多调用一次 因为出现了duplicate key说明了已经有值了
+           return _M.query_ip(ip)
+        end
 
     end
 end
