@@ -11,7 +11,7 @@ if req_url == "list" then
 
     local username = ngx.ctx.body_data.username
     if type(username) == "string" then
-        where_cause = "where username=" .. db.quote(name)
+        where_cause = "where username=" .. db.quote(username)
     end
 
     local sql_args = req.get_page_size(ngx.ctx.body_data)
