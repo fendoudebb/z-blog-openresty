@@ -12,7 +12,7 @@
         <div class="shadow" style="padding: 50px">
             <p>当前IP：{{ngx.ctx.client_ip}}</p>
             <div style="width: 300px;display: inline-block">
-                <input id="ipInput" class="search-input" placeholder="请输入ip地址" value="{{ngx.ctx.client_ip}}">
+                <input id="ipInput" class="search-input" placeholder="请输入IP地址" value="{{ngx.ctx.client_ip}}">
                 <button id="queryIp" class="shadow button">查询</button>
             </div>
             <p id="result"></p>
@@ -37,7 +37,7 @@
             success: function (data) {
                 if (data.code === 0) {
                     $('#result').text(data.data).css('color','#4CAF50');
-                } else if (data.code === 1003) {
+                } else if (data.code === 1003 || data.code === 1004) {
                     $('#result').text(data.msg).css('color', 'red');
                 }
             }

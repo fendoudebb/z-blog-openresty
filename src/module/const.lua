@@ -43,6 +43,13 @@ function _M.query_ip_fail()
     }
 end
 
+function _M.invalid_ipv4()
+    return {
+        code = 1004,
+        msg = "请输入IPv4地址"
+    }
+end
+
 function _M.login_fail()
     return {
         code = 2000,

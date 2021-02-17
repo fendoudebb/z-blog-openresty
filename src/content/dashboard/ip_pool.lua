@@ -2,6 +2,7 @@ local json = require "cjson.safe"
 local const = require "module.const"
 local db = require "module.db"
 local req = require "module.req"
+local util = require "module.util"
 
 
 local req_url = ngx.var[1]
@@ -20,6 +21,9 @@ if req_url == "list" then
     local where_cause = ""
 
     if type(ip) == "string" then
+        if not util.is_ip(ip) then
+            return ngx.say(json.encode(const.fail("请输入IPv4地址")))
+        end
         where_cause = "where ip=" .. db.quote(ip) .. "::inet"
         count_sql = "select count(*) as count from ip_pool " .. where_cause .. ";"
     else

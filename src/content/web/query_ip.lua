@@ -17,6 +17,11 @@ if type(query_ip) ~= "string" then
     return req.bad_request()
 end
 
+if not util.is_ip(query_ip) then
+    ngx.log(ngx.ERR, "query ip invalid IPv4#", query_ip)
+    return ngx.say(json.encode(const.invalid_ipv4()))
+end
+
 local address = util.query_ip(query_ip).address;
 
 if address then

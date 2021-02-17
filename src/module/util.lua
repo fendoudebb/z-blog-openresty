@@ -194,6 +194,20 @@ end
 --    ngx.log(ngx.ERR, json.encode(res.body))
 --end
 
+function _M.is_ip(ip)
+    local chunks = {ip:match("(%d+)%.(%d+)%.(%d+)%.(%d+)")}
+    if (#chunks == 4) then
+        for _,v in pairs(chunks) do
+            if (tonumber(v) < 0 or tonumber(v) > 255) then
+                return false
+            end
+        end
+        return true
+    else
+        return false
+    end
+end
+
 -- 统计标签数量
 -- select  count(1) as topic_count, unnest(topics) unnest_topic from post group by unnest_topic order by topic_count desc
 function _M.query_web_stat()
