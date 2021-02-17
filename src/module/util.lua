@@ -103,11 +103,11 @@ function _M.query_ip(ip)
         local json_data = json.decode(res.body).data
 
         if json_data.PROVINCE_CN == json_data.CITY_CN then
-            json_data.city = nil
+            json_data.CITY_CN = nil
         end
 
         if json_data.PROVINCE_CN == 'XX' then
-            json_data.region = nil
+            json_data.PROVINCE_CN = nil
         end
 
         if json_data.CITY_CN == 'XX' then
@@ -119,7 +119,7 @@ function _M.query_ip(ip)
         end
 
         if json_data.PROVINCE_CODE == 'xx' then
-            json_data.region_id = nil
+            json_data.PROVINCE_CODE = nil
         end
 
         if json_data.CITY_CODE == 'xx' then
@@ -127,7 +127,7 @@ function _M.query_ip(ip)
         end
 
         if json_data.ISP_CODE == 'xx' then
-            json_data.isp_id = nil
+            json_data.ISP_CODE = nil
         end
 
         local country = db.quote(json_data.COUNTRY_CN)
