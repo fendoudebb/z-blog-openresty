@@ -39,7 +39,7 @@ http {
     gzip_vary on;
     gzip_disable "MSIE [1-6]\.";
 
-    resolver 8.8.8.8;
+    resolver 8.8.8.8 ipv6=off;
 
     # 从 v0.5.0rc29 发行版开始 $prefix 或 ${prefix} 来指示 server prefix（通常通过 -p PATH 指定）
     # Linux 若OpenResty 指定的 --prefix 为 /usr/local/openresty 则 nginx 真实的 --prefix 为 /usr/local/openresty/nginx，z_blog_openresty工程放置在/usr/local/openresty/nginx下
@@ -71,9 +71,12 @@ http {
         -- 定义一个函数用于决定哪个域名自动处理和注册新证书。默认是不允许任务域名。所以该配置也是必须项。
         -- 替换 example.com 为自己的域名，直接返回 true 表示所有请求进来的域名都颁发证书
         auto_ssl:set("allow_domain", function(domain)
+          return ngx.re.match(domain, "(example.com|example.net)$", "ijo")
+          -- ^()& 是只能指定的域名，无法为二级域名颁发证书
           -- return ngx.re.match(domain, "^(example.com|example.net)$", "ijo")
+          -- example.com$ 可以为所有 example.com 子域名颁发证书
           -- return ngx.re.match(domain, "example.com$", "ijo")
-          return true
+          -- return true
         end)
 
         auto_ssl:init()
