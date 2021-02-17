@@ -29,6 +29,8 @@ end
 
 local sql
 
+local ip_id = util.query_ip(client_ip).id
+
 if reply_id then
     if type(reply_id) ~= "number" then
         return req.bad_request()
@@ -40,8 +42,6 @@ if reply_id then
     end
 
     local root_id = result.root_id or result.id
-
-    local ip_id = util.query_ip(client_ip).id
 
     sql = [[
     insert into message_board(nickname, content, ua, os, browser, ip_id, reply_id, root_id) values(%s, %s, %s, %s, %s, %s, %s, %s);
@@ -56,7 +56,7 @@ else
         )
     ]]
 
-    sql = string.format(sql, db.quote(nickname), db.quote(content), util.query_ip(client_ip).id, db.quote(ngx.var.http_user_agent), db.quote(ua.os), db.quote(ua.name))
+    sql = string.format(sql, db.quote(nickname), db.quote(content), ip_id, db.quote(ngx.var.http_user_agent), db.quote(ua.os), db.quote(ua.name))
 end
 
 db.query(sql)
