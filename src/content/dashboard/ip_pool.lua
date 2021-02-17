@@ -20,8 +20,8 @@ if req_url == "list" then
     local where_cause = ""
 
     if type(ip) == "string" then
-        count_sql = "select count(*) as count from ip_pool %s;"
         where_cause = "where ip=" .. db.quote(ip) .. "::inet"
+        count_sql = "select count(*) as count from ip_pool " .. where_cause .. ";"
     else
         count_sql = "select last_value as count from ip_pool_id_seq;"
     end
