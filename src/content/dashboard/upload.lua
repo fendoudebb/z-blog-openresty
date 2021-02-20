@@ -4,7 +4,10 @@ local upload = require "resty.upload"
 
 --local root_path = "z_blog_openresty/resources/img/" .. ngx.re.gsub(ngx.today(), "-", "") .. "/"
 local relative_path = "uploads/img/"
-local root_path = "z_blog_openresty/resources/" .. relative_path
+-- ngx.var.realpath_root Windows输出：./html Linux输出：/usr/local/openresty/nginx/html
+-- ngx.var.document_root Windows输出：./html Linux输出：/usr/local/openresty/nginx/html
+--local root_path = "z_blog_openresty/resources/" .. relative_path 如果只用相对路径，Linux上将报错
+local root_path = ngx.var.document_root .. "/../z_blog_openresty/resources/" .. relative_path
 
 local chunk_size = 4096
 local form = upload:new(chunk_size)
