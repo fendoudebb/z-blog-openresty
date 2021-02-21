@@ -49,9 +49,9 @@
                     {% for _, reply in ipairs(m.replies) do %}
                     <div id="{{reply.id}}" class="reply-area">
                         <div class="nickname-span">
-                            <span style="color: #4CAF50">{{reply.nickname}}</span><span class="floor-span reply-btn" onclick="replyMessage({{reply.id}}, '{{reply.nickname}}')">回复</span>
+                            <span style="color: #4CAF50">{{reply.nickname}}</span> 回复 <a style="text-decoration:none;color: #4CAF50" href="#{{reply.reply_id}}">@{{reply.reply_nickname}}</a><span class="floor-span reply-btn" onclick="replyMessage({{reply.id}}, '{{reply.nickname}}')">回复</span>
                         </div>
-                        <pre class="content-pre" style="padding: 8px 0;min-height: 0">回复 <a style="text-decoration:none;color: #4CAF50" href="#{{reply.reply_id}}">@{{reply.reply_nickname}}</a>{% if reply.status == 0 then %} {{reply.content}}{% else %} <span class="content-delete-pre">回复已删除</span>{% end %}</pre>
+                        <pre class="content-pre" style="padding: 8px 0;min-height: 0">{% if reply.status == 0 then %} {{reply.content}}{% else %} <span class="content-delete-pre">回复已删除</span>{% end %}</pre>
                         <div>
                             <span class="browse-os-span">{{reply.browser}} | {{reply.os}}</span>
                             <span class="time-span">{{reply.create_ts}}</span>
