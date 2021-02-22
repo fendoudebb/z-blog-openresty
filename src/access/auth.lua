@@ -44,7 +44,8 @@ if not util.find(user_info.roles, "ROLE_ADMIN") then
             "upsert",
             "audit",
             "reply",
-            "publish"
+            "publish",
+            "upload"
         }
         if util.find(admin_action, action) then
             ngx.log(ngx.ERR, "auth permission deny, request uri#" .. ngx.var.uri .. ", user info#" .. json.encode(user_info))
