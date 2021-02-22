@@ -88,6 +88,6 @@ end
 --微信小程序中图片不支持直接斜杠+名称的格式 /aaa.jpg
 --local file_url = string.format("/%s%s", relative_path, file_name)
 
-local file_url = string.format("%s://%s/%s%s", ngx.var.scheme, ngx.var.host, relative_path, file_name)
+local file_url = string.format("%s://%s/%s%s", ngx.req.get_headers()['X-Scheme'], ngx.var.host, relative_path, file_name)
 
 ngx.say(json.encode(const.ok(file_url)))
