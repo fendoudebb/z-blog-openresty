@@ -27,10 +27,13 @@ if req_url == "list" then
     if rank_type == nil then
         order_cause = "id"
     elseif rank_type == "pv" then
+        where_cause = "where pv>0"
         order_cause = "(pv,id)"
     elseif rank_type == "comment_count" then
+        where_cause = "where comment_count>0"
         order_cause = "(comment_count,id)"
     elseif rank_type == "like_count" then
+        where_cause = "where like_count>0"
         order_cause = "(like_count,id)"
     else
         order_cause = "id"
