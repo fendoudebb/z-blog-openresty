@@ -71,11 +71,11 @@ function _M.query_ip(ip)
         keepalive_timeout = 2000 -- 毫秒
     })
 
-    if (not res) or (res.status == 502) then
+    if (res.status ~= 200) or (not res) then
         if not res then
             ngx.log(ngx.ERR, "request ip taobao error#", err)
         else
-            ngx.log(ngx.ERR, "request ip taobao header status=502")
+            ngx.log(ngx.ERR, "request ip taobao header status=" .. res.status)
         end
         -- insert on conflict do update 需设置唯一约束（主键也是唯一约束）
         local insert_sql = "insert into ip_unknown(ip) values(%s) on conflict(ip) do update set update_ts = current_timestamp"
