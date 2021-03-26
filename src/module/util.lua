@@ -66,7 +66,7 @@ function _M.query_ip(ip)
     end
 
     local httpc = http.new()
-    local res, err = httpc:request_uri('http://ip.taobao.com/getIpInfo.php?ip=' .. ip, {
+    local res, err = httpc:request_uri('https://ip.taobao.com/getIpInfo.php?ip=' .. ip, {
         keepalive_timeout = 2000 -- 毫秒
     })
 
