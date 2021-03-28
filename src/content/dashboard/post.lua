@@ -18,25 +18,21 @@ if req_url == "list" then
 
     local where_cause = ""
 
+    local order_cause = "id"
+
     if type(post_id) == "number" then
         where_cause = "where id=" .. post_id
-    end
-
-    local order_cause = ""
-
-    if rank_type == nil then
-        order_cause = "id"
-    elseif rank_type == "pv" then
-        where_cause = "where pv>0"
-        order_cause = "(pv,id)"
-    elseif rank_type == "comment_count" then
-        where_cause = "where comment_count>0"
-        order_cause = "(comment_count,id)"
-    elseif rank_type == "like_count" then
-        where_cause = "where like_count>0"
-        order_cause = "(like_count,id)"
     else
-        order_cause = "id"
+        if rank_type == "pv" then
+            where_cause = "where pv>0"
+            order_cause = "(pv,id)"
+        elseif rank_type == "comment_count" then
+            where_cause = "where comment_count>0"
+            order_cause = "(comment_count,id)"
+        elseif rank_type == "like_count" then
+            where_cause = "where like_count>0"
+            order_cause = "(like_count,id)"
+        end
     end
 
     local result = db.query(string.format(sql, where_cause, where_cause, order_cause, sql_args.limit, sql_args.offset))
