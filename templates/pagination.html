@@ -9,15 +9,15 @@
             {% end %}
         </li>
         {% for i = 1, sum_page do %}
-        <li>
             {% if i > cur_page -4 and i < cur_page + 4 then %}
-            {% if i == cur_page then %}
-            <a class="active disabled" href="javascript:void(0);">{{i}}</a>
-            {% else %}
-            <a href="?page={{i}}">{{i}}</a>
+            <li>
+                {% if i == cur_page then %}
+                <a class="active disabled" href="javascript:void(0);">{{i}}</a>
+                {% else %}
+                <a href="?page={{i}}">{{i}}</a>
+                {% end %}
+            </li>
             {% end %}
-            {% end %}
-        </li>
         {% end %}
         <li>
             {% if cur_page < sum_page then %}
