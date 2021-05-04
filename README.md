@@ -11,20 +11,22 @@
 
 ## 安装依赖
 
-```bash
+```shell
 luarocks install lua-resty-template
 luarocks install pgmoon
 luarocks install lua-resty-woothee
 luarocks install lua-resty-http
+luarocks install lua-resty-auto-ssl
 ```
 
 `LuaRocks`安装可参考  
 
-- [OpenResty整合LuaRocks - Windows10](https://www.zhangbj.com/p/523.html)
+- [OpenResty 整合 LuaRocks - Windows10](https://www.zhangbj.com/p/523.html)
+- [OpenResty 整合 LuaRocks - Linux](https://www.zhangbj.com/p/810.html)
 
 ## 初始化数据库
 
-```sql
+```shell
 initdb
 psql -d postgres -f pg_schema.sql
 ```
