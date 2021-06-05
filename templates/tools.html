@@ -1,6 +1,7 @@
 {% local request_url = ngx.var.uri %}
 <div style="margin-bottom: 40px">
     <a class="tool-btn-link" href="/tool/json.html" {% if "/tool/json.html" == request_url then %}style="color: #4CAF50"{% end %}>格式化JSON</a>
+    <a class="tool-btn-link" href="/tool/packer.html" {% if "/tool/packer.html" == request_url then %}style="color: #4CAF50"{% end %}>压缩HTML/JavaScript</a>
     <a class="tool-btn-link" href="/tool/md5.html" {% if "/tool/md5.html" == request_url then %}style="color: #4CAF50"{% end %}>MD5加密</a>
     <a class="tool-btn-link" href="/tool/base64.html" {% if "/tool/base64.html" == request_url then %}style="color: #4CAF50"{% end %}>BASE64加解密</a>
     <a class="tool-btn-link" href="/tool/url.html" {% if "/tool/url.html" == request_url then %}style="color: #4CAF50"{% end %}>URL编解码</a>
