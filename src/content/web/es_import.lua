@@ -7,6 +7,8 @@ local sql = "select id, title, topics, post_status, content_html, to_char(create
 
 local result = db.query(sql)
 
+local httpc = http.new()
+
 for _, post in ipairs(result) do
     local param = {
         postId = post.id,
@@ -16,7 +18,6 @@ for _, post in ipairs(result) do
         title = post.title,
         content = html.strip_tags(post.content_html)
     }
-    local httpc = http.new()
     local res, err = httpc:request_uri("http://127.0.0.1:9200/post/_doc/" .. post.id, {
         method = "PUT",
         body = json.encode(param),
