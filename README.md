@@ -7,7 +7,8 @@
 - [pgmoon](https://github.com/leafo/pgmoon)：`PostgreSQL`的`Lua`驱动
 - [lua-resty-woothee](https://github.com/woothee/lua-resty-woothee)：基于`Woothee`的`User-Agent`解析器
 - [lua-resty-http](https://github.com/ledgetech/lua-resty-http)：`OpenResty`和`ngx_lua`中的`HTTP`客户端
-- [lua-resty-auto-ssl](https://github.com/auto-ssl/lua-resty-auto-ssl)：自动注册和更新`Let's Encrypt`的`https`证书
+- [lua-resty-auto-ssl](https://github.com/auto-ssl/lua-resty-auto-ssl)：自动注册和更新`Let's Encrypt`的`https`证书（需编写`Lua`代码）
+- [certbot](https://certbot.eff.org)：自动注册和更新`Let's Encrypt`的`https`证书（安装成`Linux`服务后自动更新证书，无需编写代码）
 
 ## 安装依赖
 
