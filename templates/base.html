@@ -240,7 +240,7 @@
         }
     }
 
-    .header {
+    .header, #mobile-topic {
         height: auto;
         background-color: white;
         min-height: 48px;
@@ -732,6 +732,33 @@
     #qrcode canvas{
         width: 100% !important;
         height: 100% !important;
+    }
+
+    #mobile-topic {
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
+    #mobile-topic::-webkit-scrollbar {
+        display: none;
+    }
+
+    #mobile-topic a {
+        color: #8a8a8a;
+        text-decoration: none;
+        line-height: 22px;
+        max-height: 44px;
+        overflow: hidden;
+        word-wrap: break-word;
+    }
+
+    #mobile-topic a:hover {
+        color: #4CAF50;
+    }
+
+    #mobile-topic a {
+        margin-left: 10px;
+        margin-right: 10px;
     }
 
 </style>
