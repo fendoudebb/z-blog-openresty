@@ -13,11 +13,11 @@
 ## 安装依赖
 
 ```shell
-luarocks install lua-resty-template
-luarocks install pgmoon
-luarocks install lua-resty-woothee
-luarocks install lua-resty-http
-luarocks install lua-resty-auto-ssl
+luarocks install lua-resty-template 2.0-1
+luarocks install pgmoon 1.12.0-1
+luarocks install lua-resty-woothee 1.12.0-1
+luarocks install lua-resty-http 0.15-0
+luarocks install lua-resty-auto-ssl 0.13.1-1
 ```
 
 `LuaRocks`安装可参考  
