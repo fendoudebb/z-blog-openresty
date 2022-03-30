@@ -39,9 +39,10 @@ end
             <p style="text-align: center;margin-bottom: 30px;color: red;"><strong>扫描下方二维码关注公众号和小程序↓↓↓</strong></p>
             <img src="/qrcode.png" title="扫描二维码关注我" alt="扫描二维码关注我">
         </div>
-
     </div>
+    {% if not ngx.ctx.is_mobile then %}
     {(sidebar.html)}
+    {% end %}
 </div>
 {(footer.html)}
 {(base_js.html)}

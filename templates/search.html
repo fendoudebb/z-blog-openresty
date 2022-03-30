@@ -47,7 +47,9 @@
             </div>
         </div>
     {% end %}
+    {% if not ngx.ctx.is_mobile then %}
     {(sidebar.html)}
+    {% end %}
 </div>
 {(footer.html)}
 {(base_js.html)}

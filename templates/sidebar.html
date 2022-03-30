@@ -1,5 +1,3 @@
-{% if not ngx.ctx.is_mobile then %}
-
 {%
 local json = require "cjson.safe"
 local memory = ngx.shared.memory
@@ -102,6 +100,4 @@ end
         <div id="qrcode" style="margin-top: 10px"></div>
     </div>
 </div>
-{% end %}
-
 {% end %}
